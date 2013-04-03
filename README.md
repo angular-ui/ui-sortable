@@ -1,4 +1,4 @@
-# ui-sortable directive
+# ui-sortable directive [![Build Status](https://travis-ci.org/angular-ui/ui-sortable.png)](https://travis-ci.org/angular-ui/ui-sortable)
 
 This directive allows you to sort array with drag & drop.
 
