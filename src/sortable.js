@@ -8,7 +8,7 @@ angular.module('ui.sortable', []).value('uiSortableConfig',{}).directive('uiSort
     return {
       require: '?ngModel',
       link: function(scope, element, attrs, ngModel) {
-        var onReceive, onRemove, onStart, onUpdate, opts;
+        var onStart, onUpdate, onReceive, onRemove, onStop, opts;
 
         opts = angular.extend({}, uiSortableConfig, scope.$eval(attrs.uiSortable));
 
@@ -70,7 +70,7 @@ angular.module('ui.sortable', []).value('uiSortableConfig',{}).directive('uiSort
             }
           })(opts.start);
 
-          // If user provided 'start' callback compose it with onStart function
+          // If user provided 'stop' callback compose it with onStop function
           opts.stop = (function(_stop){
             return function(e, ui) {
               onStop(e, ui);
