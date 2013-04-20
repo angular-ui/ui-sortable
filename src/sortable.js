@@ -65,44 +65,49 @@ angular.module('ui.sortable', []).value('uiSortableConfig',{}).directive('uiSort
           opts.start = (function(_start){
             return function(e, ui) {
               onStart(e, ui);
-              if (typeof _start === "function")
+              if ( typeof _start === "function") {
                 _start(e, ui);
-            }
+              }
+            };
           })(opts.start);
 
           // If user provided 'stop' callback compose it with onStop function
           opts.stop = (function(_stop){
             return function(e, ui) {
               onStop(e, ui);
-              if (typeof _stop === "function")
+              if (typeof _stop === "function") {
                 _stop(e, ui);
-            }
+              }
+            };
           })(opts.stop);
 
           // If user provided 'update' callback compose it with onUpdate function
           opts.update = (function(_update){
             return function(e, ui) {
               onUpdate(e, ui);
-              if (typeof _update === "function")
+              if (typeof _update === "function") {
                 _update(e, ui);
-            }
+              }
+            };
           })(opts.update);
 
           // If user provided 'receive' callback compose it with onReceive function
           opts.receive = (function(_receive){
             return function(e, ui) {
               onReceive(e, ui);
-              if (typeof _receive === "function")
+              if (typeof _receive === "function") {
                 _receive(e, ui);
-            }
+              }
+            };
           })(opts.receive);
 
           // If user provided 'remove' callback compose it with onRemove function
           opts.remove = (function(_remove){
             return function(e, ui) {
               onRemove(e, ui);
-              if (typeof _remove === "function")
+              if (typeof _remove === "function") {
                 _remove(e, ui);
+              }
             };
           })(opts.remove);
         }
