@@ -11,7 +11,7 @@ angular.module('ui.sortable', []).value('uiSortableConfig',{}).directive('uiSort
         var onReceive, onRemove, onStart, onStop, onUpdate, opts = {};
 
         attrs.$observe('ui-sortable', function(){
-          opts = angular.extend({}, uiSortableConfig, scope.$eval(attrs.uiSortable));
+          angular.extend(opts, uiSortableConfig, scope.$eval(attrs.uiSortable));
         });
 
         if (ngModel) {
