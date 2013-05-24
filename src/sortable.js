@@ -10,12 +10,13 @@ angular.module('ui.sortable', []).value('uiSortableConfig',{}).directive('uiSort
       link: function(scope, element, attrs, ngModel) {
         var onReceive, onRemove, onStart, onStop, onUpdate, opts = {};
 
-        attrs.$observe('ui-sortable', function(newVal){
-          angular.extend(opts, uiSortableConfig, newVal);
-          angular.forEach(opts, function(value, key){
+        angular.extend(opts, uiSortableConfig);
+
+        scope.$watch(attrs.uiSortable, function(newVal, oldVal){
+          angular.forEach(newVal, function(value, key){
             element.sortable('option', key, value);
           });
-        });
+        }, true);
 
         if (ngModel) {
 
