@@ -18,7 +18,7 @@ Load the script file: sortable.js in your application:
 Add the sortable module as a dependency to your application module:
 
 ```js
-var myAppModule = angular.module('MyApp', ['ui.directives.sortable'])
+var myAppModule = angular.module('MyApp', ['ui.sortable'])
 ```
 
 Apply the directive to your form elements:
