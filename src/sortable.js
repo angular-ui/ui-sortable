@@ -1,125 +1,107 @@
 /*
- jQuery UI Sortable plugin wrapper
+ * wrap jQuery UI Sortable Widget
+ *
+ * <tbody ui-sortable="myOptions">
+ *    <tr ng-repeat="..."></tr>
+ * </tbody>
+ *
+ * $scope.myOptions = {
+ *     options: {
+ *         //jQuery UI Sortable Widget Options, the same below. http://api.jqueryui.com/sortable/#option
+ *     },
+ *     events: // jQuery UI Sortable Widget Events, http://api.jqueryui.com/sortable/#event
+ *     methods: // extend jQuery UI Sortable Widget Methods to AngularJS after initialize., http://api.jqueryui.com/sortable/#methods
+ *              // then you can invoke methods like this: $scope.myOptions.methods.cancel();
+ *     items: [] // ng-repeat items array reference, optional. Notice that items will be get asynchronous in most cases.
+ * };
+ *
+ */
 
- @param [ui-sortable] {object} Options to pass to $.fn.sortable() merged onto ui.config
-*/
-angular.module('ui.sortable', []).value('uiSortableConfig',{}).directive('uiSortable', [
-  'uiSortableConfig', function(uiSortableConfig) {
+'use strict';
+/*global angular, $*/
+
+angular.module('ui.sortable', []).value('uiSortableConfig', {}).directive('uiSortable', [
+    'uiSortableConfig',
+  function (uiSortableConfig) {
+    var methodsName = ['cancel', 'destroy', 'disable', 'enable', 'option', 'refresh', 'refreshPositions', 'serialize', 'toArray', 'widget'],
+      eventsName = ['sortactivate', 'sortbeforestop', 'sortchange', 'sortcreate', 'sortdeactivate', 'sortout', 'sortover', 'sortreceive', 'sortremove', 'sort', 'sortstart', 'sortstop', 'sortupdate'];
     return {
-      require: '?ngModel',
-      link: function(scope, element, attrs, ngModel) {
-        var onReceive, onRemove, onStart, onStop, onUpdate, opts = {};
+      link: function (scope, element, attr, ctrl) {
+        var updateItems = {},
+          sortable = scope.$eval(attr.uiSortable);
 
-        angular.extend(opts, uiSortableConfig);
+        sortable = angular.isObject(sortable) ? sortable : {};
+        sortable.options = angular.isObject(sortable.options) ? sortable.options : {};
+        sortable.methods = angular.isObject(sortable.methods) ? sortable.methods : {};
+        sortable.events = angular.isObject(sortable.events) ? sortable.events : {};
+        sortable.element = element;
 
-        scope.$watch(attrs.uiSortable, function(newVal, oldVal){
-          angular.forEach(newVal, function(value, key){
-            element.sortable('option', key, value);
-          });
-        }, true);
+        if (!sortable.options.appendTo) {
+          sortable.options.appendTo = element.parents('.ng-view')[0] || element.parents('[ng-view]')[0] || 'parent';
+        }
 
-        if (ngModel) {
-
-          ngModel.$render = function() {
-            element.sortable( "refresh" );
+        if (angular.isArray(sortable.items)) {
+          updateItems.sortstart = function (e, ui) {
+            // Save index of dragged item
+            ui.item.sortable = {
+              index: ui.item.index()
+            };
           };
-
-          onStart = function(e, ui) {
-            // Save position of dragged item
-            ui.item.sortable = { index: ui.item.index() };
-          };
-
-          onUpdate = function(e, ui) {
-            // For some reason the reference to ngModel in stop() is wrong
-            ui.item.sortable.resort = ngModel;
-          };
-
-          onReceive = function(e, ui) {
-            ui.item.sortable.relocate = true;
+          updateItems.sortreceive = function (e, ui) {
             // added item to array into correct position and set up flag
-            ngModel.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
+            ui.item.sortable.relocate = true;
+            sortable.items.splice(ui.item.index(), 0, ui.item.sortable.moved);
           };
-
-          onRemove = function(e, ui) {
-            // copy data into item
-            if (ngModel.$modelValue.length === 1) {
-              ui.item.sortable.moved = ngModel.$modelValue.splice(0, 1)[0];
+          updateItems.sortremove = function (e, ui) {
+            // get item from items
+            if (sortable.items.length === 1) {
+              ui.item.sortable.moved = sortable.items.splice(0, 1)[0];
             } else {
-              ui.item.sortable.moved =  ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0];
+              ui.item.sortable.moved = sortable.items.splice(ui.item.sortable.index, 1)[0];
             }
           };
-
-          onStop = function(e, ui) {
-            // digest all prepared changes
-            if (ui.item.sortable.resort && !ui.item.sortable.relocate) {
-
+          updateItems.sortupdate = function (e, ui) {
+            if (!ui.item.sortable.relocate) {
               // Fetch saved and current position of dropped element
               var end, start;
               start = ui.item.sortable.index;
               end = ui.item.index();
 
               // Reorder array and apply change to scope
-              ui.item.sortable.resort.$modelValue.splice(end, 0, ui.item.sortable.resort.$modelValue.splice(start, 1)[0]);
-
+              sortable.items.splice(end, 0, sortable.items.splice(start, 1)[0]);
             }
-            if (ui.item.sortable.resort || ui.item.sortable.relocate) {
-              scope.$apply();
-            }
+            scope.$apply();
           };
-
-          // If user provided 'start' callback compose it with onStart function
-          opts.start = (function(_start){
-            return function(e, ui) {
-              onStart(e, ui);
-              if ( typeof _start === "function") {
-                _start(e, ui);
-              }
-            };
-          })(opts.start);
-
-          // If user provided 'stop' callback compose it with onStop function
-          opts.stop = (function(_stop){
-            return function(e, ui) {
-              onStop(e, ui);
-              if (typeof _stop === "function") {
-                _stop(e, ui);
-              }
-            };
-          })(opts.stop);
-
-          // If user provided 'update' callback compose it with onUpdate function
-          opts.update = (function(_update){
-            return function(e, ui) {
-              onUpdate(e, ui);
-              if (typeof _update === "function") {
-                _update(e, ui);
-              }
-            };
-          })(opts.update);
-
-          // If user provided 'receive' callback compose it with onReceive function
-          opts.receive = (function(_receive){
-            return function(e, ui) {
-              onReceive(e, ui);
-              if (typeof _receive === "function") {
-                _receive(e, ui);
-              }
-            };
-          })(opts.receive);
-
-          // If user provided 'remove' callback compose it with onRemove function
-          opts.remove = (function(_remove){
-            return function(e, ui) {
-              onRemove(e, ui);
-              if (typeof _remove === "function") {
-                _remove(e, ui);
-              }
-            };
-          })(opts.remove);
         }
 
-        // Create sortable
-        element.sortable(opts);
+        element.sortable(angular.extend({}, uiSortableConfig, sortable.options, sortable.events));
+        sortable.widget = element.sortable('widget');
+
+        // extend sortable methods to AngularJS
+        angular.forEach(methodsName, function (name) {
+          sortable.methods[name] = function () {
+            var args = [name];
+            angular.forEach(arguments, function (value) {
+              args.push(value);
+            });
+            return element.sortable.apply(element, args);
+          };
+        });
+
+        //autoupdate options
+        scope.$watch(function () {
+          return sortable.options;
+        }, function (value) {
+          element.sortable('option', value);
+        });
+
+        // update items and emit sortable events to AngularJS
+        element.on(eventsName.join(' '), function (event, ui) {
+          if (updateItems[event.type]) {
+            updateItems[event.type](event, ui);
+          }
+          scope.$emit(event.type, ui);
+        });
       }
     };
   }
