@@ -1,6 +1,6 @@
 'use strict';
 /*global angular */
-angular.module('uiSortableDemo', ['ui.sortable']).
+angular.module('uiSortableDemo', ['ui.directives.sortable']).
 controller('uiSortableCtr', ['$scope',
     function ($scope) {
         $scope.users = [{

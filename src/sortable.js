@@ -20,7 +20,7 @@
 'use strict';
 /*global angular, $*/
 
-angular.module('ui.sortable', []).value('uiSortableConfig', {}).directive('uiSortable', [
+angular.module('ui.directives.sortable', []).value('uiSortableConfig', {}).directive('uiSortable', [
     'uiSortableConfig',
   function (uiSortableConfig) {
     var methodsName = ['cancel', 'destroy', 'disable', 'enable', 'option', 'refresh', 'refreshPositions', 'serialize', 'toArray', 'widget'],

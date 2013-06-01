@@ -1,24 +1,27 @@
-describe('uiSortable', function() {
+describe('uiSortable', function () {
 
   // Ensure the sortable angular module is loaded
-  beforeEach(module('ui.sortable'));
+  beforeEach(module('ui.directives.sortable'));
 
-  describe('simple use', function() {
+  describe('simple use', function () {
 
-    it('should have a ui-sortable class', function() {
-      inject(function($compile, $rootScope) {
+    it('should have a ui-sortable class', function () {
+      inject(function ($compile, $rootScope) {
         var element;
         element = $compile("<ul ui-sortable></ul>")($rootScope);
         expect(element.hasClass("ui-sortable")).toBeTruthy();
       });
     });
 
-    it('should update model when order changes', function() {
-      inject(function($compile, $rootScope) {
+    it('should update model when order changes', function () {
+      inject(function ($compile, $rootScope) {
         var element;
-        element = $compile('<ul ui-sortable ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
-        $rootScope.$apply(function() {
-          return $rootScope.items = ["One", "Two", "Three"];
+        element = $compile('<ul ui-sortable="sortableOption"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        $rootScope.$apply(function () {
+          $rootScope.items = ["One", "Two", "Three"];
+          $rootScope.sortableOption = {
+            items: $rootScope.items
+          };
         });
 
         element.find('li:eq(1)').insertAfter(element.find('li:eq(2)'));
@@ -26,7 +29,7 @@ describe('uiSortable', function() {
         // None of this work, one way is to use .bind("sortupdate")
         // and then use .trigger("sortupdate", e, ui) but I have no idea how to
         // construct ui object
-        
+
         // element.sortable('refresh')
         // element.sortable('refreshPositions')
         // element.trigger('sortupdate')

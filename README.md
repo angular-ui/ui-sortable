@@ -11,44 +11,34 @@ This directive allows you to sort array with drag & drop.
 
 Load the script file: sortable.js in your application:
 
-```html
-<script type="text/javascript" src="modules/directives/sortable/src/sortable.js"></script>
-```
-
-Add the sortable module as a dependency to your application module:
-
-```js
-var myAppModule = angular.module('MyApp', ['ui.directives.sortable'])
-```
+    <script type="text/javascript" src="modules/directives/sortable/src/sortable.js"></script>
 
 Apply the directive to your form elements:
 
-```html
-<ul ui-sortable ng-model="items">
-  <li ng-repeat="item in items">{{ item }}</li>
-</ul>
-```
+    <ul ui-sortable="mySortable">
+        <li ng-repeat="item in items">{{ item }}</li>
+    </ul>
+
+Add the sortable module as a dependency to your application module:
+
+    var myAppModule = angular.module('MyApp', ['ui.directives.sortable'])
+
 
 ### Options
 
-All the jQueryUI Sortable options can be passed through the directive.
+All the jQueryUI Sortable options, methods, events can be passed into `mySortable`.
 
+    myAppModule.controller('MyController', function($scope) {
+      $scope.items = ["One", "Two", "Three"];
 
-```js
-myAppModule.controller('MyController', function($scope) {
-  $scope.items = ["One", "Two", "Three"];
-
-  $scope.sortableOptions = {
-    update: function(e, ui) { ... },
-    axis: 'x'
-  };
-});
-```
-
-```html
-<ul ui-sortable="sortableOptions" ng-model="items">
-  <li ng-repeat="item in items">{{ item }}</li>
-</ul>
-```
-
+      $scope.mySortable = {
+          options: {
+              axis: 'x'
+              },
+          items: $scope.items,
+          events: {
+              update: function(e, ui) { ... }
+          }
+      }
+    });
 
