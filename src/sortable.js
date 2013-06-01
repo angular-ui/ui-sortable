@@ -74,9 +74,6 @@ angular.module('ui.sortable', []).value('uiSortableConfig', {}).directive('uiSor
           };
         }
 
-        element.sortable(angular.extend({}, uiSortableConfig, sortable.options, sortable.events));
-        sortable.widget = element.sortable('widget');
-
         // extend sortable methods to AngularJS
         angular.forEach(methodsName, function (name) {
           sortable.methods[name] = function () {
@@ -102,6 +99,9 @@ angular.module('ui.sortable', []).value('uiSortableConfig', {}).directive('uiSor
           }
           scope.$emit(event.type, ui);
         });
+
+        element.sortable(angular.extend({}, uiSortableConfig, sortable.options, sortable.events));
+        sortable.widget = element.sortable('widget');
       }
     };
   }
