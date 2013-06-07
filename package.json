@@ -1,11 +1,11 @@
 {
-  "name": "angular-ui-date",
-  "version": "0.0.2",
-  "description": "This directive allows you to add a date-picker to your form elements.",
-  "author": "https://github.com/angular-ui/ui-date/graphs/contributors",
+  "name": "angular-ui-sortable",
+  "version": "0.0.1",
+  "description": "This directive allows you to jQueryUI Sortable.",
+  "author": "https://github.com/angular-ui/ui-sortable/graphs/contributors",
   "license": "MIT",
   "homepage": "http://angular-ui.github.com",
-  "main": "src/date.js",
+  "main": "./src/sortable.js",
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",
@@ -15,6 +15,6 @@
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git://github.com/angular-ui/ui-date.git"
+    "url": "git://github.com/angular-ui/ui-sortable.git"
   }
 }
