@@ -16,8 +16,8 @@ angular.module('ui.sortable', [])
                       return function(e,ui){
                           first(e,ui);
                           second(e,ui);
-                      }
-                  }
+                      };
+                  };
                   return first;
               }
 
@@ -106,6 +106,6 @@ angular.module('ui.sortable', [])
 
             element.sortable(opts);
           }
-        }
+        };
       }
 ]);
