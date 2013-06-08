@@ -118,6 +118,11 @@ angular.module('ui.sortable', []).value('uiSortableConfig',{}).directive('uiSort
           })(opts.remove);
         }
 
+        // Extend config by uiSortableConnect if available
+        if (attrs.uiSortableConnect) {
+          angular.extend(opts, { connectWith: attrs.uiSortableConnect });
+        }
+
         // Create sortable
         element.sortable(opts);
       }
