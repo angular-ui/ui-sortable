@@ -17,7 +17,7 @@ angular.module('ui.sortable', [])
                           first(e,ui);
                           second(e,ui);
                       };
-                  };
+                  }
                   return first;
               }
 
