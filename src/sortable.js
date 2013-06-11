@@ -8,15 +8,10 @@ angular.module('ui.sortable', []).value('uiSortableConfig',{}).directive('uiSort
     return {
       require: '?ngModel',
       link: function(scope, element, attrs, ngModel) {
-        var onReceive, onRemove, onStart, onStop, onUpdate, opts = {};
+        var onReceive, onRemove, onStart, onStop, onUpdate, opts;
 
-        angular.extend(opts, uiSortableConfig);
-
-        scope.$watch(attrs.uiSortable, function(newVal, oldVal){
-          angular.forEach(newVal, function(value, key){
-            element.sortable('option', key, value);
-          });
-        }, true);
+        opts = angular.extend({}, uiSortableConfig, 
+        scope.$eval(attrs.uiSortable));
 
         if (ngModel) {
 
