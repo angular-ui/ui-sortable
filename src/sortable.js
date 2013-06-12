@@ -10,13 +10,7 @@ angular.module('ui.sortable', []).value('uiSortableConfig',{}).directive('uiSort
       link: function(scope, element, attrs, ngModel) {
         var onReceive, onRemove, onStart, onStop, onUpdate, opts = {};
 
-        angular.extend(opts, uiSortableConfig);
-
-        scope.$watch(attrs.uiSortable, function(newVal, oldVal){
-          angular.forEach(newVal, function(value, key){
-            element.sortable('option', key, value);
-          });
-        }, true);
+        angular.extend(opts, scope[attrs.uiSortable]);
 
         if (ngModel) {
 
@@ -26,12 +20,13 @@ angular.module('ui.sortable', []).value('uiSortableConfig',{}).directive('uiSort
 
           onStart = function(e, ui) {
             // Save position of dragged item
-            ui.item.sortable = { index: ui.item.index() };
+			ui.item.sortable = {
+				index: ui.item.index(),
+				resort : ngModel
+            };
           };
 
           onUpdate = function(e, ui) {
-            // For some reason the reference to ngModel in stop() is wrong
-            ui.item.sortable.resort = ngModel;
           };
 
           onReceive = function(e, ui) {
