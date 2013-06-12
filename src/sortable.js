@@ -3,124 +3,109 @@
 
  @param [ui-sortable] {object} Options to pass to $.fn.sortable() merged onto ui.config
 */
-angular.module('ui.sortable', []).value('uiSortableConfig',{}).directive('uiSortable', [
-  'uiSortableConfig', function(uiSortableConfig) {
-    return {
-      require: '?ngModel',
-      link: function(scope, element, attrs, ngModel) {
-        var onReceive, onRemove, onStart, onStop, onUpdate, opts = {};
+angular.module('ui.sortable', [])
+  .value('uiSortableConfig',{})
+  .directive('uiSortable', [ 'uiSortableConfig',
+        function(uiSortableConfig) {
+        return {
+          require: '?ngModel',
+          link: function(scope, element, attrs, ngModel) {
 
-        angular.extend(opts, uiSortableConfig);
+              function combineCallbacks(first,second){
+                  if( second && (typeof second === "function") ){
+                      return function(e,ui){
+                          first(e,ui);
+                          second(e,ui);
+                      };
+                  }
+                  return first;
+              }
 
-        scope.$watch(attrs.uiSortable, function(newVal, oldVal){
-          angular.forEach(newVal, function(value, key){
-            element.sortable('option', key, value);
-          });
-        }, true);
+            var opts = {};
 
-        if (ngModel) {
+            var callbacks = {
+                receive: null,
+                remove:null,
+                start:null,
+                stop:null,
+                update:null
+            };
 
-          ngModel.$render = function() {
-            element.sortable( "refresh" );
-          };
+            angular.extend(opts, uiSortableConfig);
 
-          onStart = function(e, ui) {
-            // Save position of dragged item
-            ui.item.sortable = { index: ui.item.index() };
-          };
+            if (ngModel) {
 
-          onUpdate = function(e, ui) {
-            // For some reason the reference to ngModel in stop() is wrong
-            ui.item.sortable.resort = ngModel;
-          };
+              ngModel.$render = function() {
+                element.sortable( "refresh" );
+              };
 
-          onReceive = function(e, ui) {
-            ui.item.sortable.relocate = true;
-            // added item to array into correct position and set up flag
-            ngModel.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
-          };
+              callbacks.start = function(e, ui) {
+                // Save position of dragged item
+                ui.item.sortable = { index: ui.item.index() };
+              };
 
-          onRemove = function(e, ui) {
-            // copy data into item
-            if (ngModel.$modelValue.length === 1) {
-              ui.item.sortable.moved = ngModel.$modelValue.splice(0, 1)[0];
-            } else {
-              ui.item.sortable.moved =  ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0];
+              callbacks.update = function(e, ui) {
+                // For some reason the reference to ngModel in stop() is wrong
+                ui.item.sortable.resort = ngModel;
+              };
+
+              callbacks.receive = function(e, ui) {
+                ui.item.sortable.relocate = true;
+                // added item to array into correct position and set up flag
+                ngModel.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
+              };
+
+              callbacks.remove = function(e, ui) {
+                // copy data into item
+                if (ngModel.$modelValue.length === 1) {
+                  ui.item.sortable.moved = ngModel.$modelValue.splice(0, 1)[0];
+                } else {
+                  ui.item.sortable.moved =  ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0];
+                }
+              };
+
+              callbacks.stop = function(e, ui) {
+                // digest all prepared changes
+                if (ui.item.sortable.resort && !ui.item.sortable.relocate) {
+
+                  // Fetch saved and current position of dropped element
+                  var end, start;
+                  start = ui.item.sortable.index;
+                  end = ui.item.index();
+
+                  // Reorder array and apply change to scope
+                  ui.item.sortable.resort.$modelValue.splice(end, 0, ui.item.sortable.resort.$modelValue.splice(start, 1)[0]);
+
+                }
+                if (ui.item.sortable.resort || ui.item.sortable.relocate) {
+                  scope.$apply();
+                }
+              };
+
             }
-          };
 
-          onStop = function(e, ui) {
-            // digest all prepared changes
-            if (ui.item.sortable.resort && !ui.item.sortable.relocate) {
 
-              // Fetch saved and current position of dropped element
-              var end, start;
-              start = ui.item.sortable.index;
-              end = ui.item.index();
+              scope.$watch(attrs.uiSortable, function(newVal, oldVal){
+                  angular.forEach(newVal, function(value, key){
 
-              // Reorder array and apply change to scope
-              ui.item.sortable.resort.$modelValue.splice(end, 0, ui.item.sortable.resort.$modelValue.splice(start, 1)[0]);
+                      if( callbacks[key] ){
+                          // wrap the callback
+                          value = combineCallbacks( callbacks[key], value );
+                      }
 
-            }
-            if (ui.item.sortable.resort || ui.item.sortable.relocate) {
-              scope.$apply();
-            }
-          };
+                      element.sortable('option', key, value);
+                  });
+              }, true);
 
-          // If user provided 'start' callback compose it with onStart function
-          opts.start = (function(_start){
-            return function(e, ui) {
-              onStart(e, ui);
-              if ( typeof _start === "function") {
-                _start(e, ui);
-              }
-            };
-          })(opts.start);
+              angular.forEach(callbacks, function(value, key ){
 
-          // If user provided 'stop' callback compose it with onStop function
-          opts.stop = (function(_stop){
-            return function(e, ui) {
-              onStop(e, ui);
-              if (typeof _stop === "function") {
-                _stop(e, ui);
-              }
-            };
-          })(opts.stop);
+                    opts[key] = combineCallbacks(value, opts[key]);
+              });
 
-          // If user provided 'update' callback compose it with onUpdate function
-          opts.update = (function(_update){
-            return function(e, ui) {
-              onUpdate(e, ui);
-              if (typeof _update === "function") {
-                _update(e, ui);
-              }
-            };
-          })(opts.update);
+              // Create sortable
 
-          // If user provided 'receive' callback compose it with onReceive function
-          opts.receive = (function(_receive){
-            return function(e, ui) {
-              onReceive(e, ui);
-              if (typeof _receive === "function") {
-                _receive(e, ui);
-              }
-            };
-          })(opts.receive);
-
-          // If user provided 'remove' callback compose it with onRemove function
-          opts.remove = (function(_remove){
-            return function(e, ui) {
-              onRemove(e, ui);
-              if (typeof _remove === "function") {
-                _remove(e, ui);
-              }
-            };
-          })(opts.remove);
-        }
-
-        // Create sortable
-        element.sortable(opts);
+            element.sortable(opts);
+          }
+        };
       }
-    };
-  }
 ]);
