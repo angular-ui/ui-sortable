@@ -2,10 +2,10 @@ basePath = '..';
 files = [
   JASMINE,
   JASMINE_ADAPTER,
-  'components/jquery/jquery.js',
-  'components/jquery-ui/ui/jquery-ui.custom.js',
-  'components/angular/angular.js',
-  'components/angular-mocks/angular-mocks.js',
+  'bower_components/jquery/jquery.js',
+  'bower_components/jquery-ui/ui/jquery-ui.custom.js',
+  'bower_components/angular/angular.js',
+  'bower_components/angular-mocks/angular-mocks.js',
   'src/sortable.js',
   'test/*.spec.js'
 ];
