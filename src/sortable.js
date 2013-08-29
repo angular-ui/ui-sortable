@@ -70,8 +70,8 @@ angular.module('ui.sortable', [])
 
                   // Fetch saved and current position of dropped element
                   var end, start;
-                  start = ui.item.sortable.index;
-                  end = ui.item.index();
+                  start = (ui.item.sortable.index - 1);
+                  end = (ui.item.index() - 1);
 
                   // Reorder array and apply change to scope
                   ui.item.sortable.resort.$modelValue.splice(end, 0, ui.item.sortable.resort.$modelValue.splice(start, 1)[0]);
