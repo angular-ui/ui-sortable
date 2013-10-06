@@ -5,8 +5,8 @@
 */
 angular.module('ui.sortable', [])
   .value('uiSortableConfig',{})
-  .directive('uiSortable', [ 'uiSortableConfig',
-        function(uiSortableConfig) {
+  .directive('uiSortable', [ 'uiSortableConfig', '$log',
+        function(uiSortableConfig, log) {
         return {
           require: '?ngModel',
           link: function(scope, element, attrs, ngModel) {
@@ -85,9 +85,6 @@ angular.module('ui.sortable', [])
                 }
               };
 
-            }
-
-
               scope.$watch(attrs.uiSortable, function(newVal, oldVal){
                   angular.forEach(newVal, function(value, key){
 
@@ -113,8 +110,11 @@ angular.module('ui.sortable', [])
               // call apply after stop
               opts.stop = combineCallbacks( opts.stop, apply );
 
-              // Create sortable
+            } else {
+              log.info('ui.sortable: ngModel not provided!', element);
+            }
 
+            // Create sortable
             element.sortable(opts);
           }
         };
