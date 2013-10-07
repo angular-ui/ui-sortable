@@ -1,0 +1,22 @@
+.wide {
+	width: 620px;
+}
+
+.floatingList > .item {
+	float: left;
+	width: 70px;
+}
+
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.clearfix {
+    *zoom: 1;
+}
