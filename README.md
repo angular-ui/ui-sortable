@@ -29,6 +29,8 @@ Apply the directive to your form elements:
 </ul>
 ```
 
+**Note:** `ng-model` is required, so that the directive knows which model to update.
+
 ### Options
 
 All the jQueryUI Sortable options can be passed through the directive.
@@ -51,4 +53,20 @@ myAppModule.controller('MyController', function($scope) {
 </ul>
 ```
 
+#### Canceling
+
+Inside the `update` callback, you can check the item that is dragged and cancel the sorting.
+
+```js
+$scope.sortableOptions = {
+  update: function(e, ui) {
+    if (ui.item.scope().item == "can't be moved") {
+      ui.item.parent().sortable('cancel');
+    }
+  }
+};
+```
+
+**Note:** `update` occurs before any model/scope changes but after the DOM position has been updated.
+So `ui.item.scope` and the directive's `ng-model`, are equal to the scope before the drag start.
 
