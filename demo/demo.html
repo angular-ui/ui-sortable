@@ -51,7 +51,7 @@
     </ul>
 
     <ul class="list logList">
-      <li ng-repeat="entry in sortingLog" class="logItem">{{entry}}</li>
+      <li ng-repeat="entry in sortingLog track by $index" class="logItem">{{entry}}</li>
     </ul>
   </div>
 </body>
