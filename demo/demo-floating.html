@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="demo/demo.css">
   <link rel="stylesheet" href="demo/demo-floating.css">
   <script type="text/javascript" src="bower_components/jquery/jquery.js"></script>
-  <script type="text/javascript" src="bower_components/jquery-ui/ui/jquery-ui.custom.js"></script>
+  <script type="text/javascript" src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
   <script type="text/javascript" src="bower_components/angular/angular.js"></script>
   <script type="text/javascript" src="src/sortable.js"></script>
   <script type="text/javascript">
@@ -63,7 +63,7 @@
     </ul>
 
     <ul class="list logList">
-      <li ng-repeat="entry in sortingLog" class="logItem">{{entry}}</li>
+      <li ng-repeat="entry in sortingLog track by $index" class="logItem">{{entry}}</li>
     </ul>
   </div>
 </body>
