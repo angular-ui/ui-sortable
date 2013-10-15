@@ -35,7 +35,10 @@
           $scope.sortableOptions = {
               // called after a node is dropped
               stop: function(e, ui) {
-                  var logEntry = 'Moved element: ' + ui.item.scope().item.text;
+                  var logEntry = {
+                    ID: $scope.sortingLog.length + 1,
+                    Text: 'Moved element: ' + ui.item.scope().item.text
+                  };
                   $scope.sortingLog.push(logEntry);
               }
           };
@@ -51,7 +54,7 @@
     </ul>
 
     <ul class="list logList">
-      <li ng-repeat="entry in sortingLog track by $index" class="logItem">{{entry}}</li>
+      <li ng-repeat="entry in sortingLog" class="logItem">{{entry.Text}}</li>
     </ul>
   </div>
 </body>
