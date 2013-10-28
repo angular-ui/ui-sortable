@@ -23,7 +23,8 @@ angular.module('ui.sortable', [])
 
             var opts = {};
 
-            var ngOpts = {
+            // custom options for the directive
+            var dirOpts = {
               floating: undefined
             };
 
@@ -92,13 +93,13 @@ angular.module('ui.sortable', [])
               scope.$watch(attrs.uiSortable, function(newVal, oldVal){
                   angular.forEach(newVal, function(value, key){
 
-                      if ( key in ngOpts ) {
+                      if ( key in dirOpts ) {
                         // if its a custom option of the directive,
                         // handle it approprietly
                         if ( key === 'floating' && value !== undefined ) {
                           element.data("ui-sortable").floating = value;
-                          return;
                         }
+                        return;
                       }
 
                       if( callbacks[key] ){
