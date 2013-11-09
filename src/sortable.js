@@ -78,6 +78,16 @@ angular.module('ui.sortable', [])
               });
             };
 
+            scope.$watch(attrs.uiSortable, function(newVal, oldVal){
+              angular.forEach(newVal, function(value, key){
+                if( callbacks[key] ){
+                  // wrap the callback
+                  value = combineCallbacks( callbacks[key], value );
+                }
+                element.sortable('option', key, value);
+              });
+            }, true);
+
             angular.forEach(callbacks, function(value, key){
               opts[key] = combineCallbacks(value, opts[key]);
             });
