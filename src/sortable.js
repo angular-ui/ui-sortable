@@ -53,7 +53,8 @@ angular.module('ui.sortable', [])
               // we can restore it after sortable has messed it up
               savedNodes = element.contents().not(
                 //Don't inlcude the placeholder
-                element.find('.ui-sortable-placeholder'));
+                element.find("." + element.sortable('option','placeholder')
+                             .element().attr('class').split(/\s+/).join('.')));
             };
 
             callbacks.update = function(e, ui) {
