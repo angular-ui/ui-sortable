@@ -58,10 +58,12 @@ angular.module('ui.sortable', [])
             };
 
             callbacks.update = function(e, ui) {
-              // Fetch saved and current position of dropped element
-              var end, start;
-              start = ui.item.sortable.index;
-              end = ui.item.index();
+              // Save current drop position but only if this is not a second
+              // update that happens when moving between lists because then
+              // the value will be overwritten with the old value
+              if(!ui.item.sortable.relocate){
+                ui.item.sortable.dropindex = ui.item.index();
+              }
 
               // Cancel the sort (let ng-repeat do the sort for us)
               element.sortable('cancel');
@@ -73,9 +75,32 @@ angular.module('ui.sortable', [])
               // comments are still messed up).
               savedNodes.detach().appendTo(element);
 
-              // Reorder array and apply change to scope
-              scope.$apply(function() {
-                ngModel.$modelValue.splice(end, 0, ngModel.$modelValue.splice(start, 1)[0]);
+              // If relocate is true (an item was dropped in from another list)
+              // then we add the new item to this list otherwise we move the
+              // item to it's new location
+              scope.$apply(function () {
+                if(ui.item.sortable.relocate) {
+                  ngModel.$modelValue.splice(ui.item.sortable.dropindex, 0,
+                                             ui.item.sortable.moved);
+                } else {
+                  ngModel.$modelValue.splice(
+                    ui.item.sortable.dropindex, 0,
+                    ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0]);
+                }
+              });
+            };
+
+            callbacks.receive = function(e, ui) {
+              // An item was dropped here from another list, set a flag
+              ui.item.sortable.relocate = true;
+            };
+
+            callbacks.remove = function(e, ui) {
+              // Remove the item from this list's model and copy data into item,
+              // so the next list can retrive it
+              scope.$apply(function () {
+                ui.item.sortable.moved = ngModel.$modelValue.splice(
+                  ui.item.sortable.index, 1)[0];
               });
             };
 
