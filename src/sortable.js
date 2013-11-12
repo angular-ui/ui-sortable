@@ -72,11 +72,11 @@ angular.module('ui.sortable', [])
               // Save current drop position but only if this is not a second
               // update that happens when moving between lists because then
               // the value will be overwritten with the old value
-              if(!ui.item.sortable.recieved) {
+              if(!ui.item.sortable.received) {
                 ui.item.sortable.dropindex = ui.item.index();
 
                 // Cancel the sort (let ng-repeat do the sort for us)
-                // Don't cancel if this is the recieved list because it has
+                // Don't cancel if this is the received list because it has
                 // already been canceled in the other list, and trying to cancel
                 // here will mess up the DOM.
                 element.sortable('cancel');
@@ -89,11 +89,11 @@ angular.module('ui.sortable', [])
               // comments are still messed up).
               savedNodes.detach().appendTo(element);
 
-              // If recieved is true (an item was dropped in from another list)
+              // If received is true (an item was dropped in from another list)
               // then we add the new item to this list otherwise wait until the
               // stop event where we will know if it was a sort or item was
               // moved here from another list
-              if(ui.item.sortable.recieved) {
+              if(ui.item.sortable.received) {
                 scope.$apply(function () {
                   ngModel.$modelValue.splice(ui.item.sortable.dropindex, 0,
                                              ui.item.sortable.moved);
@@ -102,9 +102,9 @@ angular.module('ui.sortable', [])
             };
 
             callbacks.stop = function(e, ui) {
-              // If the recieved flag hasn't be set on the item, this is a
+              // If the received flag hasn't be set on the item, this is a
               // normal sort, so move the items in the list.
-              if(!ui.item.sortable.recieved) {
+              if(!ui.item.sortable.received) {
                 scope.$apply(function () {
                   ngModel.$modelValue.splice(
                     ui.item.sortable.dropindex, 0,
@@ -116,7 +116,7 @@ angular.module('ui.sortable', [])
             callbacks.receive = function(e, ui) {
               // An item was dropped here from another list, set a flag on the
               // item.
-              ui.item.sortable.recieved = true;
+              ui.item.sortable.received = true;
             };
 
             callbacks.remove = function(e, ui) {
