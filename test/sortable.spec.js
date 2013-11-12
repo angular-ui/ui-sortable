@@ -23,15 +23,13 @@ describe('uiSortable', function() {
 
         element.find('li:eq(1)').insertAfter(element.find('li:eq(2)'));
 
-        // None of this work, one way is to use .bind("sortupdate")
-        // and then use .trigger("sortupdate", e, ui) but I have no idea how to
-        // construct ui object
-        
-        // element.sortable('refresh')
-        // element.sortable('refreshPositions')
-        // element.trigger('sortupdate')
+        $('body').append(element);
+        var li = element.find(':eq(1)');
+        var dy = 1.25 * li.outerHeight();
+        li.simulate('drag', { dx: 0, dy: dy });
 
-        // expect($rootScope.items).toEqual(["One", "Three", "Two"])
+        expect($rootScope.items).toEqual(["One", "Three", "Two"]);
+        $(element).remove();
       });
     });
 
