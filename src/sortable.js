@@ -103,8 +103,9 @@ angular.module('ui.sortable', [])
 
             callbacks.stop = function(e, ui) {
               // If the received flag hasn't be set on the item, this is a
-              // normal sort, so move the items in the list.
-              if(!ui.item.sortable.received) {
+              // normal sort, if dropindex is set, the item was moved, so move
+              // the items in the list.
+              if(!ui.item.sortable.received && ('dropindex' in ui.item.sortable)) {
                 scope.$apply(function () {
                   ngModel.$modelValue.splice(
                     ui.item.sortable.dropindex, 0,
