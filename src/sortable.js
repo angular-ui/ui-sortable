@@ -61,7 +61,13 @@ angular.module('ui.sortable', [])
               // If this list has a placeholder (the connected lists won't),
               // don't inlcude it in saved nodes.
               var placeholder = element.sortable('option','placeholder');
-              if (placeholder) {
+
+              // placeholder.element will be a function if the placeholder, has
+              // been created (placeholder will be an object).  If it hasn't
+              // been created, either placeholder will be false if no
+              // placeholder class was given or placeholder.element will be
+              // undefined if a class was given (placeholder will be a string)
+              if (placeholder && placeholder.element) {
                 savedNodes = savedNodes.not(element.find(
                   "." + placeholder.element()
                     .attr('class').split(/\s+/).join('.')));
