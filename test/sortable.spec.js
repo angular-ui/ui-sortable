@@ -154,7 +154,33 @@ describe('uiSortable', function() {
 
     it('should update model when sorting between sortables', function() {
       inject(function($compile, $rootScope) {
-        // TODO
+        var elementTop, elementBottom;
+        elementTop = $compile('<ul ui-sortable="opts" class="cross-sortable" ng-model="itemsTop"><li ng-repeat="item in itemsTop" id="s-top-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        elementBottom = $compile('<ul ui-sortable="opts" class="cross-sortable" ng-model="itemsBottom"><li ng-repeat="item in itemsBottom" id="s-bottom-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.itemsTop = ["Top One", "Top Two", "Top Three"];
+          $rootScope.itemsBottom = ["Bottom One", "Bottom Two", "Bottom Three"];
+          $rootScope.opts = { connectWith: ".cross-sortable" };
+        });
+
+        host.append(elementTop).append(elementBottom);
+
+        var li1 = elementTop.find(':eq(0)');
+        var li2 = elementBottom.find(':eq(0)');
+        var dy = EXTRA_DY_PERCENTAGE * li1.outerHeight() + (li2.position().top - li1.position().top);
+        li1.simulate('drag', { dy: dy });
+        expect($rootScope.itemsTop).toEqual(["Top Two", "Top Three"]);
+        expect($rootScope.itemsBottom).toEqual(["Bottom One", "Top One", "Bottom Two", "Bottom Three"]);
+
+        li1 = elementBottom.find(':eq(1)');
+        li2 = elementTop.find(':eq(1)');
+        dy = -EXTRA_DY_PERCENTAGE * li1.outerHeight() - (li1.position().top - li2.position().top);
+        li1.simulate('drag', { dy: dy });
+        expect($rootScope.itemsTop).toEqual(["Top Two", "Top One", "Top Three"]);
+        expect($rootScope.itemsBottom).toEqual(["Bottom One", "Bottom Two", "Bottom Three"]);
+
+        $(elementTop).remove();
+        $(elementBottom).remove();
       });
     });
 
