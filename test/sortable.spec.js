@@ -134,17 +134,17 @@ describe('uiSortable', function() {
         li.simulate('drag', { dy: dy });
         expect($rootScope.items.map(function(x){ return x.text; })).toEqual(["One", "Three", "Four", "Two"]);
 
-        // // fails on angular 1.2
-        // li = element.find(':eq(2)');
-        // dy = -(2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
-        // li.simulate('drag', { dy: dy });
-        // expect($rootScope.items.map(function(x){ return x.text; })).toEqual(["Four", "One", "Three", "Two"]);
+        // fails on angular 1.2
+        li = element.find(':eq(2)');
+        dy = -(2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items.map(function(x){ return x.text; })).toEqual(["Four", "One", "Three", "Two"]);
 
-        // // fails on angular 1.2
-        // li = element.find(':eq(3)');
-        // dy = -(2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
-        // li.simulate('drag', { dy: dy });
-        // expect($rootScope.items.map(function(x){ return x.text; })).toEqual(["Four", "Two", "One", "Three"]);
+        // fails on angular 1.2
+        li = element.find(':eq(3)');
+        dy = -(2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items.map(function(x){ return x.text; })).toEqual(["Four", "Two", "One", "Three"]);
 
         // also placing right above the locked node seems a bit harder !?!?
 
@@ -165,6 +165,7 @@ describe('uiSortable', function() {
 
         host.append(elementTop).append(elementBottom);
 
+        // fails on angular 1.2
         var li1 = elementTop.find(':eq(0)');
         var li2 = elementBottom.find(':eq(0)');
         var dy = EXTRA_DY_PERCENTAGE * li1.outerHeight() + (li2.position().top - li1.position().top);
@@ -172,6 +173,7 @@ describe('uiSortable', function() {
         expect($rootScope.itemsTop).toEqual(["Top Two", "Top Three"]);
         expect($rootScope.itemsBottom).toEqual(["Bottom One", "Top One", "Bottom Two", "Bottom Three"]);
 
+        // fails on angular 1.2
         li1 = elementBottom.find(':eq(1)');
         li2 = elementTop.find(':eq(1)');
         dy = -EXTRA_DY_PERCENTAGE * li1.outerHeight() - (li1.position().top - li2.position().top);
