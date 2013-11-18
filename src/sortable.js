@@ -138,6 +138,11 @@ angular.module('ui.sortable', [])
             scope.$watch(attrs.uiSortable, function(newVal, oldVal) {
               angular.forEach(newVal, function(value, key) {
                 if(callbacks[key]) {
+                  if( key === 'stop' ){
+                    // call apply after stop
+                    value = combineCallbacks(
+                      value, function() { scope.$apply(); });
+                  }
                   // wrap the callback
                   value = combineCallbacks(callbacks[key], value);
                 }

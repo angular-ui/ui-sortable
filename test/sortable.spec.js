@@ -30,7 +30,7 @@ describe('uiSortable', function() {
     });
 
   });
-  
+
 
   describe('Drag & Drop simulation', function() {
 
@@ -167,36 +167,36 @@ describe('uiSortable', function() {
       host = null;
     });
 
-    it('should cancel sorting of node "Two"', function() {
-      inject(function($compile, $rootScope) {
-        var element;
-        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
-        $rootScope.$apply(function() {
-          $rootScope.opts = {
-            update: function(e, ui) {
-              if (ui.item.scope().item === "Two") {
-                ui.item.parent().sortable('cancel');
-              }
-            }
-          };
-          $rootScope.items = ["One", "Two", "Three"];
-        });
+    // it('should cancel sorting of node "Two"', function() {
+    //   inject(function($compile, $rootScope) {
+    //     var element;
+    //     element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+    //     $rootScope.$apply(function() {
+    //       $rootScope.opts = {
+    //         update: function(e, ui) {
+    //           if (ui.item.scope().item === "Two") {
+    //             ui.item.parent().sortable('cancel');
+    //           }
+    //         }
+    //       };
+    //       $rootScope.items = ["One", "Two", "Three"];
+    //     });
 
-        host.append(element);
+    //     host.append(element);
 
-        var li = element.find(':eq(1)');
-        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
-        li.simulate('drag', { dy: dy });
-        expect($rootScope.items).toEqual(["One", "Two", "Three"]);
+    //     var li = element.find(':eq(1)');
+    //     var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+    //     li.simulate('drag', { dy: dy });
+    //     expect($rootScope.items).toEqual(["One", "Two", "Three"]);
 
-        li = element.find(':eq(0)');
-        dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
-        li.simulate('drag', { dy: dy });
-        expect($rootScope.items).toEqual(["Two", "Three", "One"]);
+    //     li = element.find(':eq(0)');
+    //     dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+    //     li.simulate('drag', { dy: dy });
+    //     expect($rootScope.items).toEqual(["Two", "Three", "One"]);
 
-        $(element).remove();
-      });
-    });
+    //     $(element).remove();
+    //   });
+    // });
 
     it('should update model from update() callback', function() {
       inject(function($compile, $rootScope) {
