@@ -16,10 +16,11 @@
     "package.json"
   ],
   "dependencies": {
-    "angular": "~1.x",
-    "jquery-ui": ">= 1.9"
+    "angular": "~1.0.x",
+    "jquery-ui": ">= 1.9",
+    "jquery-simulate": "latest"
   },
   "devDependencies": {
-    "angular-mocks": "~1.x"
+    "angular-mocks": "~1.0.x"
   }
 }
