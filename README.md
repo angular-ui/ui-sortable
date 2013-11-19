@@ -6,6 +6,9 @@ This directive allows you to sort array with drag & drop.
 
 - JQuery
 - JQueryUI
+- AngularJS 1.0.x
+
+**Note for AngularJS 1.2 users:** Use the seperate branch `angular1.2`.
 
 ## Usage
 
