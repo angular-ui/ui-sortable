@@ -48,7 +48,16 @@ angular.module('ui.sortable', [])
 
             callbacks.start = function(e, ui) {
               // Save the starting position of dragged item
-              ui.item.sortable = { index: ui.item.index() };
+              ui.item.sortable = {
+                index: ui.item.index(),
+                cancel: function () {
+                  ui.item.sortable._isCanceled = true;
+                },
+                isCanceled: function () {
+                  return ui.item.sortable._isCanceled;
+                },
+                _isCanceled: false
+              };
             };
 
             callbacks.activate = function(e, ui) {
@@ -111,7 +120,7 @@ angular.module('ui.sortable', [])
               // If the received flag hasn't be set on the item, this is a
               // normal sort, if dropindex is set, the item was moved, so move
               // the items in the list.
-              if(!ui.item.sortable.received && ('dropindex' in ui.item.sortable)) {
+              if(!ui.item.sortable.received && ('dropindex' in ui.item.sortable) && !ui.item.sortable.isCanceled()) {
                 scope.$apply(function () {
                   ngModel.$modelValue.splice(
                     ui.item.sortable.dropindex, 0,

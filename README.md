@@ -61,7 +61,7 @@ Inside the `update` callback, you can check the item that is dragged and cancel 
 $scope.sortableOptions = {
   update: function(e, ui) {
     if (ui.item.scope().item == "can't be moved") {
-      ui.item.parent().sortable('cancel');
+      ui.item.sortable.cancel();
     }
   }
 };
