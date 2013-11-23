@@ -108,7 +108,7 @@ angular.module('ui.sortable', [])
               // then we add the new item to this list otherwise wait until the
               // stop event where we will know if it was a sort or item was
               // moved here from another list
-              if(ui.item.sortable.received) {
+              if(ui.item.sortable.received && !ui.item.sortable.isCanceled()) {
                 scope.$apply(function () {
                   ngModel.$modelValue.splice(ui.item.sortable.dropindex, 0,
                                              ui.item.sortable.moved);
@@ -138,10 +138,12 @@ angular.module('ui.sortable', [])
             callbacks.remove = function(e, ui) {
               // Remove the item from this list's model and copy data into item,
               // so the next list can retrive it
-              scope.$apply(function () {
-                ui.item.sortable.moved = ngModel.$modelValue.splice(
-                  ui.item.sortable.index, 1)[0];
-              });
+              if (!ui.item.sortable.isCanceled()) {
+                scope.$apply(function () {
+                  ui.item.sortable.moved = ngModel.$modelValue.splice(
+                    ui.item.sortable.index, 1)[0];
+                });
+              }
             };
 
             scope.$watch(attrs.uiSortable, function(newVal, oldVal) {
