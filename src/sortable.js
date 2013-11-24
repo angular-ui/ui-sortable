@@ -79,7 +79,7 @@ angular.module('ui.sortable', [])
               if (placeholder && placeholder.element) {
                 savedNodes = savedNodes.not(element.find(
                   "." + placeholder.element()
-                    .attr('class').split(/\s+/).join('.')));
+                    .attr('class').split(/\s+/).join('.') + ':not(.ng-scope)'));
               }
             };
 
