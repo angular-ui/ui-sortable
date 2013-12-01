@@ -13,3 +13,12 @@ files = [
 singleRun = true;
 autoWatch = false;
 browsers = [ 'Chrome' ];
+
+if (singleRun) {
+	reporters = [ 'coverage' ];
+	preprocessors = { '**/src/*.js': 'coverage' };
+	coverageReporter = {
+		type : 'html',
+		dir : 'coverage/'
+	};
+}
