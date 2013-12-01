@@ -65,7 +65,17 @@ module.exports = function(grunt) {
     karma: {
       unit: testConfig('test/karma.conf.js'),
       server: {configFile: 'test/karma.conf.js'},
-      continuous: {configFile: 'test/karma.conf.js',  background: true }
+      continuous: {configFile: 'test/karma.conf.js',  background: true },
+      coverage: {
+        configFile: 'test/karma.conf.js',
+        reporters: ['progress', 'coverage'],
+        preprocessors: { 'src/*.js': ['coverage'] },
+        coverageReporter: {
+          type : 'html',
+          dir : 'coverage/'
+        },
+        singleRun: true
+      }
     },
 
     jshint: {
