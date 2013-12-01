@@ -11,4 +11,5 @@ files = [
   'test/*.spec.js'
 ];
 singleRun = true;
+autoWatch = false;
 browsers = [ 'Chrome' ];
