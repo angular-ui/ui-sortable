@@ -77,9 +77,12 @@ angular.module('ui.sortable', [])
               // placeholder class was given or placeholder.element will be
               // undefined if a class was given (placeholder will be a string)
               if (placeholder && placeholder.element) {
-                savedNodes = savedNodes.not(element.find(
-                  "." + placeholder.element()
-                    .attr('class').split(/\s+/).join('.')));
+                // exact match with the placeholder's class attribute to handle
+                // the case that multiple connected sortables exist and
+                // the placehoilder option equals the class of sortable items
+                var excludes = element.find('[class="' + placeholder.element().attr('class') + '"]');
+                  
+                savedNodes = savedNodes.not(excludes);
               }
             };
 
