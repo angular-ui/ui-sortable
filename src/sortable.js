@@ -77,9 +77,12 @@ angular.module('ui.sortable', [])
               // placeholder class was given or placeholder.element will be
               // undefined if a class was given (placeholder will be a string)
               if (placeholder && placeholder.element) {
-                savedNodes = savedNodes.not(element.find(
-                  "." + placeholder.element()
-                    .attr('class').split(/\s+/).join('.')));
+                // exact match with the placeholder's class attribute to handle
+                // the case that multiple connected sortables exist and
+                // the placehoilder option equals the class of sortable items
+                var excludes = element.find('[class="' + placeholder.element().attr('class') + '"]');
+                  
+                savedNodes = savedNodes.not(excludes);
               }
             };
 
@@ -120,7 +123,10 @@ angular.module('ui.sortable', [])
               // If the received flag hasn't be set on the item, this is a
               // normal sort, if dropindex is set, the item was moved, so move
               // the items in the list.
-              if(!ui.item.sortable.received && ('dropindex' in ui.item.sortable) && !ui.item.sortable.isCanceled()) {
+              if(!ui.item.sortable.received &&
+                 ('dropindex' in ui.item.sortable) &&
+                 !ui.item.sortable.isCanceled()) {
+
                 scope.$apply(function () {
                   ngModel.$modelValue.splice(
                     ui.item.sortable.dropindex, 0,
