@@ -100,7 +100,7 @@ angular.module('ui.sortable', [])
 
                       element.sortable('option', key, value);
                   });
-              }, true);
+              }, true);  // scope.$watch
 
               angular.forEach(callbacks, function(value, key ){
 
@@ -112,11 +112,23 @@ angular.module('ui.sortable', [])
 
             } else {
               log.info('ui.sortable: ngModel not provided!', element);
-            }
+            }  // if(ngModel)
 
             // Create sortable
             element.sortable(opts);
-          }
-        };
-      }
+
+            if(attrs.uiSortableWhen !== undefined) {
+              scope.$watch(function() {
+                  return scope.$eval(attrs.uiSortableWhen);
+              }, function(v) {
+                if(v) {
+                  element.sortable('enable');
+                } else {
+                  element.sortable('disable');
+                }
+              });  // scope.$watch
+            }  // if(attrs.uiSortableWhen)
+          }  // link
+        };  // return
+      }  // function
 ]);
