@@ -2,6 +2,7 @@ module.exports = function (grunt) {
 
   grunt.loadNpmTasks('grunt-testacular');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-conventional-changelog');
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'testacular']);
@@ -32,6 +33,11 @@ module.exports = function (grunt) {
         boss:true,
         eqnull:true,
         globals:{}
+      }
+    },
+    changelog: {
+      options: {
+        dest: 'CHANGELOG.md'
       }
     }
   });
