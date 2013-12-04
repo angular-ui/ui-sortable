@@ -1,7 +1,6 @@
 module.exports = function (grunt) {
 
-  grunt.loadNpmTasks('grunt-testacular');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
+  reqiore('load-grunt-tasks')(grunt);
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'testacular']);
