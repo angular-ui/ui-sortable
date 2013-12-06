@@ -76,7 +76,7 @@ angular.module('ui.sortable', [])
               // been created, either placeholder will be false if no
               // placeholder class was given or placeholder.element will be
               // undefined if a class was given (placeholder will be a string)
-              if (placeholder && placeholder.element) {
+              if (placeholder && placeholder.element && typeof placeholder.element === 'function') {
                 // exact match with the placeholder's class attribute to handle
                 // the case that multiple connected sortables exist and
                 // the placehoilder option equals the class of sortable items
