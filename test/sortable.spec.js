@@ -7,7 +7,6 @@ describe('uiSortable', function() {
     this.addMatchers({
       toEqualListContent: function (list) {
         if (list && list.length) {
-          console.log(list.children().map(function(){ return this.innerHTML; }).toArray());
           return list.children().map(function(){ return this.innerHTML; }).toArray();
         }
         return [];
