@@ -77,10 +77,17 @@ angular.module('ui.sortable', [])
               // placeholder class was given or placeholder.element will be
               // undefined if a class was given (placeholder will be a string)
               if (placeholder && placeholder.element && typeof placeholder.element === 'function') {
+                var phElement = placeholder.element();
+                // workaround for jquery ui 1.9.x,
+                // not returning jquery collection
+                if (!phElement.jquery) {
+                  phElement = $(phElement);
+                }
+
                 // exact match with the placeholder's class attribute to handle
                 // the case that multiple connected sortables exist and
                 // the placehoilder option equals the class of sortable items
-                var excludes = element.find('[class="' + placeholder.element().attr('class') + '"]');
+                var excludes = element.find('[class="' + phElement.attr('class') + '"]');
                   
                 savedNodes = savedNodes.not(excludes);
               }
