@@ -189,6 +189,47 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should continue to work after a drag is reverted', function() {
+      inject(function($compile, $rootScope) {
+        var element;
+        element = $compile('<ul ui-sortable ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            placeholder: "sortable-item"
+          };
+          $rootScope.items = ["One", "Two", "Three"];
+        });
+
+        host.append(element);
+
+        var li = element.find(':eq(0)');
+        var dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('dragAndRevert', { dy: dy });
+        expect($rootScope.items).toEqual(["One", "Two", "Three"]);
+        expect($rootScope.items).toEqualListContent(element);
+
+        li = element.find(':eq(0)');
+        dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(["Two", "One", "Three"]);
+        expect($rootScope.items).toEqualListContent(element);
+
+        li = element.find(':eq(1)');
+        dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(["Two", "Three", "One"]);
+        expect($rootScope.items).toEqualListContent(element);
+
+        li = element.find(':eq(1)');
+        dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(["Two", "One", "Three"]);
+        expect($rootScope.items).toEqualListContent(element);
+
+        $(element).remove();
+      });
+    });
+
   });
 
   describe('Multiple sortables related', function() {

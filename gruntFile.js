@@ -26,7 +26,7 @@ module.exports = function(grunt) {
       }
     },
     jshint: {
-      files: ['src/**/*.js', 'test/**/*.js', 'demo/**/*.js'],
+      files: ['src/**/*.js', 'test/**/*.js', 'demo/**/*.js', '!test/libs/*.js'],
       options: {
         curly: true,
         eqeqeq: true,
