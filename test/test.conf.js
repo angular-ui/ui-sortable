@@ -17,10 +17,10 @@ browsers = [ 'Chrome' ];
 reporters = [ 'dots' ];
 
 if (singleRun) {
-	reporters.push('coverage');
-	preprocessors = { '**/src/*.js': 'coverage' };
-	coverageReporter = {
-		type : 'html',
-		dir : 'coverage/'
-	};
+  reporters.push('coverage');
+  preprocessors = { '**/src/*.js': 'coverage' };
+  coverageReporter = {
+    type : 'html',
+    dir : 'coverage/'
+  };
 }
