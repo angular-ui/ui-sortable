@@ -79,4 +79,4 @@ The following pen's are provided as a good starting point to demonstrate issues,
 Feel free to edit any of them for your needs (don't forget to also update the libraries used to your version).
 
 - [Simple Demo](http://codepen.io/thgreasi/pen/BlFLp)
-- [Connected Lists](hhttp://codepen.io/thgreasi/pen/apwsb)
+- [Connected Lists](http://codepen.io/thgreasi/pen/apwsb)
