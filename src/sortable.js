@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  jQuery UI Sortable plugin wrapper
 
@@ -12,7 +14,7 @@ angular.module('ui.sortable', [])
           link: function(scope, element, attrs, ngModel) {
 
               function combineCallbacks(first,second){
-                  if( second && (typeof second === "function") ){
+                  if( second && (typeof second === 'function') ){
                       return function(e,ui){
                           first(e,ui);
                           second(e,ui);
@@ -30,7 +32,7 @@ angular.module('ui.sortable', [])
                 stop:null,
                 update:null
             };
-            
+
             var apply = function(e, ui) {
               if (ui.item.sortable.resort || ui.item.sortable.relocate) {
                 scope.$apply();
@@ -42,7 +44,7 @@ angular.module('ui.sortable', [])
             if (ngModel) {
 
               ngModel.$render = function() {
-                element.sortable( "refresh" );
+                element.sortable( 'refresh' );
               };
 
               callbacks.start = function(e, ui) {
@@ -85,13 +87,13 @@ angular.module('ui.sortable', [])
                 }
               };
 
-              scope.$watch(attrs.uiSortable, function(newVal, oldVal){
+              scope.$watch(attrs.uiSortable, function(newVal){
                   angular.forEach(newVal, function(value, key){
 
                       if( callbacks[key] ){
                           // wrap the callback
                           value = combineCallbacks( callbacks[key], value );
-                          
+
                           if ( key === 'stop' ){
                               // call apply after stop
                               value = combineCallbacks( value, apply );
@@ -106,7 +108,7 @@ angular.module('ui.sortable', [])
 
                     opts[key] = combineCallbacks(value, opts[key]);
               });
-              
+
               // call apply after stop
               opts.stop = combineCallbacks( opts.stop, apply );
 
