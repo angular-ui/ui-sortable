@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8"/>
+  <title>Angular UI ~ UI.Sortable Doc</title>
+
+  <!-- Le css -->
+  <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css"/>
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
+  <link rel="stylesheet" type="text/css" href="assets/css/prettify.css"/>
+
+      <link rel="stylesheet" type="text/css" href="vendor/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="demo/demo.css"/>
+
+
+</head>
+
+<body>
+
+<!-- Le navbar
+================================================== -->
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <div class="dropdown pull-left">
+        <a class="brand dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+          UI.Sortable
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+          <li><a href="https://github.com/angular-ui/"><strong>Related Projects:</strong></a></li>
+          <li class="divider"></li>
+          <li><a href="http://angular-ui.github.io/">AngularUI</a></li>
+          <li><a href="http://angular-ui.github.io/bootstrap/">UI Bootstrap</a></li>
+          <li><a href="http://angular-ui.github.io/ng-grid/">Grid</a></li>
+          <li><a href="https://github.com/angular-ui/AngularJs.tmbundle">AngularJS.tmbundle</a></li>
+          <li><a href="http://angular-ui.github.io/ui-router/sample/">Router</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="margin: 20px;"></div>
+
+<!-- Le header
+================================================== -->
+<header class="hero-unit" id="overview">
+  <div class="container">
+
+    <h1>UI.Sortable</h1>
+
+    <p>This directive allows you to jQueryUI Sortable.</p>
+
+    <p class="btn-group">
+      <a class="btn" href="https://github.com/angular-ui/ui-sortable"><i
+        class="icon-github"></i> Code on Github</a>
+      <a class="btn btn-primary" href="https://github.com/angular-ui/ui-sortable/tree/gh-pages/build">
+        <i class="icon-download-alt icon-white"></i> Download
+        <small>(0.0.1)</small>
+      </a>
+    </p>
+  </div>
+  <div class="bs-docs-social">
+    <div class="container">
+      <ul class="bs-docs-social-buttons">
+        <li>
+          <iframe
+            src="http://ghbtns.com/github-btn.html?user=angular-ui&amp;repo=ui-sortable&amp;type=watch&amp;count=true"
+            allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+        </li>
+        <li>
+          <iframe
+            src="http://ghbtns.com/github-btn.html?user=angular-ui&amp;repo=ui-sortable&amp;type=fork&amp;count=true"
+            allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe>
+        </li>
+        <li>
+          <!-- Place this tag where you want the +1 button to render. -->
+          <div class="g-plusone" data-size="medium"></div>
+
+          <!-- Place this tag after the last +1 button tag. -->
+          <script type="text/javascript">
+            (function () {
+              var po = document.createElement('script');
+              po.type = 'text/javascript';
+              po.async = true;
+              po.src = 'https://apis.google.com/js/plusone.js';
+              var s = document.getElementsByTagName('script')[0];
+              s.parentNode.insertBefore(po, s);
+            })();
+          </script>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<!-- Le main
+================================================== -->
+<div class="container">
+
+  <section ng-app="sortableApp" ng-controller="sortableController">
+  <div class="row">
+    <div class="span6">
+      <ul ui-sortable="sortableOptions" ng-model="list" class="list">
+        <li ng-repeat="item in list" class="item">{{item.text}}</li>
+      </ul>
+    </div>
+    <div class="span6">
+      <ul class="list logList">
+        <li ng-repeat="entry in sortingLog" class="logItem">{{entry.Text}}</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- Le javascript
+================================================== -->
+
+<script src="assets/vendor/jquery.min.js"></script>
+<script src="assets/vendor/bootstrap.min.js"></script>
+
+<script src="assets/vendor/prettify.js"></script>
+
+<script src="assets/vendor/angular.min.js"></script>
+<script src="core/prettifyDirective.js"></script>
+<script src="core/plunker.js"></script>
+
+<script src="vendor/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
+<script src="dist/sortable.js" type="text/javascript" charset="utf-8"></script>
+
+
+<script>
+  'use strict';
+
+var myapp = angular.module('sortableApp', ['ui.sortable']);
+
+myapp.controller('sortableController', function ($scope) {
+  var tmpList = [];
+
+  for (var i = 1; i <= 6; i++){
+    tmpList.push({
+      text: 'Item ' + i,
+      value: i
+    });
+  }
+
+  $scope.list = tmpList;
+
+
+  $scope.sortingLog = [];
+
+  $scope.sortableOptions = {
+    // called after a node is dropped
+    stop: function(e, ui) {
+      var logEntry = {
+        ID: $scope.sortingLog.length + 1,
+        Text: 'Moved element: ' + ui.item.scope().item.text
+      };
+      $scope.sortingLog.push(logEntry);
+    }
+  };
+});
+</script>
+
+</body>
+
+</html>
