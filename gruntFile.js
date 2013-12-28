@@ -24,19 +24,32 @@ module.exports = function(grunt) {
       }
     },
     jshint: {
-      files: ['src/**/*.js', 'test/**/*.js', 'demo/**/*.js', '!test/libs/*.js'],
-      options: {
-        curly: true,
-        eqeqeq: true,
-        immed: true,
-        //indent: 2,
-        latedef: true,
-        newcap: true,
-        noarg: true,
-        sub: true,
-        boss: true,
-        eqnull: true,
-        globals: {}
+      src: {
+        files:{ src : ['src/**/*.js', 'demo/**/*.js'] },
+        options: { jshintrc: '.jshintrc' }
+      },
+      test: {
+        files:{ src : [ 'test/*.spec.js', 'gruntFile.js'] },
+        options: grunt.util._.extend({}, grunt.file.readJSON('.jshintrc'), {
+          node: true,
+          globals: {
+            angular: false,
+            inject: false,
+            jQuery: false,
+
+            jasmine: false,
+            afterEach: false,
+            beforeEach: false,
+            ddescribe: false,
+            describe: false,
+            expect: false,
+            iit: false,
+            it: false,
+            spyOn: false,
+            xdescribe: false,
+            xit: false
+          }
+        })
       }
     }
   });
