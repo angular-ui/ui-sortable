@@ -10,7 +10,9 @@
   "devDependencies": {
     "grunt": "~0.4.x",
     "grunt-contrib-jshint": "0.8.x",
+    "grunt-contrib-uglify": "0.2.x",
     "grunt-karma": "0.6.x",
+    "grunt-ngmin": "0.0.x",
     "karma": "0.10.x",
     "karma-chrome-launcher": "0.1.x",
     "karma-coffee-preprocessor": "0.1.x",
