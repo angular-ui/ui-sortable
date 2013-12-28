@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-karma');
@@ -35,7 +37,7 @@ module.exports = function(grunt) {
           globals: {
             angular: false,
             inject: false,
-            jQuery: false,
+            '$': false,
 
             jasmine: false,
             afterEach: false,
