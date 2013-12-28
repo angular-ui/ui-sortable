@@ -20,10 +20,6 @@
 
 /***  Extra ***/
 
-body {
-	font-family: Verdana, 'Trebuchet ms', Tahoma;
-}
-
 .logList {
 	margin-top: 20px;
 	width: 250px;
@@ -41,11 +37,6 @@ body {
 	background-color: #FFF;
 }
 
-.container {
-	width:300px;
-	margin: auto;
-}
-
-h2 {
-	text-align: center;
+ul[ui-sortable] {
+	float: right;
 }
