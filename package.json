@@ -5,9 +5,10 @@
   "author": "https://github.com/angular-ui/ui-sortable/graphs/contributors",
   "license": "MIT",
   "homepage": "http://angular-ui.github.com",
-  "main": "./src/sortable.js",
+  "main": "./sortable.js",
   "dependencies": {},
   "devDependencies": {
+    "angular-ui-publisher": "1.x",
     "grunt": "~0.4.x",
     "grunt-contrib-jshint": "0.8.x",
     "grunt-contrib-uglify": "0.2.x",
