@@ -10,7 +10,8 @@
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-testacular": "~0.3.0",
-    "grunt-contrib-jshint": "~0.2.0"
+    "grunt-contrib-jshint": "~0.2.0",
+    "load-grunt-tasks": "~0.2.0"
   },
   "scripts": {},
   "repository": {
