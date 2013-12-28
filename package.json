@@ -10,8 +10,10 @@
   "devDependencies": {
     "angular-ui-publisher": "1.x",
     "grunt": "~0.4.x",
+    "grunt-contrib-connect": "0.5.x",
     "grunt-contrib-jshint": "0.8.x",
     "grunt-contrib-uglify": "0.2.x",
+    "grunt-contrib-watch": "0.5.x",
     "grunt-karma": "0.6.x",
     "grunt-ngmin": "0.0.x",
     "karma": "0.10.x",

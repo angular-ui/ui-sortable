@@ -5,7 +5,8 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'karma']);
+  grunt.registerTask('default', ['jshint', 'karma:unit']);
+  grunt.registerTask('serve', ['karma:continuous', 'dist', 'build:gh-pages', 'connect:continuous', 'watch']);
   grunt.registerTask('dist', ['ngmin', 'uglify']);
 
 
@@ -51,11 +52,20 @@ module.exports = function(grunt) {
         ''].join('\n')
     },
 
+    connect: {
+      options: {
+        base : 'out/built/gh-pages',
+        open: true,
+        livereload: true
+      },
+      server: { options: { keepalive: true } },
+      continuous: { options: { keepalive: false } }
+    },
 
     karma: {
-      unit: {
-        options: testConfig('test/karma.conf.js')
-      }
+      unit: testConfig('test/karma.conf.js'),
+      server: {configFile: 'test/karma.conf.js'},
+      continuous: {configFile: 'test/karma.conf.js',  background: true }
     },
 
     jshint: {
@@ -107,6 +117,25 @@ module.exports = function(grunt) {
         dest: 'dist'
       }
     },
+
+    watch: {
+      src: {
+        files: ['src/*'],
+        tasks: ['jshint:src', 'karma:unit:run', 'dist', 'build:gh-pages']
+      },
+      test: {
+        files: ['test/*.js'],
+        tasks: ['jshint:test', 'karma:unit:run']
+      },
+      demo: {
+        files: ['demo/*', 'publish.js'],
+        tasks: ['jshint', 'build:gh-pages']
+      },
+      livereload: {
+        files: ['out/built/gh-pages/**/*'],
+        options: { livereload: true }
+      }
+    }
   });
 
 };
