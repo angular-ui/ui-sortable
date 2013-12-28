@@ -2,8 +2,7 @@
 
 module.exports = function(grunt) {
 
-  grunt.loadNpmTasks('grunt-karma');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
+  require('load-grunt-tasks')(grunt);
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'karma']);
