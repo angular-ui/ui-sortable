@@ -139,6 +139,12 @@ angular.module('ui.sortable', [])
                     ui.item.sortable.dropindex, 0,
                     ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0]);
                 });
+              } else {
+                // if the item was not moved, then restore the elements
+                // so that the ngRepeat's comment are correct.
+                if(!('dropindex' in ui.item.sortable) || ui.item.sortable.isCanceled()) {
+                  savedNodes.detach().appendTo(element);
+                }
               }
             };
 

@@ -10,6 +10,12 @@ describe('uiSortable', function() {
           return list.children().map(function(){ return this.innerHTML; }).toArray();
         }
         return [];
+      },
+      toEqualListInnerContent: function (list) {
+        if (list && list.length) {
+          return list.children().map(function(){ return $(this).find('.itemContent').html(); }).toArray();
+        }
+        return [];
       }
     });
   });
@@ -225,6 +231,116 @@ describe('uiSortable', function() {
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(["Two", "One", "Three"]);
         expect($rootScope.items).toEqualListContent(element);
+
+        $(element).remove();
+      });
+    });
+
+    it('should work when "handle" option is used', function() {
+      inject(function($compile, $rootScope) {
+        var element, logsElement;
+        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}"><span class="handle">H</span> <span class="itemContent">{{ item }}</span></li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            handle: '.handle'
+          };
+          $rootScope.items = ["One", "Two", "Three"];
+        });
+
+        host.append(element);
+
+        var li = element.find('li:eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.find('.handle').simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(["One", "Three", "Two"]);
+        expect($rootScope.items).toEqualListInnerContent(element);
+
+        li = element.find('li:eq(1)');
+        dy = -(1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.find('.handle').simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(["Three", "One", "Two"]);
+        expect($rootScope.items).toEqualListInnerContent(element);
+
+        $(element).remove();
+      });
+    });
+
+    it('should properly remove elements after a sorting', function() {
+      inject(function($compile, $rootScope) {
+        var element, logsElement;
+        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}"><span class="handle">H</span> <span class="itemContent">{{ item }}</span> <button type="button" class="removeButton" ng-click="remove(item, $index)">X</button></li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            handle: '.handle'
+          };
+          $rootScope.items = ["One", "Two", "Three"];
+
+          $rootScope.remove = function (item, itemIndex) {
+            $rootScope.items.splice(itemIndex, 1);
+          };
+        });
+
+        host.append(element);
+
+        var li = element.find('li:eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.find('.handle').simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(["One", "Three", "Two"]);
+        expect($rootScope.items).toEqualListInnerContent(element);
+
+        li = element.find('li:eq(1)');
+        li.find('.removeButton').click();
+        expect($rootScope.items).toEqual(["One", "Two"]);
+        expect($rootScope.items).toEqualListInnerContent(element);
+
+        li = element.find('li:eq(0)');
+        dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.find('.handle').simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(["Two", "One"]);
+        expect($rootScope.items).toEqualListInnerContent(element);
+
+        li = element.find('li:eq(0)');
+        li.find('.removeButton').click();
+        expect($rootScope.items).toEqual(["One"]);
+        expect($rootScope.items).toEqualListInnerContent(element);
+
+        $(element).remove();
+      });
+    });
+
+    it('should properly remove elements after a drag is reverted', function() {
+      inject(function($compile, $rootScope) {
+        var element, logsElement;
+        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}"><span class="handle">H</span> <span class="itemContent">{{ item }}</span> <button type="button" class="removeButton" ng-click="remove(item, $index)">X</button></li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            handle: '.handle'
+          };
+          $rootScope.items = ["One", "Two", "Three"];
+
+          $rootScope.remove = function (item, itemIndex) {
+            $rootScope.items.splice(itemIndex, 1);
+          };
+        });
+
+        host.append(element);
+
+        var li = element.find('li:eq(0)');
+        var dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.find('.handle').simulate('dragAndRevert', { dy: dy });
+        expect($rootScope.items).toEqual(["One", "Two", "Three"]);
+        expect($rootScope.items).toEqualListInnerContent(element);
+
+        li = element.find('li:eq(0)');
+        li.find('.removeButton').click();
+        expect($rootScope.items).toEqual(["Two", "Three"]);
+        expect($rootScope.items).toEqualListInnerContent(element);
+
+        li = element.find('li:eq(0)');
+        dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.find('.handle').simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(["Three", "Two"]);
+        expect($rootScope.items).toEqualListInnerContent(element);
 
         $(element).remove();
       });
