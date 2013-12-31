@@ -55,7 +55,7 @@ angular.module('plunker', [])
 
           listUpScript(vendor_js) +
 
-          '      <script src="http://angular-ui.github.io/' + repoName + '/build/' + repoName + '.js"></script>\n' +
+          '      <script src="https://rawgithub.com/angular-ui/' + repoName + '/bower/' + repoName + '.min.js"></script>\n' +
 
           '    <script src="app.js"></script>\n' +
           '  </body>\n' +

@@ -7,8 +7,8 @@
 
   <!-- Le css -->
   <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css"/>
-  <link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
   <link rel="stylesheet" type="text/css" href="assets/css/prettify.css"/>
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
 
       <link rel="stylesheet" type="text/css" href="vendor/jquery-ui.css"/>
     <link rel="stylesheet" type="text/css" href="demo/demo.css"/>
@@ -20,78 +20,81 @@
 
 <!-- Le navbar
 ================================================== -->
-<div class="navbar navbar-fixed-top">
+<div class="navbar navbar-default navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
-      <div class="dropdown pull-left">
-        <a class="brand dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-          UI.Sortable
-          <b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-          <li><a href="https://github.com/angular-ui/"><strong>Related Projects:</strong></a></li>
-          <li class="divider"></li>
-          <li><a href="http://angular-ui.github.io/">AngularUI</a></li>
-          <li><a href="http://angular-ui.github.io/bootstrap/">UI Bootstrap</a></li>
-          <li><a href="http://angular-ui.github.io/ng-grid/">Grid</a></li>
-          <li><a href="https://github.com/angular-ui/AngularJs.tmbundle">AngularJS.tmbundle</a></li>
-          <li><a href="http://angular-ui.github.io/ui-router/sample/">Router</a></li>
-        </ul>
+      <div class="navbar-header">
       </div>
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="" class="navbar-brand">UI.Sortable</a>
+        </li>
+        <li class="pull-right">
+          <a href="http://angular-ui.github.io">by AngularUI</a>
+        </li>
+      </ul>
     </div>
   </div>
 </div>
-<div style="margin: 20px;"></div>
 
 <!-- Le header
 ================================================== -->
-<header class="hero-unit" id="overview">
+<header class="bs-header">
   <div class="container">
 
     <h1>UI.Sortable</h1>
 
     <p>This directive allows you to jQueryUI Sortable.</p>
 
-    <p class="btn-group">
-      <a class="btn" href="https://github.com/angular-ui/ui-sortable"><i
-        class="icon-github"></i> Code on Github</a>
-      <a class="btn btn-primary" href="https://github.com/angular-ui/ui-sortable/tree/gh-pages/build">
-        <i class="icon-download-alt icon-white"></i> Download
-        <small>(0.0.1)</small>
-      </a>
+    <p>
+      <a class="btn btn-outline-inverse btn-lg" href="https://github.com/angular-ui/ui-sortable">Code on Github</a>
+      <a class="btn btn-outline-inverse btn-lg" href="https://github.com/angular-ui/ui-sortable/releases/tag/v0.0.1">
+        <i class="glyphicon glyphicon-download-alt"></i> Download <small>(0.0.1)</small>
+     </a>
     </p>
   </div>
-  <div class="bs-docs-social">
-    <div class="container">
-      <ul class="bs-docs-social-buttons">
-        <li>
-          <iframe
+  <div class="bs-social container">
+      <ul class="bs-social-buttons list-inline list-unstyled">
+          <li>
+              <iframe
             src="http://ghbtns.com/github-btn.html?user=angular-ui&amp;repo=ui-sortable&amp;type=watch&amp;count=true"
             allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
-        </li>
-        <li>
-          <iframe
+          </li>
+          <li>
+             <iframe
             src="http://ghbtns.com/github-btn.html?user=angular-ui&amp;repo=ui-sortable&amp;type=fork&amp;count=true"
             allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe>
-        </li>
-        <li>
-          <!-- Place this tag where you want the +1 button to render. -->
-          <div class="g-plusone" data-size="medium"></div>
+          </li>
+          <li>
+              <a href="https://twitter.com/share" class="twitter-share-button"
+                 data-hashtags="angularjs">Tweet</a>
+              <script>!function (d, s, id) {
+                  var js, fjs = d.getElementsByTagName(s)[0];
+                  if (!d.getElementById(id)) {
+                      js = d.createElement(s);
+                      js.id = id;
+                      js.src = "//platform.twitter.com/widgets.js";
+                      fjs.parentNode.insertBefore(js, fjs);
+                  }
+              }(document, "script", "twitter-wjs");</script>
+          </li>
+          <li>
+              <!-- Place this tag where you want the +1 button to render. -->
+              <div class="g-plusone" data-size="medium"></div>
 
-          <!-- Place this tag after the last +1 button tag. -->
-          <script type="text/javascript">
-            (function () {
-              var po = document.createElement('script');
-              po.type = 'text/javascript';
-              po.async = true;
-              po.src = 'https://apis.google.com/js/plusone.js';
-              var s = document.getElementsByTagName('script')[0];
-              s.parentNode.insertBefore(po, s);
-            })();
-          </script>
-        </li>
+              <!-- Place this tag after the last +1 button tag. -->
+              <script type="text/javascript">
+                  (function () {
+                      var po = document.createElement('script');
+                      po.type = 'text/javascript';
+                      po.async = true;
+                      po.src = 'https://apis.google.com/js/plusone.js';
+                      var s = document.getElementsByTagName('script')[0];
+                      s.parentNode.insertBefore(po, s);
+                  })();
+              </script>
+          </li>
       </ul>
-    </div>
   </div>
 </header>
 
@@ -118,18 +121,15 @@
 
 <!-- Le javascript
 ================================================== -->
-
-<script src="assets/vendor/jquery.min.js"></script>
-<script src="assets/vendor/bootstrap.min.js"></script>
-
 <script src="assets/vendor/prettify.js"></script>
 
 <script src="assets/vendor/angular.min.js"></script>
+<script src="assets/vendor/ui-bootstrap-tpls.min.js"></script>
 <script src="core/prettifyDirective.js"></script>
 <script src="core/plunker.js"></script>
 
-<script src="vendor/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
-<script src="dist/sortable.js" type="text/javascript" charset="utf-8"></script>
+<script src="vendor/jquery-ui.js"></script>
+<script src="dist/sortable.js"></script>
 
 
 <script>
