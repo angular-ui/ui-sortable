@@ -6,6 +6,7 @@ angular.module('ui.sortable', []).value('uiSortableConfig', {}).directive('uiSor
     return {
       require: '?ngModel',
       link: function (scope, element, attrs, ngModel) {
+        element = jQuery(element);
         function combineCallbacks(first, second) {
           if (second && typeof second === 'function') {
             return function (e, ui) {
