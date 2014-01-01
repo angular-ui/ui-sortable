@@ -20,10 +20,9 @@ myapp.controller('sortableController', function ($scope) {
   $scope.sortableOptions = {
     // called after a node is dropped
     stop: function(e, ui) {
-      var localScope = angular.element(ui.item).scope();
       var logEntry = {
         ID: $scope.sortingLog.length + 1,
-        Text: 'Moved element: ' + localScope.item.text
+        Text: 'Moved element: ' + ui.item.scope().item.text
       };
       $scope.sortingLog.push(logEntry);
     }
