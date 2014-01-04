@@ -48,6 +48,43 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should enable sortable', function() {
+      inject(function($compile, $rootScope, $log) {
+        var element;
+        element = $compile('<ul ui-sortable ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.items = ["One", "Two", "Three"];
+        });
+
+        expect(element.sortable('option', 'disabled')).not.toBeTruthy();
+      });
+    });
+
+    it('should enable sortable with uiSortableWhen parameter', function() {
+      inject(function($compile, $rootScope, $log) {
+        var element;
+        element = $compile('<ul ui-sortable ng-model="items" ui-sortable-when="testParam"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.items = ["One", "Two", "Three"];
+          $rootScope.testParam = true;
+        });
+
+        expect(element.sortable('option', 'disabled')).not.toBeTruthy();
+
+        $rootScope.$apply(function() {
+          $rootScope.testParam = false;
+        });
+
+        expect(element.sortable('option', 'disabled')).toBeTruthy();
+
+        $rootScope.$apply(function() {
+          $rootScope.testParam = true;
+        });
+
+        expect(element.sortable('option', 'disabled')).not.toBeTruthy();
+      });
+    });
+
   });
 
 
