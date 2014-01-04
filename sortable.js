@@ -41,7 +41,9 @@ angular.module('ui.sortable', []).value('uiSortableConfig', {}).directive('uiSor
           };
           callbacks.receive = function (e, ui) {
             ui.item.sortable.relocate = true;
-            ngModel.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
+            if ('moved' in ui.item.sortable) {
+              ngModel.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
+            }
           };
           callbacks.remove = function (e, ui) {
             if (ngModel.$modelValue.length === 1) {
