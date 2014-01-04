@@ -60,7 +60,7 @@ angular.module('ui.sortable', [])
               callbacks.receive = function(e, ui) {
                 ui.item.sortable.relocate = true;
                   // if the item still exists (it has not been cancelled)
-                  if(ui.item.sortable.moved) {
+                  if('moved' in ui.item.sortable) {
                       // added item to array into correct position and set up flag
                       ngModel.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
                   }
