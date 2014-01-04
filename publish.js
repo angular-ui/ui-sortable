@@ -8,6 +8,7 @@ var path = require('path');
 module.exports = function() {
 
   var js_dependencies =[
+    'bower_components/jquery/jquery.js',
     'bower_components/jquery-ui/ui/jquery-ui.js'
   ];
 
@@ -25,7 +26,10 @@ module.exports = function() {
     inlineHTML : fs.readFileSync(__dirname + '/demo/demo.html'),
     inlineJS : fs.readFileSync(__dirname + '/demo/demo.js'),
     css: css_dependencies.map(putThemInVendorDir).concat(['demo/demo.css']),
-    js : js_dependencies.map(putThemInVendorDir).concat(['dist/sortable.js']),
+    js : function(defaultJsFiles){
+      // HACK TO LOAD JQUERY BEFORE ANGULAR
+      return ['vendor/jquery.js'].concat(defaultJsFiles, js_dependencies.slice(1).map(putThemInVendorDir).concat(['dist/sortable.js']));
+    },
     tocopy : css_dependencies.concat(js_dependencies)
   };
 };
