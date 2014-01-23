@@ -351,7 +351,7 @@ describe('uiSortable', function() {
         element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li></ul>')($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
-            helper: 'clone',
+            helper: 'clone'
           };
           $rootScope.items = ['One', 'Two', 'Three'];
         });
@@ -380,7 +380,7 @@ describe('uiSortable', function() {
         element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li></ul>')($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
-            helper: 'clone',
+            helper: 'clone'
           };
           $rootScope.items = ['One', 'Two', 'Three'];
         });
