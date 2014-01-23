@@ -151,7 +151,7 @@ angular.module('ui.sortable', [])
               } else {
                 // if the item was not moved, then restore the elements
                 // so that the ngRepeat's comment are correct.
-                if(!('dropindex' in ui.item.sortable) || ui.item.sortable.isCanceled()) {
+                if((!('dropindex' in ui.item.sortable) || ui.item.sortable.isCanceled()) && element.sortable('option','helper') !== 'clone') {
                   savedNodes.detach().appendTo(element);
                 }
               }
