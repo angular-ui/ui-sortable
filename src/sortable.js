@@ -114,7 +114,14 @@ angular.module('ui.sortable', [])
               // the start and stop of repeat sections and sortable doesn't
               // respect their order (even if we cancel, the order of the
               // comments are still messed up).
-              savedNodes.detach().appendTo(element);
+              savedNodes.detach();
+              if (element.sortable('option','helper') === 'clone') {
+                // first detach all the savedNodes and then restore all of them
+                // except .ui-sortable-helper element (which is placed last).
+                // That way it will be garbage collected.
+                savedNodes = savedNodes.not(savedNodes.last());
+              }
+              savedNodes.appendTo(element);
 
               // If received is true (an item was dropped in from another list)
               // then we add the new item to this list otherwise wait until the

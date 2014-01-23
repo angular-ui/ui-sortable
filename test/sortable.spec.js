@@ -345,6 +345,35 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should work when "helper: clone" option is used', function() {
+      inject(function($compile, $rootScope) {
+        var element;
+        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            helper: 'clone',
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element);
+
+        var li = element.find(':eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        li = element.find(':eq(1)');
+        dy = -(1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Three', 'One', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        $(element).remove();
+      });
+    });
+
   });
 
   describe('Multiple sortables related', function() {
