@@ -21,6 +21,7 @@ module.exports = function(config) {
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'src/sortable.js',
+      'test/sortable.test-helper.js',
       'test/*.spec.js'
     ],
 
