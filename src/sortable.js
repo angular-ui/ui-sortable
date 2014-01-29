@@ -101,6 +101,7 @@ angular.module('ui.sortable', [])
               // the value will be overwritten with the old value
               if(!ui.item.sortable.received) {
                 ui.item.sortable.dropindex = ui.item.index();
+                ui.item.sortable.droptarget = ui.item.parent();
 
                 // Cancel the sort (let ng-repeat do the sort for us)
                 // Don't cancel if this is the received list because it has
