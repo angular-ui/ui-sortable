@@ -129,6 +129,12 @@ module.exports = function(grunt) {
       }
     },
 
+    changelog: {
+      options: {
+        dest: 'CHANGELOG.md'
+      }
+    },
+
     watch: {
       src: {
         files: ['src/*'],
