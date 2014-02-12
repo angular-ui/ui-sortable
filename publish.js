@@ -30,6 +30,7 @@ module.exports = function() {
       // HACK TO LOAD JQUERY BEFORE ANGULAR
       return ['vendor/jquery.js'].concat(defaultJsFiles, js_dependencies.slice(1).map(putThemInVendorDir).concat(['dist/sortable.js']));
     },
+    bowerData: { main : './sortable.js' },
     tocopy : css_dependencies.concat(js_dependencies)
   };
 };
