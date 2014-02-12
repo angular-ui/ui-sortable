@@ -42,7 +42,7 @@ Apply the directive to your form elements:
 
 ### Options
 
-All the jQueryUI Sortable options can be passed through the directive.
+All the [jQueryUI Sortable options](http://api.jqueryui.com/sortable/) can be passed through the directive.
 
 
 ```js
