@@ -1,4 +1,9 @@
 'use strict';
+/*
+ jQuery UI Sortable plugin wrapper
+
+ @param [ui-sortable] {object} Options to pass to $.fn.sortable() merged onto ui.config
+*/
 angular.module('ui.sortable', []).value('uiSortableConfig', {}).directive('uiSortable', [
   'uiSortableConfig',
   '$log',
@@ -34,18 +39,23 @@ angular.module('ui.sortable', []).value('uiSortableConfig', {}).directive('uiSor
             element.sortable('refresh');
           };
           callbacks.start = function (e, ui) {
+            // Save position of dragged item
             ui.item.sortable = { index: ui.item.index() };
           };
           callbacks.update = function (e, ui) {
+            // For some reason the reference to ngModel in stop() is wrong
             ui.item.sortable.resort = ngModel;
           };
           callbacks.receive = function (e, ui) {
             ui.item.sortable.relocate = true;
+            // if the item still exists (it has not been cancelled)
             if ('moved' in ui.item.sortable) {
+              // added item to array into correct position and set up flag
               ngModel.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
             }
           };
           callbacks.remove = function (e, ui) {
+            // copy data into item
             if (ngModel.$modelValue.length === 1) {
               ui.item.sortable.moved = ngModel.$modelValue.splice(0, 1)[0];
             } else {
@@ -53,18 +63,23 @@ angular.module('ui.sortable', []).value('uiSortableConfig', {}).directive('uiSor
             }
           };
           callbacks.stop = function (e, ui) {
+            // digest all prepared changes
             if (ui.item.sortable.resort && !ui.item.sortable.relocate) {
+              // Fetch saved and current position of dropped element
               var end, start;
               start = ui.item.sortable.index;
               end = ui.item.index();
+              // Reorder array and apply change to scope
               ui.item.sortable.resort.$modelValue.splice(end, 0, ui.item.sortable.resort.$modelValue.splice(start, 1)[0]);
             }
           };
           scope.$watch(attrs.uiSortable, function (newVal) {
             angular.forEach(newVal, function (value, key) {
               if (callbacks[key]) {
+                // wrap the callback
                 value = combineCallbacks(callbacks[key], value);
                 if (key === 'stop') {
+                  // call apply after stop
                   value = combineCallbacks(value, apply);
                 }
               }
@@ -74,10 +89,12 @@ angular.module('ui.sortable', []).value('uiSortableConfig', {}).directive('uiSor
           angular.forEach(callbacks, function (value, key) {
             opts[key] = combineCallbacks(value, opts[key]);
           });
+          // call apply after stop
           opts.stop = combineCallbacks(opts.stop, apply);
         } else {
           log.info('ui.sortable: ngModel not provided!', element);
         }
+        // Create sortable
         element.sortable(opts);
       }
     };
