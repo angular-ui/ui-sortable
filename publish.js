@@ -8,7 +8,7 @@ var path = require('path');
 module.exports = function() {
 
   var js_dependencies =[
-    'bower_components/jquery/jquery.js',
+    'bower_components/jquery/dist/jquery.js',
     'bower_components/jquery-ui/ui/jquery-ui.js'
   ];
 
