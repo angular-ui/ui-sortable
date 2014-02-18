@@ -6,9 +6,6 @@ This directive allows you to sort array with drag & drop.
 
 - JQuery
 - JQueryUI
-- AngularJS 1.0.x
-
-**Note for AngularJS 1.2 users:** Use the separate branch `angular1.2`.
 
 ## Usage
 
@@ -38,7 +35,6 @@ Apply the directive to your form elements:
 * `ui-sortable` element should only contain one `ng-repeat` and not any other elements (above or below).  
   Otherwise the index matching of the generated DOM elements and the `ng-model`'s items will break.
 * `ui-sortable` lists containing many 'types' of items can be implemented by using [dynamic template loading with ng-include](http://stackoverflow.com/questions/14607879/angularjs-load-dynamic-template-html-within-directive/14621927#14621927), to determine how each model item should be rendered.
-
 
 ### Options
 
@@ -70,7 +66,7 @@ Inside the `update` callback, you can check the item that is dragged and cancel 
 $scope.sortableOptions = {
   update: function(e, ui) {
     if (ui.item.scope().item == "can't be moved") {
-      ui.item.parent().sortable('cancel');
+      ui.item.sortable.cancel();
     }
   }
 };
@@ -84,8 +80,8 @@ So `ui.item.scope` and the directive's `ng-model`, are equal to the scope before
 The following pen's are provided as a good starting point to demonstrate issues, proposals and use cases.
 Feel free to edit any of them for your needs (don't forget to also update the libraries used to your version).
 
-- [Simple Demo](http://codepen.io/thgreasi/pen/BlFLp)
-- [Connected Lists](http://codepen.io/thgreasi/pen/apwsb)
+- [Simple Demo](http://codepen.io/thgreasi/pen/jlkhr)
+- [Connected Lists](http://codepen.io/thgreasi/pen/uFile)
 
 
 ## Testing

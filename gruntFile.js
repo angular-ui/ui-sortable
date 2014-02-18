@@ -8,6 +8,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['jshint', 'karma:unit']);
   grunt.registerTask('serve', ['karma:continuous', 'dist', 'build:gh-pages', 'connect:continuous', 'watch']);
   grunt.registerTask('dist', ['ngmin', 'uglify']);
+  grunt.registerTask('coverage', ['jshint', 'karma:coverage']);
 
 
   // HACK TO ACCESS TO THE COMPONENT PUBLISHER
@@ -65,7 +66,17 @@ module.exports = function(grunt) {
     karma: {
       unit: testConfig('test/karma.conf.js'),
       server: {configFile: 'test/karma.conf.js'},
-      continuous: {configFile: 'test/karma.conf.js',  background: true }
+      continuous: {configFile: 'test/karma.conf.js',  background: true },
+      coverage: {
+        configFile: 'test/karma.conf.js',
+        reporters: ['progress', 'coverage'],
+        preprocessors: { 'src/*.js': ['coverage'] },
+        coverageReporter: {
+          type : 'html',
+          dir : 'coverage/'
+        },
+        singleRun: true
+      }
     },
 
     jshint: {
@@ -115,6 +126,12 @@ module.exports = function(grunt) {
         cwd: 'src',
         src: ['*.js'],
         dest: 'dist'
+      }
+    },
+
+    changelog: {
+      options: {
+        dest: 'CHANGELOG.md'
       }
     },
 
