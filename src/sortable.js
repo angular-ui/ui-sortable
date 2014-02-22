@@ -115,11 +115,9 @@ angular.module('ui.sortable', [])
               // the start and stop of repeat sections and sortable doesn't
               // respect their order (even if we cancel, the order of the
               // comments are still messed up).
-              savedNodes.detach();
               if (element.sortable('option','helper') === 'clone') {
-                // first detach all the savedNodes and then restore all of them
-                // except .ui-sortable-helper element (which is placed last).
-                // That way it will be garbage collected.
+                // restore all the savedNodes except .ui-sortable-helper element
+                // (which is placed last). That way it will be garbage collected.
                 savedNodes = savedNodes.not(savedNodes.last());
               }
               savedNodes.appendTo(element);
@@ -153,7 +151,7 @@ angular.module('ui.sortable', [])
                 // if the item was not moved, then restore the elements
                 // so that the ngRepeat's comment are correct.
                 if((!('dropindex' in ui.item.sortable) || ui.item.sortable.isCanceled()) && element.sortable('option','helper') !== 'clone') {
-                  savedNodes.detach().appendTo(element);
+                  savedNodes.appendTo(element);
                 }
               }
             };
