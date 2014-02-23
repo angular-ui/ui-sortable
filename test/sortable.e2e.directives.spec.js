@@ -62,7 +62,7 @@ describe('uiSortable', function() {
       });
     });
 
-    it('should not $destroy direcives after sorting.', function() {
+    it('should not $destroy directives after sorting.', function() {
       inject(function($compile, $rootScope) {
         var element;
         element = $compile(''.concat(
