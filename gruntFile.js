@@ -85,7 +85,7 @@ module.exports = function(grunt) {
         options: { jshintrc: '.jshintrc' }
       },
       test: {
-        files:{ src : [ 'test/*.spec.js', 'gruntFile.js'] },
+        files:{ src : [ 'test/*.js', 'gruntFile.js'] },
         options: grunt.util._.extend({}, grunt.file.readJSON('.jshintrc'), grunt.file.readJSON('test/.jshintrc'))
       }
     },
