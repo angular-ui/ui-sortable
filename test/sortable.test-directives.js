@@ -8,10 +8,10 @@ angular.module('ui.sortable.testDirectives', [])
         scope: true,
         require: '?ngModel',
         template: '<div>Directive: <span class="itemContent" ng-bind="text"></span> !!!</div>',
-        link: function(scope, element, attrs, ngModel) {
+        link: function(scope, element, attrs) {
           scope.$watch(attrs.ngModel, function(value) {
-              scope.text = value;
-            });
+            scope.text = value;
+          });
         }
       };
     }
@@ -23,10 +23,10 @@ angular.module('ui.sortable.testDirectives', [])
         scope: true,
         require: '?ngModel',
         template: '<div>$destroy(able) Directive: <span class="itemContent" ng-bind="text"></span> !!!</div>',
-        link: function(scope, element, attrs, ngModel) {
+        link: function(scope, element, attrs) {
           scope.$watch(attrs.ngModel, function(value) {
-              scope.text = value;
-            });
+            scope.text = value;
+          });
 
           element.bind('$destroy', function() {
             element.html('');
