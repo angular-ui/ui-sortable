@@ -85,27 +85,8 @@ module.exports = function(grunt) {
         options: { jshintrc: '.jshintrc' }
       },
       test: {
-        files:{ src : [ 'test/*.spec.js', 'gruntFile.js'] },
-        options: grunt.util._.extend({}, grunt.file.readJSON('.jshintrc'), {
-          node: true,
-          globals: {
-            angular: false,
-            inject: false,
-            '$': false,
-
-            jasmine: false,
-            afterEach: false,
-            beforeEach: false,
-            ddescribe: false,
-            describe: false,
-            expect: false,
-            iit: false,
-            it: false,
-            spyOn: false,
-            xdescribe: false,
-            xit: false
-          }
-        })
+        files:{ src : [ 'test/*.js', 'gruntFile.js'] },
+        options: grunt.util._.extend({}, grunt.file.readJSON('.jshintrc'), grunt.file.readJSON('test/.jshintrc'))
       }
     },
 
