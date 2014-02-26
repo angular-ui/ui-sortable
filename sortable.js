@@ -1,4 +1,3 @@
-'use strict';
 /*
  jQuery UI Sortable plugin wrapper
 
@@ -9,6 +8,7 @@ angular.module('ui.sortable', []).value('uiSortableConfig', {}).directive('uiSor
   '$timeout',
   '$log',
   function (uiSortableConfig, $timeout, $log) {
+    'use strict';
     return {
       require: '?ngModel',
       link: function (scope, element, attrs, ngModel) {
