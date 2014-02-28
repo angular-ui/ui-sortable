@@ -1,8 +1,9 @@
-'use strict';
 
 var myapp = angular.module('sortableApp', ['ui.sortable']);
 
 myapp.controller('sortableController', function ($scope) {
+  'use strict';
+
   var tmpList = [];
 
   for (var i = 1; i <= 6; i++){
