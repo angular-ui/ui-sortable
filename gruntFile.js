@@ -1,3 +1,5 @@
+/* jshint node:true */
+
 'use strict';
 
 module.exports = function(grunt) {
@@ -102,7 +104,8 @@ module.exports = function(grunt) {
 
     surround: {
       options: {
-        prepend: '(function(window, angular, undefined) { \'use strict\';',
+        prepend: ['(function(window, angular, undefined) {',
+                  '\'use strict\';'].join('\n'),
         append: '})(window, window.angular);'
       },
       main: {
