@@ -83,7 +83,9 @@ Feel free to edit any of them for your needs (don't forget to also update the li
 
 - [Simple Demo](http://codepen.io/thgreasi/pen/jlkhr)
 - [Connected Lists](http://codepen.io/thgreasi/pen/uFile)
-
+- [Filtering](http://codepen.io/thgreasi/pen/mzGbq) [details #113](https://github.com/angular-ui/ui-sortable/issues/113)
+- [Ordering](http://plnkr.co/edit/XPUzJjdvwE0QWQ6py6mQ?p=preview) [details #70](https://github.com/angular-ui/ui-sortable/issues/70)
+- [Cloning](http://codepen.io/thgreasi/pen/qmvhG) [details #139](https://github.com/angular-ui/ui-sortable/issues/139)
 
 ## Testing
 
