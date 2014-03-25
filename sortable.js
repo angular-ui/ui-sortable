@@ -44,7 +44,9 @@ angular.module('ui.sortable', [])
             scope.$watch(attrs.ngModel+'.length', function() {
               // Timeout to let ng-repeat modify the DOM
               $timeout(function() {
-                element.sortable('refresh');
+                if (!!element.data('ui-sortable')) {
+                  element.sortable('refresh');
+                }
               });
             });
 
