@@ -40,7 +40,7 @@ describe('uiSortable', function() {
 
         element.remove(element.firstChild);
         expect(function() {
-          $timeout.flush()
+          $timeout.flush();
         }).not.toThrow();
 
       });
