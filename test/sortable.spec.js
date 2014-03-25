@@ -29,6 +29,23 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should not refresh sortable if destroyed', function() {
+      inject(function($compile, $rootScope, $timeout) {
+        var element;
+        var childScope = $rootScope.$new();
+        element = $compile('<div><ul ui-sortable ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul></div>')(childScope);
+        $rootScope.$apply(function() {
+          childScope.items = ['One', 'Two', 'Three'];
+        });
+
+        element.remove(element.firstChild);
+        expect(function() {
+          $timeout.flush();
+        }).not.toThrow();
+
+      });
+    });
+
   });
 
 });
