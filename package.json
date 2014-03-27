@@ -5,7 +5,7 @@
   "author": "https://github.com/angular-ui/ui-sortable/graphs/contributors",
   "license": "MIT",
   "homepage": "http://angular-ui.github.com",
-  "main": "./sortable.js",
+  "main": "./src/sortable.js",
   "dependencies": {},
   "devDependencies": {
     "angular-ui-publisher": "1.2.x",
