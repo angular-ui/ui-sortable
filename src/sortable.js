@@ -184,7 +184,8 @@ angular.module('ui.sortable', [])
                   // wrap the callback
                   value = combineCallbacks(callbacks[key], value);
                 }
-                element.sortable('option', key, value);
+                if(element.is(':visible'))
+                  element.sortable('option', key, value);
               });
             }, true);
 
