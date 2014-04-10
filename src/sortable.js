@@ -42,6 +42,8 @@ angular.module('ui.sortable', [])
             scope.$watch(attrs.ngModel+'.length', function() {
               // Timeout to let ng-repeat modify the DOM
               $timeout(function() {
+                // ensure that the jquery-ui-sortable widget instance
+                // is still bound to the directive's element
                 if (!!element.data('ui-sortable')) {
                   element.sortable('refresh');
                 }
@@ -174,18 +176,23 @@ angular.module('ui.sortable', [])
             };
 
             scope.$watch(attrs.uiSortable, function(newVal /*, oldVal*/) {
-              angular.forEach(newVal, function(value, key) {
-                if(callbacks[key]) {
-                  if( key === 'stop' ){
-                    // call apply after stop
-                    value = combineCallbacks(
-                      value, function() { scope.$apply(); });
+              // ensure that the jquery-ui-sortable widget instance
+              // is still bound to the directive's element
+              if (!!element.data('ui-sortable')) {
+                angular.forEach(newVal, function(value, key) {
+                  if(callbacks[key]) {
+                    if( key === 'stop' ){
+                      // call apply after stop
+                      value = combineCallbacks(
+                        value, function() { scope.$apply(); });
+                    }
+                    // wrap the callback
+                    value = combineCallbacks(callbacks[key], value);
                   }
-                  // wrap the callback
-                  value = combineCallbacks(callbacks[key], value);
-                }
-                element.sortable('option', key, value);
-              });
+                  
+                  element.sortable('option', key, value);
+                });
+              }
             }, true);
 
             angular.forEach(callbacks, function(value, key) {

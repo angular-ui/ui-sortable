@@ -46,6 +46,27 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should not try to apply options to a destroyed sortable', function() {
+      inject(function($compile, $rootScope, $timeout) {
+        var element;
+        var childScope = $rootScope.$new();
+        element = $compile('<div><ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul></div>')(childScope);
+        $rootScope.$apply(function() {
+          childScope.items = ['One', 'Two', 'Three'];
+          childScope.opts = {
+            update: function() {}
+          };
+
+          element.remove(element.firstChild);
+        });
+
+        expect(function() {
+          $timeout.flush();
+        }).not.toThrow();
+
+      });
+    });
+
   });
 
 });
