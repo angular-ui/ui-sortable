@@ -17,7 +17,9 @@ module.exports = function(grunt) {
   function fakeTargetTask(prefix){
     return function(){
 
-      if (this.args.length !== 1) return grunt.log.fail('Just give the name of the ' + prefix + ' you want like :\ngrunt ' + prefix + ':bower');
+      if (this.args.length !== 1) {
+        return grunt.log.fail('Just give the name of the ' + prefix + ' you want like :\ngrunt ' + prefix + ':bower');
+      }
 
       var done = this.async();
       var spawn = require('child_process').spawn;

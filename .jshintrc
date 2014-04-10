@@ -1,6 +1,7 @@
 {
   "boss": true,
   "browser": true,
+  "curly": true,
   "eqnull": true,
   "expr": true,
   "immed": true,
