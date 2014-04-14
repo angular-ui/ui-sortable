@@ -6,6 +6,11 @@ This directive allows you to sort an array with drag & drop.
 
 - JQuery
 - JQueryUI
+- AngularJS
+
+**Notes:**
+> JQuery must be included before AngularJS.  
+> JQueryUI dependecies include core, widget, mouse & sortable. Creating a [custom build](http://jqueryui.com/download/#!version=1.10&components=1110000010000000000000000000000000) will [greatly reduce](https://github.com/angular-ui/ui-sortable/issues/154#issuecomment-40279430) the required file size. 
 
 ## Usage
 
