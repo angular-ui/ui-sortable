@@ -6,6 +6,11 @@ This directive allows you to sort an array with drag & drop.
 
 - JQuery
 - JQueryUI
+- AngularJS
+
+**Notes:**
+> JQuery must be included before AngularJS.  
+> JQueryUI dependecies include core, widget, mouse & sortable. Creating a [custom build](http://jqueryui.com/download/#!version=1.10&components=1110000010000000000000000000000000) will [greatly reduce](https://github.com/angular-ui/ui-sortable/issues/154#issuecomment-40279430) the required file size. 
 
 ## Usage
 
@@ -73,16 +78,18 @@ $scope.sortableOptions = {
 };
 ```
 
-**Note:** `update` occurs before any model/scope changes but after the DOM position has been updated.
+**Notes:**
+* `update` is the appropriate place to cancel a sorting, since it occurs before any model/scope changes but after the DOM position has been updated.
 So `ui.item.scope` and the directive's `ng-model`, are equal to the scope before the drag start.
+* To [cancel a sorting between connected lists](https://github.com/angular-ui/ui-sortable/issues/107#issuecomment-33633638), `cancel` should be called inside the `update` callback of the originating list.
 
 ## Examples
 
 - [Simple Demo](http://codepen.io/thgreasi/pen/jlkhr)
-- [Connected Lists](http://codepen.io/thgreasi/pen/uFile)
-- [Filtering](http://codepen.io/thgreasi/pen/mzGbq) [details #113](https://github.com/angular-ui/ui-sortable/issues/113)
-- [Ordering](http://plnkr.co/edit/XPUzJjdvwE0QWQ6py6mQ?p=preview) [details #70](https://github.com/angular-ui/ui-sortable/issues/70)
-- [Cloning](http://codepen.io/thgreasi/pen/qmvhG) [details #139](https://github.com/angular-ui/ui-sortable/issues/139)
+- [Connected Lists](http://codepen.io/thgreasi/pen/uFile) & [Connected Lists Canceling](http://codepen.io/thgreasi/pen/IdvFc)
+- [Filtering](http://codepen.io/thgreasi/pen/mzGbq) ([details](https://github.com/angular-ui/ui-sortable/issues/113))
+- [Ordering](http://plnkr.co/edit/XPUzJjdvwE0QWQ6py6mQ?p=preview) ([details](https://github.com/angular-ui/ui-sortable/issues/70))
+- [Cloning](http://codepen.io/thgreasi/pen/qmvhG) ([details](https://github.com/angular-ui/ui-sortable/issues/139))
 
 ## Reporting Issues
 
