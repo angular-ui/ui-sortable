@@ -4,6 +4,13 @@ describe('uiSortable', function() {
 
   // Ensure the sortable angular module is loaded
   beforeEach(module('ui.sortable'));
+  beforeEach(module('ui.sortable.testHelper'));
+
+  var listContent;
+
+  beforeEach(inject(function (sortableTestHelper) {
+    listContent = sortableTestHelper.listContent;
+  }));
 
   describe('Simple use', function() {
 
@@ -26,6 +33,24 @@ describe('uiSortable', function() {
         expect($log.info.logs.length).toEqual(1);
         expect($log.info.logs[0].length).toEqual(2);
         expect($log.info.logs[0][0]).toEqual('ui.sortable: ngModel not provided!');
+      });
+    });
+
+    it('should refresh sortable properly after an apply', function() {
+      inject(function($compile, $rootScope, $timeout) {
+        var element;
+        var childScope = $rootScope.$new();
+        element = $compile('<ul ui-sortable ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>')(childScope);
+        $rootScope.$apply(function() {
+          childScope.items = ['One', 'Two', 'Three'];
+        });
+
+        expect(function() {
+          $timeout.flush();
+        }).not.toThrow();
+
+        expect(childScope.items).toEqual(['One', 'Two', 'Three']);
+        expect(childScope.items).toEqual(listContent(element));
       });
     });
 
