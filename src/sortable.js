@@ -84,9 +84,7 @@ angular.module('ui.sortable', [])
                 var phElement = placeholder.element();
                 // workaround for jquery ui 1.9.x,
                 // not returning jquery collection
-                if (!phElement.jquery) {
-                  phElement = angular.element(phElement);
-                }
+                phElement = angular.element(phElement);
 
                 // exact match with the placeholder's class attribute to handle
                 // the case that multiple connected sortables exist and
