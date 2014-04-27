@@ -37,6 +37,11 @@ angular.module('ui.sortable', [])
 
           angular.extend(opts, uiSortableConfig);
 
+          if (!angular.element.fn || !angular.element.fn.jquery) {
+            $log.error('ui.sortable: jQuery should be included before AngularJS!');
+            return;
+          }
+
           if (ngModel) {
 
             // When we add or remove elements, we need the sortable to 'refresh'
