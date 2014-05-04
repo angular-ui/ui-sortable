@@ -429,6 +429,130 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should work when "helper: function" option is used', function() {
+      inject(function($compile, $rootScope) {
+        var element;
+        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            helper: function (e, item) {
+              return item.clone().text('helper');
+            }
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element);
+
+        var li = element.find(':eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        li = element.find(':eq(1)');
+        dy = -(1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Three', 'One', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        $(element).remove();
+      });
+    });
+
+    it('should work when "helper: function" option is used and a drag is reverted', function() {
+      inject(function($compile, $rootScope) {
+        var element;
+        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            helper: function (e, item) {
+              return item.clone().text('helper');
+            }
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element);
+
+        var li = element.find(':eq(0)');
+        var dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('dragAndRevert', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        li = element.find(':eq(0)');
+        dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Two', 'One', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        li = element.find(':eq(1)');
+        dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        li = element.find(':eq(1)');
+        dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Two', 'One', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        $(element).remove();
+      });
+    });
+
+    it('should work when "helper: function" and "placeholder" options are used together.', function() {
+      inject(function($compile, $rootScope) {
+        var element;
+        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            helper: function (e, item) {
+              return item.clone().text('helper');
+            },
+            placeholder: 'sortable-item'
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element);
+
+        var li = element.find(':eq(0)');
+        var dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('dragAndRevert', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        li = element.find(':eq(0)');
+        dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Two', 'One', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        li = element.find(':eq(1)');
+        dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        li = element.find(':eq(1)');
+        dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('dragAndRevert', { dy: dy });
+        expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        li = element.find(':eq(1)');
+        dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Two', 'One', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        $(element).remove();
+      });
+    });
+
   });
 
 });
