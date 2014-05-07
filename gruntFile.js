@@ -38,7 +38,15 @@ module.exports = function(grunt) {
   // HACK TO MAKE TRAVIS WORK
   var testConfig = function(configFile, customOptions) {
     var options = { configFile: configFile, singleRun: true };
-    var travisOptions = process.env.TRAVIS && { browsers: ['Firefox', 'PhantomJS'], reporters: ['dots'] };
+    var travisOptions = process.env.TRAVIS && {
+      browsers: ['Firefox', 'PhantomJS'],
+      reporters: ['dots', 'coverage'],
+      preprocessors: { 'src/*.js': 'coverage' },
+      coverageReporter: {
+        type: 'lcov',
+        dir: 'coverage/'
+      },
+    };
     return grunt.util._.extend(options, customOptions, travisOptions);
   };
   //
@@ -65,6 +73,16 @@ module.exports = function(grunt) {
       },
       server: { options: { keepalive: true } },
       continuous: { options: { keepalive: false } }
+    },
+
+    coveralls: {
+      options: {
+        coverage_dir: 'coverage/'
+        // debug: true,
+        // dryRun: true,
+        // force: true,
+        // recursive: true
+      }
     },
 
     karma: {
