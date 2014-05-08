@@ -213,7 +213,9 @@ angular.module('ui.sortable', [])
           }
 
           // Create sortable
-          element.sortable(opts);
+          // PM: by loading jquery-ui.sortable via requirejs, the angular element stuff might
+          // not have $.fn.sortable at all. just use jQuery straight up.
+          $(element).sortable(opts);
         }
       };
     }
