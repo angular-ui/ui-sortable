@@ -5,7 +5,7 @@ This directive allows you to sort an array with drag & drop.
 ## Requirements
 
 - JQuery
-- JQueryUI
+- JQueryUI (1.9+)
 - AngularJS
 
 **Notes:**
