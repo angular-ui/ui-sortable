@@ -5,7 +5,7 @@ This directive allows you to sort an array with drag & drop.
 ## Requirements
 
 - JQuery
-- JQueryUI
+- JQueryUI (1.9+)
 - AngularJS
 
 **Notes:**
@@ -40,7 +40,7 @@ Apply the directive to your form elements:
 * `ui-sortable` element should only contain one `ng-repeat` and not any other elements (above or below).  
   Otherwise the index matching of the generated DOM elements and the `ng-model`'s items will break.  
   **In other words: The items of `ng-model` must match the indexes of the generated DOM elements.**
-* `ui-sortable` lists containing many 'types' of items can be implemented by using [dynamic template loading with ng-include](http://stackoverflow.com/questions/14607879/angularjs-load-dynamic-template-html-within-directive/14621927#14621927), to determine how each model item should be rendered.
+* `ui-sortable` lists containing many 'types' of items can be implemented by using dynamic template loading [with ng-include](http://stackoverflow.com/questions/14607879/angularjs-load-dynamic-template-html-within-directive/14621927#14621927) or a [loader directive](https://gist.github.com/thgreasi/7152499c0e91973c4820), to determine how each model item should be rendered.
 
 ### Options
 
@@ -63,6 +63,9 @@ myAppModule.controller('MyController', function($scope) {
   <li ng-repeat="item in items">{{ item }}</li>
 </ul>
 ```
+
+When using event callbacks ([start](http://api.jqueryui.com/sortable/#event-start)/[update](http://api.jqueryui.com/sortable/#event-update)/[stop](http://api.jqueryui.com/sortable/#event-stop)...), avoid manipulating DOM elements (especially the one with the ng-repeat attached).
+The suggested pattern is to use callbacks for emmiting events and altering the scope (inside the 'Angular world').
 
 #### Canceling
 
