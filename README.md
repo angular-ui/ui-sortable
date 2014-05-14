@@ -64,6 +64,9 @@ myAppModule.controller('MyController', function($scope) {
 </ul>
 ```
 
+When using event callbacks ([start](http://api.jqueryui.com/sortable/#event-start)/[update](http://api.jqueryui.com/sortable/#event-update)/[stop](http://api.jqueryui.com/sortable/#event-stop)...), avoid manipulating DOM elements (especially the one with the ng-repeat attached).
+The suggested pattern is to use callbacks for emmiting events and altering the scope (inside the 'Angular world').
+
 #### Canceling
 
 Inside the `update` callback, you can check the item that is dragged and cancel the sorting.
