@@ -41,7 +41,7 @@ module.exports = function(grunt) {
     var travisOptions = process.env.TRAVIS && {
       browsers: ['Firefox', 'PhantomJS'],
       reporters: ['dots', 'coverage'],
-      preprocessors: { 'src/*.js': 'coverage' },
+      preprocessors: { 'src/*.js': ['coverage'] },
       coverageReporter: {
         type: 'lcov',
         dir: 'coverage/'
