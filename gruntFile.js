@@ -78,7 +78,7 @@ module.exports = function(grunt) {
     coveralls: {
       options: {
         coverage_dir: 'coverage/'
-        // debug: true,
+        // debug: true
         // dryRun: true,
         // force: true,
         // recursive: true
@@ -94,7 +94,7 @@ module.exports = function(grunt) {
         reporters: ['progress', 'coverage'],
         preprocessors: { 'src/*.js': ['coverage'] },
         coverageReporter: {
-          type : 'html',
+          type : 'lcov',
           dir : 'coverage/'
         },
         singleRun: true
