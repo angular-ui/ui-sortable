@@ -11,6 +11,7 @@ module.exports = function(grunt) {
   grunt.registerTask('serve', ['karma:continuous', 'dist', 'build:gh-pages', 'connect:continuous', 'watch']);
   grunt.registerTask('dist', ['ngmin', 'surround', 'uglify' ]);
   grunt.registerTask('coverage', ['jshint', 'karma:coverage']);
+  grunt.registerTask('junit', ['jshint', 'karma:junit']);
 
 
   // HACK TO ACCESS TO THE COMPONENT PUBLISHER
@@ -78,6 +79,15 @@ module.exports = function(grunt) {
         coverageReporter: {
           type : 'html',
           dir : 'coverage/'
+        },
+        singleRun: true
+      },
+      junit: {
+        configFile: 'test/karma.conf.js',
+        reporters: ['progress', 'junit'],
+        junitReporter: {
+          outputFile: 'junit/unit.xml',
+          suite: 'unit'
         },
         singleRun: true
       }
