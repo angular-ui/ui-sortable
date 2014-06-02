@@ -86,6 +86,49 @@ $scope.sortableOptions = {
 So `ui.item.scope` and the directive's `ng-model`, are equal to the scope before the drag start.
 * To [cancel a sorting between connected lists](https://github.com/angular-ui/ui-sortable/issues/107#issuecomment-33633638), `cancel` should be called inside the `update` callback of the originating list.
 
+### jQueryUI Sortable Event order
+
+**Single sortable** [demo](http://codepen.io/thgreasi/pen/KtsFH)
+```
+start
+activate
+
+/* multiple: sort/change/over/out */
+
+beforeStop
+update    <= call cancel() here if needed
+deactivate
+stop
+```
+
+**Connected sortables** [demo](http://codepen.io/thgreasi/pen/uIBKb)
+
+```
+list A: start
+list B: activate
+list A: activate
+
+/* both lists multiple: sort/change/over/out */
+list A: sort
+list A: change
+list B: change
+list B: over
+list A: sort
+list B: out
+list A: sort
+
+list A: beforeStop
+list A: update    <= call cancel() here if needed
+list A: remove
+list B: receive
+list B: update
+list B: deactivate
+list A: deactivate
+list A: stop
+```
+
+For more details about the events check the [jQueryUI API documentation](http://api.jqueryui.com/sortable/).
+
 ## Examples
 
 - [Simple Demo](http://codepen.io/thgreasi/pen/jlkhr)
