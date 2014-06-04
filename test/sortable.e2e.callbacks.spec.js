@@ -190,6 +190,28 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should call the create() callback when initialized', function() {
+      inject(function($compile, $rootScope) {
+        var element;
+        $rootScope.$apply(function() {
+          $rootScope.items = ['One', 'Two', 'Three'];
+          $rootScope.opts = {
+            create: function() {
+
+            }
+          };
+          spyOn($rootScope.opts, 'create');
+          element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        });
+
+        host.append(element);
+
+        expect($rootScope.opts.create).toHaveBeenCalled();
+
+        $(element).remove();
+      });
+    });
+
   });
 
 });
