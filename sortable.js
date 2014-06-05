@@ -40,7 +40,7 @@ angular.module('ui.sortable', [])
             update:null
           };
 
-          angular.extend(opts, uiSortableConfig);
+          angular.extend(opts, uiSortableConfig, scope.$eval(attrs.uiSortable));
 
           if (!angular.element.fn || !angular.element.fn.jquery) {
             $log.error('ui.sortable: jQuery should be included before AngularJS!');
@@ -127,7 +127,7 @@ angular.module('ui.sortable', [])
               // the start and stop of repeat sections and sortable doesn't
               // respect their order (even if we cancel, the order of the
               // comments are still messed up).
-              if (hasSortingHelper(element)) {
+              if (hasSortingHelper(element) && !ui.item.sortable.received) {
                 // restore all the savedNodes except .ui-sortable-helper element
                 // (which is placed last). That way it will be garbage collected.
                 savedNodes = savedNodes.not(savedNodes.last());
