@@ -40,7 +40,7 @@ angular.module('ui.sortable', [])
             update:null
           };
 
-          angular.extend(opts, uiSortableConfig);
+          angular.extend(opts, uiSortableConfig, scope.$eval(attrs.uiSortable));
 
           if (!angular.element.fn || !angular.element.fn.jquery) {
             $log.error('ui.sortable: jQuery should be included before AngularJS!');
