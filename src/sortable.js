@@ -174,6 +174,14 @@ angular.module('ui.sortable', [])
             };
 
             callbacks.remove = function(e, ui) {
+              // Workaround for a problem observed in nested connected lists.
+              // There should be an 'update' event before 'remove' when moving
+              // elements. If the event did not fire, cancel sorting.
+              if (!('dropindex' in ui.item.sortable)) {
+                element.sortable('cancel');
+                ui.item.sortable.cancel();
+              }
+
               // Remove the item from this list's model and copy data into item,
               // so the next list can retrive it
               if (!ui.item.sortable.isCanceled()) {

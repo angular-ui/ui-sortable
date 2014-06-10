@@ -349,14 +349,14 @@ describe('uiSortable', function() {
 
     it('should update model when sorting between nested sortables', function() {
       inject(function($compile, $rootScope) {
-        var elementTree;
+        var elementTree, li1, li2, dy;
 
         elementTree = $compile(''.concat(
           '<ul ui-sortable="sortableOptions" ng-model="items" class="apps-container outterList" style="float: left;margin-left: 10px;padding-bottom: 10px;">',
             '<li ng-repeat="item in items track by $index">',
               '<div>',
                 '<span class="itemContent lvl1ItemContent">{{item.text}}</span>',
-                '<ul ui-sortable="sortableOptions" ng-model="item.items" class="apps-container innerList" style="float: left;margin-left: 10px;padding-bottom: 10px;">',
+                '<ul ui-sortable="sortableOptions" ng-model="item.items" class="apps-container innerList" style="margin-left: 10px;padding-bottom: 10px;">',
                   '<li ng-repeat="i in item.items track by $index">',
                     '<span class="itemContent lvl2ItemContent">{{i.text}}</span>',
                   '</li>',
@@ -375,8 +375,8 @@ describe('uiSortable', function() {
             {
               text: 'Item 2',
               items: [
-                { text: 'Item 2.1' },
-                { text: 'Item 2.2' }
+                { text: 'Item 2.1', items: [] },
+                { text: 'Item 2.2', items: [] }
               ]
             }
           ];
@@ -388,8 +388,10 @@ describe('uiSortable', function() {
 
         host.append(elementTree);
 
-        var li = elementTree.find('.innerList:last').find(':last');
-        li.simulate('drag', { dx: -200, moves: 30 });
+        li1 = elementTree.find('.innerList:last').find(':last');
+        // this should drag the item out of the list and
+        // the item should return back to its original position
+        li1.simulate('drag', { dx: -200, moves: 30 });
         expect($rootScope.items.map(function(x){ return x.text; }))
           .toEqual(['Item 1', 'Item 2']);
         expect($rootScope.items.map(function(x){ return x.text; }))
@@ -402,6 +404,27 @@ describe('uiSortable', function() {
           .toEqual(['Item 2.1', 'Item 2.2']);
         expect($rootScope.items[1].items.map(function(x){ return x.text; }))
           .toEqual(listInnerContent(elementTree.find('.innerList:eq(1)'), '.lvl2ItemContent'));
+
+        li1 = elementTree.find('.innerList:last').find(':last');
+        li2 = elementTree.find('> li:last');
+        dy = EXTRA_DY_PERCENTAGE * li1.outerHeight() + (li2.position().top - li1.position().top);
+        li1.simulate('drag', { dy: dy });
+        expect($rootScope.items.map(function(x){ return x.text; }))
+          .toEqual(['Item 1', 'Item 2.2', 'Item 2']);
+        expect($rootScope.items.map(function(x){ return x.text; }))
+          .toEqual(listInnerContent(elementTree, '.lvl1ItemContent'));
+        expect($rootScope.items[0].items.map(function(x){ return x.text; }))
+          .toEqual([]);
+        expect($rootScope.items[0].items.map(function(x){ return x.text; }))
+          .toEqual(listInnerContent(elementTree.find('.innerList:eq(0)'), '.lvl2ItemContent'));
+        expect($rootScope.items[1].items.map(function(x){ return x.text; }))
+          .toEqual([]);
+        expect($rootScope.items[1].items.map(function(x){ return x.text; }))
+          .toEqual(listInnerContent(elementTree.find('.innerList:eq(1)'), '.lvl2ItemContent'));
+        expect($rootScope.items[2].items.map(function(x){ return x.text; }))
+          .toEqual(['Item 2.1']);
+        expect($rootScope.items[2].items.map(function(x){ return x.text; }))
+          .toEqual(listInnerContent(elementTree.find('.innerList:eq(2)'), '.lvl2ItemContent'));
 
         $(elementTree).remove();
       });
