@@ -6,11 +6,12 @@ describe('uiSortable', function() {
   beforeEach(module('ui.sortable'));
   beforeEach(module('ui.sortable.testHelper'));
   
-  var EXTRA_DY_PERCENTAGE, listContent;
+  var EXTRA_DY_PERCENTAGE, listContent, listInnerContent;
 
   beforeEach(inject(function (sortableTestHelper) {
     EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
     listContent = sortableTestHelper.listContent;
+    listInnerContent = sortableTestHelper.listInnerContent;
   }));
 
   describe('Multiple sortables related', function() {
@@ -343,6 +344,66 @@ describe('uiSortable', function() {
 
         $(elementTop).remove();
         $(elementBottom).remove();
+      });
+    });
+
+    it('should update model when sorting between nested sortables', function() {
+      inject(function($compile, $rootScope) {
+        var elementTree;
+
+        elementTree = $compile(''.concat(
+          '<ul ui-sortable="sortableOptions" ng-model="items" class="apps-container outterList" style="float: left;margin-left: 10px;padding-bottom: 10px;">',
+            '<li ng-repeat="item in items track by $index">',
+              '<div>',
+                '<span class="itemContent lvl1ItemContent">{{item.text}}</span>',
+                '<ul ui-sortable="sortableOptions" ng-model="item.items" class="apps-container innerList" style="float: left;margin-left: 10px;padding-bottom: 10px;">',
+                  '<li ng-repeat="i in item.items track by $index">',
+                    '<span class="itemContent lvl2ItemContent">{{i.text}}</span>',
+                  '</li>',
+                '</ul>',
+              '</div>',
+            '</li>',
+          '</ul>',
+          '<div style="clear: both;"></div>'))($rootScope);
+
+        $rootScope.$apply(function() {
+          $rootScope.items = [
+            {
+              text: 'Item 1',
+              items: []
+            },
+            {
+              text: 'Item 2',
+              items: [
+                { text: 'Item 2.1' },
+                { text: 'Item 2.2' }
+              ]
+            }
+          ];
+          
+          $rootScope.sortableOptions = {
+            connectWith: '.apps-container'
+          };
+        });
+
+        host.append(elementTree);
+
+        var li = elementTree.find('.innerList:last').find(':last');
+        li.simulate('drag', { dx: -200, moves: 30 });
+        expect($rootScope.items.map(function(x){ return x.text; }))
+          .toEqual(['Item 1', 'Item 2']);
+        expect($rootScope.items.map(function(x){ return x.text; }))
+          .toEqual(listInnerContent(elementTree, '.lvl1ItemContent'));
+        expect($rootScope.items[0].items.map(function(x){ return x.text; }))
+          .toEqual([]);
+        expect($rootScope.items[0].items.map(function(x){ return x.text; }))
+          .toEqual(listInnerContent(elementTree.find('.innerList:eq(0)'), '.lvl2ItemContent'));
+        expect($rootScope.items[1].items.map(function(x){ return x.text; }))
+          .toEqual(['Item 2.1', 'Item 2.2']);
+        expect($rootScope.items[1].items.map(function(x){ return x.text; }))
+          .toEqual(listInnerContent(elementTree.find('.innerList:eq(1)'), '.lvl2ItemContent'));
+
+        $(elementTree).remove();
       });
     });
 
