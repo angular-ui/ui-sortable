@@ -25,9 +25,9 @@ angular.module('ui.sortable', [])
             return first;
           }
 
-          function hasSortingHelper (element) {
+          function hasSortingHelper (element, ui) {
             var helperOption = element.sortable('option','helper');
-            return helperOption === 'clone' || typeof helperOption === 'function';
+            return helperOption === 'clone' || (typeof helperOption === 'function' && ui.item.sortable.isCustomHelperUsed());
           }
 
           var opts = {};
@@ -38,6 +38,10 @@ angular.module('ui.sortable', [])
             start:null,
             stop:null,
             update:null
+          };
+
+          var wrappers = {
+            helper: null
           };
 
           angular.extend(opts, uiSortableConfig, scope.$eval(attrs.uiSortable));
@@ -72,7 +76,11 @@ angular.module('ui.sortable', [])
                 isCanceled: function () {
                   return ui.item.sortable._isCanceled;
                 },
-                _isCanceled: false
+                isCustomHelperUsed: function () {
+                  return !!ui.item.sortable._isCustomHelperUsed;
+                },
+                _isCanceled: false,
+                _isCustomHelperUsed: ui.item.sortable._isCustomHelperUsed
               };
             };
 
@@ -127,7 +135,7 @@ angular.module('ui.sortable', [])
               // the start and stop of repeat sections and sortable doesn't
               // respect their order (even if we cancel, the order of the
               // comments are still messed up).
-              if (hasSortingHelper(element) && !ui.item.sortable.received) {
+              if (hasSortingHelper(element, ui) && !ui.item.sortable.received) {
                 // restore all the savedNodes except .ui-sortable-helper element
                 // (which is placed last). That way it will be garbage collected.
                 savedNodes = savedNodes.not(savedNodes.last());
@@ -163,7 +171,7 @@ angular.module('ui.sortable', [])
                 // if the item was not moved, then restore the elements
                 // so that the ngRepeat's comment are correct.
                 if ((!('dropindex' in ui.item.sortable) || ui.item.sortable.isCanceled()) &&
-                    !hasSortingHelper(element)) {
+                    !hasSortingHelper(element, ui)) {
                   savedNodes.appendTo(element);
                 }
               }
@@ -176,6 +184,14 @@ angular.module('ui.sortable', [])
             };
 
             callbacks.remove = function(e, ui) {
+              // Workaround for a problem observed in nested connected lists.
+              // There should be an 'update' event before 'remove' when moving
+              // elements. If the event did not fire, cancel sorting.
+              if (!('dropindex' in ui.item.sortable)) {
+                element.sortable('cancel');
+                ui.item.sortable.cancel();
+              }
+
               // Remove the item from this list's model and copy data into item,
               // so the next list can retrive it
               if (!ui.item.sortable.isCanceled()) {
@@ -184,6 +200,17 @@ angular.module('ui.sortable', [])
                     ui.item.sortable.index, 1)[0];
                 });
               }
+            };
+
+            wrappers.helper = function (inner) {
+              if (inner && typeof inner === 'function') {
+                return function (e, item) {
+                  var innerResult = inner(e, item);
+                  item.sortable._isCustomHelperUsed = item !== innerResult;
+                  return innerResult;
+                };
+              }
+              return inner;
             };
 
             scope.$watch(attrs.uiSortable, function(newVal /*, oldVal*/) {
@@ -199,6 +226,8 @@ angular.module('ui.sortable', [])
                     }
                     // wrap the callback
                     value = combineCallbacks(callbacks[key], value);
+                  } else if (wrappers[key]) {
+                    value = wrappers[key](value);
                   }
                   
                   element.sortable('option', key, value);
