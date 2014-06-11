@@ -11,9 +11,13 @@ angular.module('ui.sortable.testHelper', [])
       return [];
     }
 
-    function listInnerContent (list) {
+    function listInnerContent (list, contentSelector) {
+      if (!contentSelector) {
+        contentSelector = '.itemContent';
+      }
+
       if (list && list.length) {
-        return list.children().map(function(){ return $(this).find('.itemContent').html(); }).toArray();
+        return list.children().map(function(){ return $(this).find(contentSelector).html(); }).toArray();
       }
       return [];
     }
