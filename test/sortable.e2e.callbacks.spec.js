@@ -66,6 +66,45 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should cancel sorting of node "Two" and "helper: function" that returns a list element is used', function() {
+      inject(function($compile, $rootScope) {
+        var element;
+        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            update: function(e, ui) {
+              if (ui.item.scope().item === 'Two') {
+                ui.item.sortable.cancel();
+              }
+            }
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element);
+
+        var li = element.find(':eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        li = element.find(':eq(0)');
+        dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        li = element.find(':eq(2)');
+        dy = -(2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        $(element).remove();
+      });
+    });
+
     it('should cancel sorting of nodes that contain "Two"', function() {
       inject(function($compile, $rootScope) {
         var elementTop, elementBottom;
