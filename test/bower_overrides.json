@@ -1,0 +1,13 @@
+{
+  "jquery-simulate": {
+    "main": "jquery.simulate.js",
+    "dependencies": {
+      "jquery": ""
+    }
+  },
+  "angular": {
+    "dependencies": {
+      "jquery": ""
+    }
+  }
+}
