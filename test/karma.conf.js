@@ -4,6 +4,16 @@
 'use strict';
 
 module.exports = function(config) {
+  var wiredep = require('wiredep');
+
+  var fs = require('fs');
+  var bowerOverrides = JSON.parse(fs.readFileSync('./test/bower_overrides.json'));
+
+  var devJSDependencies = wiredep({
+    devDependencies: true,
+    overrides: bowerOverrides
+  }).js;
+
   config.set({
 
     // base path, that will be used to resolve files and exclude
@@ -15,18 +25,13 @@ module.exports = function(config) {
 
 
     // list of files / patterns to load in the browser
-    files: [
-      'bower_components/jquery/dist/jquery.js',
-      'bower_components/jquery-simulate/jquery.simulate.js',
+    files: devJSDependencies.concat([
       'test/libs/jquery.simulate.dragandrevert.js',
-      'bower_components/jquery-ui/ui/jquery-ui.js',
-      'bower_components/angular/angular.js',
-      'bower_components/angular-mocks/angular-mocks.js',
       'src/sortable.js',
       'test/sortable.test-helper.js',
       'test/sortable.test-directives.js',
       'test/*.spec.js'
-    ],
+    ]),
 
 
     // list of files to exclude

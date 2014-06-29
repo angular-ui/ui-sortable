@@ -31,7 +31,8 @@
     "karma-requirejs": "0.2.x",
     "karma-script-launcher": "0.1.x",
     "load-grunt-tasks": "0.2.x",
-    "requirejs": "2.1.x"
+    "requirejs": "2.1.x",
+    "wiredep": "1.8.x"
   },
   "scripts": {},
   "repository": {
