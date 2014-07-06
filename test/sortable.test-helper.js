@@ -22,9 +22,34 @@ angular.module('ui.sortable.testHelper', [])
       return [];
     }
 
+    function simulateElementDrag(draggedElement, dropTarget, options) {
+      var dragOptions = {
+        dx: dropTarget.position().left - draggedElement.position().left,
+        dy: dropTarget.position().top - draggedElement.position().top
+      };
+
+      if (options === 'above') {
+        dragOptions.dy -= EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
+      } else if (options === 'below') {
+        dragOptions.dy += EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
+      } else if (typeof options === 'object') {
+        
+        if (isFinite(options.dy)) {
+          dragOptions.dy += options.dy;
+        }
+
+        if (isFinite(options.dx)) {
+          dragOptions.dx += options.dx;
+        }
+      }
+
+      draggedElement.simulate('drag', dragOptions);
+    }
+
     return {
       EXTRA_DY_PERCENTAGE: EXTRA_DY_PERCENTAGE,
       listContent: listContent,
-      listInnerContent: listInnerContent
+      listInnerContent: listInnerContent,
+      simulateElementDrag: simulateElementDrag
     };
   });
