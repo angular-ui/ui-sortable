@@ -30,7 +30,8 @@ module.exports = function(config) {
       'src/sortable.js',
       'test/sortable.test-helper.js',
       'test/sortable.test-directives.js',
-      'test/*.spec.js'
+      'test/*.spec.js',
+      'test/sortable.tests.css'
     ]),
 
 
