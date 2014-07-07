@@ -22,9 +22,50 @@ angular.module('ui.sortable.testHelper', [])
       return [];
     }
 
+    function simulateElementDrag(draggedElement, dropTarget, options) {
+      var dragOptions = {
+        dx: dropTarget.position().left - draggedElement.position().left,
+        dy: dropTarget.position().top - draggedElement.position().top,
+        moves: 30
+      };
+
+      if (options === 'above') {
+        dragOptions.dy -= EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
+      } else if (options === 'below') {
+        dragOptions.dy += EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
+      } else if (typeof options === 'object') {
+
+        if ('place' in options) {
+          if (options.place === 'above') {
+            dragOptions.dy -= EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
+          } else if (options.place === 'below') {
+            dragOptions.dy += EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
+          }
+        }
+
+        if (isFinite(options.dx)) {
+          dragOptions.dx = options.dx;
+        }
+        if (isFinite(options.dy)) {
+          dragOptions.dy = options.dy;
+        }
+        
+        if (isFinite(options.extrady)) {
+          dragOptions.dy += options.extrady;
+        }
+
+        if (isFinite(options.extradx)) {
+          dragOptions.dx += options.extradx;
+        }
+      }
+
+      draggedElement.simulate('drag', dragOptions);
+    }
+
     return {
       EXTRA_DY_PERCENTAGE: EXTRA_DY_PERCENTAGE,
       listContent: listContent,
-      listInnerContent: listInnerContent
+      listInnerContent: listInnerContent,
+      simulateElementDrag: simulateElementDrag
     };
   });

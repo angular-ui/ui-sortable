@@ -6,12 +6,13 @@ describe('uiSortable', function() {
   beforeEach(module('ui.sortable'));
   beforeEach(module('ui.sortable.testHelper'));
   
-  var EXTRA_DY_PERCENTAGE, listContent, listInnerContent;
+  var EXTRA_DY_PERCENTAGE, listContent, listInnerContent, simulateElementDrag;
 
   beforeEach(inject(function (sortableTestHelper) {
     EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
     listContent = sortableTestHelper.listContent;
     listInnerContent = sortableTestHelper.listInnerContent;
+    simulateElementDrag = sortableTestHelper.simulateElementDrag;
   }));
 
   describe('Multiple sortables related', function() {
@@ -39,12 +40,11 @@ describe('uiSortable', function() {
           $rootScope.opts = { connectWith: '.cross-sortable' };
         });
 
-        host.append(elementTop).append(elementBottom);
+        host.append(elementTop).append(elementBottom).append('<div class="clear"></div>');
 
         var li1 = elementTop.find(':eq(0)');
         var li2 = elementBottom.find(':eq(0)');
-        var dy = EXTRA_DY_PERCENTAGE * li1.outerHeight() + (li2.position().top - li1.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, 'below');
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Top One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -52,8 +52,7 @@ describe('uiSortable', function() {
 
         li1 = elementBottom.find(':eq(1)');
         li2 = elementTop.find(':eq(1)');
-        dy = -EXTRA_DY_PERCENTAGE * li1.outerHeight() - (li1.position().top - li2.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top One', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -75,7 +74,7 @@ describe('uiSortable', function() {
           $rootScope.opts = { connectWith: '.cross-sortable' };
         });
 
-        host.append(elementTop).append(elementBottom);
+        host.append(elementTop).append(elementBottom).append('<div class="clear"></div>');
 
         function parseFalsyValue (value) {
           if (value === '0') {
@@ -86,8 +85,7 @@ describe('uiSortable', function() {
 
         var li1 = elementTop.find(':eq(0)');
         var li2 = elementBottom.find(':eq(0)');
-        var dy = EXTRA_DY_PERCENTAGE * li1.outerHeight() + (li2.position().top - li1.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, 'below');
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 0, 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop).map(parseFalsyValue));
@@ -95,8 +93,7 @@ describe('uiSortable', function() {
 
         li1 = elementBottom.find(':eq(1)');
         li2 = elementTop.find(':eq(1)');
-        dy = -EXTRA_DY_PERCENTAGE * li1.outerHeight() - (li1.position().top - li2.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
         expect($rootScope.itemsTop).toEqual(['Top Two', 0, 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop).map(parseFalsyValue));
@@ -121,12 +118,11 @@ describe('uiSortable', function() {
           };
         });
 
-        host.append(elementTop).append(elementBottom);
+        host.append(elementTop).append(elementBottom).append('<div class="clear"></div>');
 
         var li1 = elementTop.find(':eq(0)');
         var li2 = elementBottom.find(':eq(0)');
-        var dy = EXTRA_DY_PERCENTAGE * li1.outerHeight() + (li2.position().top - li1.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, 'below');
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Top One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -134,8 +130,7 @@ describe('uiSortable', function() {
 
         li1 = elementBottom.find(':eq(1)');
         li2 = elementTop.find(':eq(1)');
-        dy = -EXTRA_DY_PERCENTAGE * li1.outerHeight() - (li1.position().top - li2.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top One', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -160,12 +155,11 @@ describe('uiSortable', function() {
           };
         });
 
-        host.append(elementTop).append(elementBottom);
+        host.append(elementTop).append(elementBottom).append('<div class="clear"></div>');
 
         var li1 = elementTop.find(':eq(0)');
         var li2 = elementBottom.find(':eq(0)');
-        var dy = EXTRA_DY_PERCENTAGE * li1.outerHeight() + (li2.position().top - li1.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, 'below');
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Top One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -173,8 +167,7 @@ describe('uiSortable', function() {
 
         li1 = elementBottom.find(':eq(1)');
         li2 = elementTop.find(':eq(1)');
-        dy = -EXTRA_DY_PERCENTAGE * li1.outerHeight() - (li1.position().top - li2.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top One', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -199,12 +192,11 @@ describe('uiSortable', function() {
           };
         });
 
-        host.append(elementTop).append(elementBottom);
+        host.append(elementTop).append(elementBottom).append('<div class="clear"></div>');
 
         var li1 = elementTop.find(':eq(0)');
         var li2 = elementBottom.find(':eq(0)');
-        var dy = EXTRA_DY_PERCENTAGE * li1.outerHeight() + (li2.position().top - li1.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, 'below');
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Top One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -212,8 +204,7 @@ describe('uiSortable', function() {
 
         li1 = elementBottom.find(':eq(1)');
         li2 = elementTop.find(':eq(1)');
-        dy = -EXTRA_DY_PERCENTAGE * li1.outerHeight() - (li1.position().top - li2.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top One', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -239,12 +230,11 @@ describe('uiSortable', function() {
           };
         });
 
-        host.append(elementTop).append(elementBottom);
+        host.append(elementTop).append(elementBottom).append('<div class="clear"></div>');
 
         var li1 = elementTop.find(':eq(0)');
         var li2 = elementBottom.find(':eq(0)');
-        var dy = EXTRA_DY_PERCENTAGE * li1.outerHeight() + (li2.position().top - li1.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, 'below');
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Top One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -252,8 +242,7 @@ describe('uiSortable', function() {
 
         li1 = elementBottom.find(':eq(1)');
         li2 = elementTop.find(':eq(1)');
-        dy = -EXTRA_DY_PERCENTAGE * li1.outerHeight() - (li1.position().top - li2.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top One', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -280,12 +269,11 @@ describe('uiSortable', function() {
           };
         });
 
-        host.append(elementTop).append(elementBottom);
+        host.append(elementTop).append(elementBottom).append('<div class="clear"></div>');
 
         var li1 = elementTop.find(':eq(0)');
         var li2 = elementBottom.find(':eq(0)');
-        var dy = EXTRA_DY_PERCENTAGE * li1.outerHeight() + (li2.position().top - li1.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, 'below');
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Top One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -293,8 +281,7 @@ describe('uiSortable', function() {
 
         li1 = elementBottom.find(':eq(1)');
         li2 = elementTop.find(':eq(1)');
-        dy = -EXTRA_DY_PERCENTAGE * li1.outerHeight() - (li1.position().top - li2.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top One', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -322,12 +309,11 @@ describe('uiSortable', function() {
           };
         });
 
-        host.append(elementTop).append(elementBottom);
+        host.append(elementTop).append(elementBottom).append('<div class="clear"></div>');
 
         var li1 = elementTop.find(':eq(0)');
         var li2 = elementBottom.find(':eq(0)');
-        var dy = EXTRA_DY_PERCENTAGE * li1.outerHeight() + (li2.position().top - li1.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, 'below');
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Top One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -335,8 +321,7 @@ describe('uiSortable', function() {
 
         li1 = elementBottom.find(':eq(1)');
         li2 = elementTop.find(':eq(1)');
-        dy = -EXTRA_DY_PERCENTAGE * li1.outerHeight() - (li1.position().top - li2.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top One', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -363,12 +348,11 @@ describe('uiSortable', function() {
           };
         });
 
-        host.append(elementTop).append(elementBottom);
+        host.append(elementTop).append(elementBottom).append('<div class="clear"></div>');
 
         var li1 = elementTop.find(':eq(0)');
         var li2 = elementBottom.find(':eq(0)');
-        var dy = EXTRA_DY_PERCENTAGE * li1.outerHeight() + (li2.position().top - li1.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, 'below');
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Top One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -376,8 +360,7 @@ describe('uiSortable', function() {
 
         li1 = elementBottom.find(':eq(1)');
         li2 = elementTop.find(':eq(1)');
-        dy = -EXTRA_DY_PERCENTAGE * li1.outerHeight() - (li1.position().top - li2.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top One', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -405,12 +388,11 @@ describe('uiSortable', function() {
           };
         });
 
-        host.append(elementTop).append(elementBottom);
+        host.append(elementTop).append(elementBottom).append('<div class="clear"></div>');
 
         var li1 = elementTop.find(':eq(0)');
         var li2 = elementBottom.find(':eq(0)');
-        var dy = EXTRA_DY_PERCENTAGE * li1.outerHeight() + (li2.position().top - li1.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, 'below');
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Top One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -418,8 +400,7 @@ describe('uiSortable', function() {
 
         li1 = elementBottom.find(':eq(1)');
         li2 = elementTop.find(':eq(1)');
-        dy = -EXTRA_DY_PERCENTAGE * li1.outerHeight() - (li1.position().top - li2.position().top);
-        li1.simulate('drag', { dy: dy });
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top One', 'Top Three']);
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
@@ -430,107 +411,62 @@ describe('uiSortable', function() {
       });
     });
 
-    it('should update model when sorting between nested sortables', function() {
+    it('should cancel sorting of nodes that contain "Two"', function() {
       inject(function($compile, $rootScope) {
-        var elementTree, li1, li2, dy;
-
-        elementTree = $compile(''.concat(
-          '<ul ui-sortable="sortableOptions" ng-model="items" class="apps-container outterList" style="float: left;margin-left: 10px;padding-bottom: 10px;">',
-            '<li ng-repeat="item in items">',
-              '<div>',
-                '<span class="itemContent lvl1ItemContent">{{item.text}}</span>',
-                '<ul ui-sortable="sortableOptions" ng-model="item.items" class="apps-container innerList" style="margin-left: 10px;padding-bottom: 10px;">',
-                  '<li ng-repeat="i in item.items">',
-                    '<span class="itemContent lvl2ItemContent">{{i.text}}</span>',
-                  '</li>',
-                '</ul>',
-              '</div>',
-            '</li>',
-          '</ul>',
-          '<div style="clear: both;"></div>'))($rootScope);
-
+        var elementTop, elementBottom;
+        elementTop = $compile('<ul ui-sortable="opts" class="cross-sortable" ng-model="itemsTop"><li ng-repeat="item in itemsTop" id="s-top-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        elementBottom = $compile('<ul ui-sortable="opts" class="cross-sortable" ng-model="itemsBottom"><li ng-repeat="item in itemsBottom" id="s-bottom-{{$index}}">{{ item }}</li></ul>')($rootScope);
         $rootScope.$apply(function() {
-          $rootScope.items = [
-            {
-              text: 'Item 1',
-              items: []
-            },
-            {
-              text: 'Item 2',
-              items: [
-                { text: 'Item 2.1', items: [] },
-                { text: 'Item 2.2', items: [] }
-              ]
+          $rootScope.itemsTop = ['Top One', 'Top Two', 'Top Three'];
+          $rootScope.itemsBottom = ['Bottom One', 'Bottom Two', 'Bottom Three'];
+          $rootScope.opts = {
+            connectWith: '.cross-sortable',
+            update: function(e, ui) {
+              if (ui.item.scope() &&
+                (typeof ui.item.scope().item === 'string') &&
+                ui.item.scope().item.indexOf('Two') >= 0) {
+                ui.item.sortable.cancel();
+              }
             }
-          ];
-          
-          $rootScope.sortableOptions = {
-            connectWith: '.apps-container'
           };
         });
 
-        host.append(elementTree);
+        host.append(elementTop).append(elementBottom).append('<div class="clear"></div>');
 
-        // this should drag the item out of the list and
-        // the item should return back to its original position
-        li1 = elementTree.find('.innerList:last').find(':last');
-        li1.simulate('drag', { dx: -200, moves: 30 });
-        expect($rootScope.items.map(function(x){ return x.text; }))
-          .toEqual(['Item 1', 'Item 2']);
-        expect($rootScope.items.map(function(x){ return x.text; }))
-          .toEqual(listInnerContent(elementTree, '.lvl1ItemContent'));
-        expect($rootScope.items[0].items.map(function(x){ return x.text; }))
-          .toEqual([]);
-        expect($rootScope.items[0].items.map(function(x){ return x.text; }))
-          .toEqual(listInnerContent(elementTree.find('.innerList:eq(0)'), '.lvl2ItemContent'));
-        expect($rootScope.items[1].items.map(function(x){ return x.text; }))
-          .toEqual(['Item 2.1', 'Item 2.2']);
-        expect($rootScope.items[1].items.map(function(x){ return x.text; }))
-          .toEqual(listInnerContent(elementTree.find('.innerList:eq(1)'), '.lvl2ItemContent'));
+        var li1 = elementTop.find(':eq(1)');
+        var li2 = elementBottom.find(':eq(0)');
+        simulateElementDrag(li1, li2, 'below');
+        expect($rootScope.itemsTop).toEqual(['Top One', 'Top Two', 'Top Three']);
+        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual(listContent(elementTop));
+        expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
 
-        // this should drag the item from the inner list and
-        // drop it to the outter list
-        li1 = elementTree.find('.innerList:last').find(':last');
-        li2 = elementTree.find('> li:last');
-        dy = EXTRA_DY_PERCENTAGE * li1.outerHeight() + (li2.position().top - li1.position().top);
-        li1.simulate('drag', { dy: dy });
-        expect($rootScope.items.map(function(x){ return x.text; }))
-          .toEqual(['Item 1', 'Item 2.2', 'Item 2']);
-        expect($rootScope.items.map(function(x){ return x.text; }))
-          .toEqual(listInnerContent(elementTree, '.lvl1ItemContent'));
-        expect($rootScope.items[0].items.map(function(x){ return x.text; }))
-          .toEqual([]);
-        expect($rootScope.items[0].items.map(function(x){ return x.text; }))
-          .toEqual(listInnerContent(elementTree.find('.innerList:eq(0)'), '.lvl2ItemContent'));
-        expect($rootScope.items[1].items.map(function(x){ return x.text; }))
-          .toEqual([]);
-        expect($rootScope.items[1].items.map(function(x){ return x.text; }))
-          .toEqual(listInnerContent(elementTree.find('.innerList:eq(1)'), '.lvl2ItemContent'));
-        expect($rootScope.items[2].items.map(function(x){ return x.text; }))
-          .toEqual(['Item 2.1']);
-        expect($rootScope.items[2].items.map(function(x){ return x.text; }))
-          .toEqual(listInnerContent(elementTree.find('.innerList:eq(2)'), '.lvl2ItemContent'));
+        li1 = elementBottom.find(':eq(1)');
+        li2 = elementTop.find(':eq(1)');
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
+        expect($rootScope.itemsTop).toEqual(['Top One', 'Top Two', 'Top Three']);
+        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual(listContent(elementTop));
+        expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
 
-        // this should drag the item from the outter list and
-        // drop it to the inner list
-        li1 = elementTree.find('> li:first');
-        li2 = elementTree.find('.innerList:last').find(':last');
-        dy = -EXTRA_DY_PERCENTAGE * li1.outerHeight() + (li2.position().top - li1.position().top);
-        li1.simulate('drag', { dy: dy });
-        expect($rootScope.items.map(function(x){ return x.text; }))
-          .toEqual(['Item 2.2', 'Item 2']);
-        expect($rootScope.items.map(function(x){ return x.text; }))
-          .toEqual(listInnerContent(elementTree, '.lvl1ItemContent'));
-        expect($rootScope.items[0].items.map(function(x){ return x.text; }))
-          .toEqual([]);
-        expect($rootScope.items[0].items.map(function(x){ return x.text; }))
-          .toEqual(listInnerContent(elementTree.find('.innerList:eq(0)'), '.lvl2ItemContent'));
-        expect($rootScope.items[1].items.map(function(x){ return x.text; }))
-          .toEqual(['Item 1', 'Item 2.1']);
-        expect($rootScope.items[1].items.map(function(x){ return x.text; }))
-          .toEqual(listInnerContent(elementTree.find('.innerList:eq(1)'), '.lvl2ItemContent'));
+        li1 = elementTop.find(':eq(0)');
+        li2 = elementBottom.find(':eq(0)');
+        simulateElementDrag(li1, li2, 'below');
+        expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three']);
+        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Top One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual(listContent(elementTop));
+        expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
 
-        $(elementTree).remove();
+        li1 = elementBottom.find(':eq(1)');
+        li2 = elementTop.find(':eq(1)');
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
+        expect($rootScope.itemsTop).toEqual(['Top Two', 'Top One', 'Top Three']);
+        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual(listContent(elementTop));
+        expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
+
+        $(elementTop).remove();
+        $(elementBottom).remove();
       });
     });
 
