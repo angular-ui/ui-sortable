@@ -240,6 +240,7 @@ angular.module('ui.sortable', [])
                     value = wrappers[key](value);
                   }
                   
+                  opts[key] = value;
                   element.sortable('option', key, value);
                 });
               }
