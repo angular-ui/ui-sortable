@@ -69,6 +69,41 @@ myAppModule.controller('MyController', function($scope) {
 When using event callbacks ([start](http://api.jqueryui.com/sortable/#event-start)/[update](http://api.jqueryui.com/sortable/#event-update)/[stop](http://api.jqueryui.com/sortable/#event-stop)...), avoid manipulating DOM elements (especially the one with the ng-repeat attached).
 The suggested pattern is to use callbacks for emmiting events and altering the scope (inside the 'Angular world').
 
+#### Floating
+
+To have a smooth horizontal-list reordering, jquery.ui.sortable needs to detect the orientation of the list.
+This detection takes place during the initialization of the plugin (and some of the checks include: whether the first item is floating left/right or if 'axis' parameter is 'x', etc).
+There is also a [known issue](bugs.jqueryui.com/ticket/7498) about initially empty horizontal lists.
+
+To provide a solution/workaround (till jquery.ui.sortable.refresh() also tests the orientation or a more appropriate method is provided), ui-sortable directive provides a `ui-floating` option as an extra to the [jquery.ui.sortable options](http://api.jqueryui.com/sortable/).
+
+```html
+<ul ui-sortable="{ 'ui-floating': true }" ng-model="items">
+  <li ng-repeat="item in items">{{ item }}</li>
+</ul>
+```
+
+**OR**
+
+```js
+$scope.sortableOptions = {
+  'ui-floating': true
+};
+```
+```html
+<ul ui-sortable="sortableOptions" ng-model="items">
+  <li ng-repeat="item in items">{{ item }}</li>
+</ul>
+```
+
+
+**ui-floating** (default: undefined)  
+Type: [Boolean](http://api.jquery.com/Types/#Boolean)/[String](http://api.jquery.com/Types/#String)/`undefined`
+*   **undefined**: Relies on jquery.ui to detect the list's orientation.
+*   **false**:     Forces jquery.ui.sortable to detect the list as vertical.
+*   **true**:      Forces jquery.ui.sortable to detect the list as horizontal.
+*   **"auto"**:    Detects on each drag `start` if the element is floating or not.
+
 #### Canceling
 
 Inside the `update` callback, you can check the item that is dragged and cancel the sorting.
@@ -138,6 +173,7 @@ For more details about the events check the [jQueryUI API documentation](http://
 - [Filtering](http://codepen.io/thgreasi/pen/mzGbq) ([details](https://github.com/angular-ui/ui-sortable/issues/113))
 - [Ordering 1](http://codepen.io/thgreasi/pen/iKEHd) & [Ordering 2](http://plnkr.co/edit/XPUzJjdvwE0QWQ6py6mQ?p=preview) ([details](https://github.com/angular-ui/ui-sortable/issues/70))
 - [Cloning](http://codepen.io/thgreasi/pen/qmvhG) ([details](https://github.com/angular-ui/ui-sortable/issues/139))
+- [Horizontal List](http://codepen.io/thgreasi/pen/wsfjD)
 - [Tree with dynamic template](http://codepen.io/thgreasi/pen/uyHFC)
 - Canceling
   - [Connected Lists With Max Size](http://codepen.io/thgreasi/pen/IdvFc)
