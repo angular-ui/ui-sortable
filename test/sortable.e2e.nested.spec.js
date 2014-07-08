@@ -24,8 +24,8 @@ describe('uiSortable', function() {
     }));
 
     afterEach(function() {
-      // host.remove();
-      // host = null;
+      host.remove();
+      host = null;
     });
 
     it('should update model when sorting between nested sortables', function() {
