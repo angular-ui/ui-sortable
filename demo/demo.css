@@ -1,10 +1,17 @@
+.section {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
 .list {
+	border: 1px solid #000;
+	border-radius: 15px;
 	list-style: none outside none;
-	margin: 10px 0 30px;
+	margin: 10px;
+	padding: 10px;
 }
 
 .item {
-	width: 200px;
 	padding: 5px 10px;
 	margin: 5px 0;
 	border: 2px solid #444;
@@ -21,22 +28,12 @@
 /***  Extra ***/
 
 .logList {
-	margin-top: 20px;
-	width: 250px;
 	min-height: 200px;
-	padding: 5px 15px;
 	border: 5px solid #000;
 	border-radius: 15px;
 }
 
 .logList:before {
-	content: 'log';
-	padding: 0 5px;
-	position: relative;
-	top: -1.1em;
 	background-color: #FFF;
 }
 
-ul[ui-sortable] {
-	float: right;
-}
