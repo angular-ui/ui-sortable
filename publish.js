@@ -6,11 +6,16 @@ var fs = require('fs');
 var path = require('path');
 
 module.exports = function() {
+  var wiredep = require('wiredep');
 
-  var js_dependencies =[
-    'bower_components/jquery/dist/jquery.js',
-    'bower_components/jquery-ui/jquery-ui.js'
-  ];
+  var bower_dependencies = wiredep({ cwd: __dirname });
+
+  var js_dependencies = []
+    .concat(bower_dependencies.packages['jquery'].main)
+    .concat(bower_dependencies.packages['jquery-ui'].main)
+    .map(function(p) {
+      return p.replace(path.join(__dirname, '/'), '');
+    });
 
   var css_dependencies = [
     'bower_components/jquery-ui/themes/smoothness/jquery-ui.css'
