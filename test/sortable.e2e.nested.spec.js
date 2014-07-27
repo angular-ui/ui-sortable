@@ -104,7 +104,7 @@ describe('uiSortable', function() {
         // drop it to the outter list
         li1 = elementTree.find('.innerList:last').find('li:last');
         li2 = elementTree.find('> li:first');
-        simulateElementDrag(li1, li2, { place: 'above', extradx: -10, extrady: -5 });
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -10, extrady: -6 });
         expect($rootScope.items.map(function(x){ return x.text; }))
           .toEqual(['Item 2.2', 'Item 2']);
         expect($rootScope.items.map(function(x){ return x.text; }))
