@@ -134,11 +134,14 @@ For more details about the events check the [jQueryUI API documentation](http://
 ## Examples
 
 - [Simple Demo](http://codepen.io/thgreasi/pen/jlkhr)
-- [Connected Lists](http://codepen.io/thgreasi/pen/uFile) & [Connected Lists Canceling](http://codepen.io/thgreasi/pen/IdvFc)
+- [Connected Lists](http://codepen.io/thgreasi/pen/uFile)
 - [Filtering](http://codepen.io/thgreasi/pen/mzGbq) ([details](https://github.com/angular-ui/ui-sortable/issues/113))
 - [Ordering 1](http://codepen.io/thgreasi/pen/iKEHd) & [Ordering 2](http://plnkr.co/edit/XPUzJjdvwE0QWQ6py6mQ?p=preview) ([details](https://github.com/angular-ui/ui-sortable/issues/70))
 - [Cloning](http://codepen.io/thgreasi/pen/qmvhG) ([details](https://github.com/angular-ui/ui-sortable/issues/139))
 - [Tree with dynamic template](http://codepen.io/thgreasi/pen/uyHFC)
+- Canceling
+  - [Connected Lists With Max Size](http://codepen.io/thgreasi/pen/IdvFc)
+  - [Connected Lists Without Duplicates](http://codepen.io/thgreasi/pen/uKfyt)
 
 ## Reporting Issues
 
