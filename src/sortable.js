@@ -33,6 +33,10 @@ angular.module('ui.sortable', [])
             return (/left|right/).test(item.css('float')) || (/inline|table-cell/).test(item.css('display'));
           }
 
+          function afterStop(e, ui) {
+            ui.item.sortable._destroy();
+          }
+
           var opts = {};
 
           // directive specific options
@@ -95,7 +99,14 @@ angular.module('ui.sortable', [])
                   return !!ui.item.sortable._isCustomHelperUsed;
                 },
                 _isCanceled: false,
-                _isCustomHelperUsed: ui.item.sortable._isCustomHelperUsed
+                _isCustomHelperUsed: ui.item.sortable._isCustomHelperUsed,
+                _destroy: function () {
+                  for (var key in ui.item.sortable) {
+                    if (ui.item.sortable.hasOwnProperty(key)) {
+                      ui.item.sortable[key] = undefined;
+                    }
+                  }
+                }
               };
             };
 
@@ -262,6 +273,8 @@ angular.module('ui.sortable', [])
                       // call apply after stop
                       value = combineCallbacks(
                         value, function() { scope.$apply(); });
+
+                      value = combineCallbacks(value, afterStop);
                     }
                     // wrap the callback
                     value = combineCallbacks(callbacks[key], value);
@@ -277,6 +290,9 @@ angular.module('ui.sortable', [])
 
             angular.forEach(callbacks, function(value, key) {
               opts[key] = combineCallbacks(value, opts[key]);
+              if( key === 'stop' ){
+                opts[key] = combineCallbacks(opts[key], afterStop);
+              }
             });
 
           } else {
