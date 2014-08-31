@@ -6,11 +6,12 @@ describe('uiSortable', function() {
   beforeEach(module('ui.sortable'));
   beforeEach(module('ui.sortable.testHelper'));
 
-  var EXTRA_DY_PERCENTAGE, listContent;
+  var EXTRA_DY_PERCENTAGE, listContent, hasUndefinedProperties;
 
   beforeEach(inject(function (sortableTestHelper) {
     EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
     listContent = sortableTestHelper.listContent;
+    hasUndefinedProperties = sortableTestHelper.hasUndefinedProperties;
   }));
 
   describe('Callbacks related', function() {
@@ -183,6 +184,61 @@ describe('uiSortable', function() {
         host.append(element);
 
         expect($rootScope.opts.create).toHaveBeenCalled();
+
+        $(element).remove();
+      });
+    });
+
+    it('should properly free ui.item.sortable object', function() {
+      inject(function($compile, $rootScope) {
+        var element, uiItem, uiItemSortable_Destroy;
+        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            start: function (e, ui) {
+              uiItem = ui.item;
+              spyOn(ui.item.sortable, '_destroy').andCallThrough();
+              uiItemSortable_Destroy = ui.item.sortable._destroy;
+            },
+            update: function(e, ui) {
+              if (ui.item.scope().item === 'Two') {
+                ui.item.sortable.cancel();
+              }
+            }
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element);
+
+        var li = element.find(':eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+        expect(uiItemSortable_Destroy).toHaveBeenCalled();
+        expect(hasUndefinedProperties(uiItem.sortable)).toBe(true);
+        uiItem = uiItemSortable_Destroy = undefined;
+
+
+        li = element.find(':eq(0)');
+        dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
+        expect($rootScope.items).toEqual(listContent(element));
+        expect(uiItemSortable_Destroy).toHaveBeenCalled();
+        expect(hasUndefinedProperties(uiItem.sortable)).toBe(true);
+        uiItem = uiItemSortable_Destroy = undefined;
+
+
+        li = element.find(':eq(2)');
+        dy = -(2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+        expect(uiItemSortable_Destroy).toHaveBeenCalled();
+        expect(hasUndefinedProperties(uiItem.sortable)).toBe(true);
+        uiItem = uiItemSortable_Destroy = undefined;
 
         $(element).remove();
       });

@@ -6,13 +6,14 @@ describe('uiSortable', function() {
   beforeEach(module('ui.sortable'));
   beforeEach(module('ui.sortable.testHelper'));
   
-  var EXTRA_DY_PERCENTAGE, listContent, listInnerContent, simulateElementDrag;
+  var EXTRA_DY_PERCENTAGE, listContent, listInnerContent, simulateElementDrag, hasUndefinedProperties;
 
   beforeEach(inject(function (sortableTestHelper) {
     EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
     listContent = sortableTestHelper.listContent;
     listInnerContent = sortableTestHelper.listInnerContent;
     simulateElementDrag = sortableTestHelper.simulateElementDrag;
+    hasUndefinedProperties = sortableTestHelper.hasUndefinedProperties;
   }));
 
   describe('Multiple sortables related', function() {
@@ -464,6 +465,83 @@ describe('uiSortable', function() {
         expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
         expect($rootScope.itemsTop).toEqual(listContent(elementTop));
         expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
+
+        $(elementTop).remove();
+        $(elementBottom).remove();
+      });
+    });
+
+    it('should properly free ui.item.sortable object', function() {
+      inject(function($compile, $rootScope) {
+        var elementTop, elementBottom, uiItem, uiItemSortable_Destroy;
+        elementTop = $compile('<ul ui-sortable="opts" class="cross-sortable" ng-model="itemsTop"><li ng-repeat="item in itemsTop" id="s-top-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        elementBottom = $compile('<ul ui-sortable="opts" class="cross-sortable" ng-model="itemsBottom"><li ng-repeat="item in itemsBottom" id="s-bottom-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.itemsTop = ['Top One', 'Top Two', 'Top Three'];
+          $rootScope.itemsBottom = ['Bottom One', 'Bottom Two', 'Bottom Three'];
+          $rootScope.opts = {
+            connectWith: '.cross-sortable',
+            start: function (e, ui) {
+              uiItem = ui.item;
+              spyOn(ui.item.sortable, '_destroy').andCallThrough();
+              uiItemSortable_Destroy = ui.item.sortable._destroy;
+            },
+            update: function(e, ui) {
+              uiItem.sortable = ui.item.sortable;
+              if (ui.item.scope() &&
+                (typeof ui.item.scope().item === 'string') &&
+                ui.item.scope().item.indexOf('Two') >= 0) {
+                ui.item.sortable.cancel();
+              }
+            }
+          };
+        });
+
+        host.append(elementTop).append(elementBottom).append('<div class="clear"></div>');
+
+        var li1 = elementTop.find(':eq(1)');
+        var li2 = elementBottom.find(':eq(0)');
+        simulateElementDrag(li1, li2, 'below');
+        expect($rootScope.itemsTop).toEqual(['Top One', 'Top Two', 'Top Three']);
+        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual(listContent(elementTop));
+        expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
+        expect(uiItemSortable_Destroy).toHaveBeenCalled();
+        expect(hasUndefinedProperties(uiItem.sortable)).toBe(true);
+        uiItem = uiItemSortable_Destroy = undefined;
+
+        li1 = elementBottom.find(':eq(1)');
+        li2 = elementTop.find(':eq(1)');
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
+        expect($rootScope.itemsTop).toEqual(['Top One', 'Top Two', 'Top Three']);
+        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual(listContent(elementTop));
+        expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
+        expect(uiItemSortable_Destroy).toHaveBeenCalled();
+        expect(hasUndefinedProperties(uiItem.sortable)).toBe(true);
+        uiItem = uiItemSortable_Destroy = undefined;
+
+        li1 = elementTop.find(':eq(0)');
+        li2 = elementBottom.find(':eq(0)');
+        simulateElementDrag(li1, li2, 'below');
+        expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three']);
+        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Top One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual(listContent(elementTop));
+        expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
+        expect(uiItemSortable_Destroy).toHaveBeenCalled();
+        expect(hasUndefinedProperties(uiItem.sortable)).toBe(true);
+        uiItem = uiItemSortable_Destroy = undefined;
+
+        li1 = elementBottom.find(':eq(1)');
+        li2 = elementTop.find(':eq(1)');
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
+        expect($rootScope.itemsTop).toEqual(['Top Two', 'Top One', 'Top Three']);
+        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual(listContent(elementTop));
+        expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
+        expect(uiItemSortable_Destroy).toHaveBeenCalled();
+        expect(hasUndefinedProperties(uiItem.sortable)).toBe(true);
+        uiItem = uiItemSortable_Destroy = undefined;
 
         $(elementTop).remove();
         $(elementBottom).remove();
