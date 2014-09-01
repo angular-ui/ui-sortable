@@ -28,7 +28,17 @@ angular.module('ui.sortable', [])
             return helperOption === 'clone' || (typeof helperOption === 'function' && ui.item.sortable.isCustomHelperUsed());
           }
 
+          // thanks jquery-ui
+          function isFloating (item) {
+            return (/left|right/).test(item.css('float')) || (/inline|table-cell/).test(item.css('display'));
+          }
+
           var opts = {};
+
+          // directive specific options
+          var directiveOpts = {
+            'ui-floating': undefined
+          };
 
           var callbacks = {
             receive: null,
@@ -42,7 +52,7 @@ angular.module('ui.sortable', [])
             helper: null
           };
 
-          angular.extend(opts, uiSortableConfig, scope.$eval(attrs.uiSortable));
+          angular.extend(opts, directiveOpts, uiSortableConfig, scope.$eval(attrs.uiSortable));
 
           if (!angular.element.fn || !angular.element.fn.jquery) {
             $log.error('ui.sortable: jQuery should be included before AngularJS!');
@@ -65,6 +75,13 @@ angular.module('ui.sortable', [])
             });
 
             callbacks.start = function(e, ui) {
+              if (opts['ui-floating'] === 'auto') {
+                // since the drag has started, the element will be
+                // absolutely positioned, so we check its siblings
+                var siblings = ui.item.siblings();
+                angular.element(e.target).data('ui-sortable').floating = isFloating(siblings);
+              }
+
               // Save the starting position of dragged item
               ui.item.sortable = {
                 index: ui.item.index(),
@@ -228,7 +245,18 @@ angular.module('ui.sortable', [])
               // is still bound to the directive's element
               if (!!element.data('ui-sortable')) {
                 angular.forEach(newVal, function(value, key) {
-                  if(callbacks[key]) {
+                  // if it's a custom option of the directive,
+                  // handle it approprietly
+                  if (key in directiveOpts) {
+                    if (key === 'ui-floating' && (value === false || value === true)) {
+                      element.data('ui-sortable').floating = value;
+                    }
+
+                    opts[key] = value;
+                    return;
+                  }
+
+                  if (callbacks[key]) {
                     if( key === 'stop' ){
                       // call apply after stop
                       value = combineCallbacks(
@@ -240,6 +268,7 @@ angular.module('ui.sortable', [])
                     value = wrappers[key](value);
                   }
                   
+                  opts[key] = value;
                   element.sortable('option', key, value);
                 });
               }
