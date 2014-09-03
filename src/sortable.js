@@ -88,7 +88,10 @@ angular.module('ui.sortable', [])
 
               // Save the starting position of dragged item
               ui.item.sortable = {
+                model: ngModel.$modelValue[ui.item.index()],
                 index: ui.item.index(),
+                source: ui.item.parent(),
+                sourceModel: ngModel.$modelValue,
                 cancel: function () {
                   ui.item.sortable._isCanceled = true;
                 },
@@ -145,7 +148,9 @@ angular.module('ui.sortable', [])
               // the value will be overwritten with the old value
               if(!ui.item.sortable.received) {
                 ui.item.sortable.dropindex = ui.item.index();
-                ui.item.sortable.droptarget = ui.item.parent();
+                var droptarget = ui.item.parent();
+                ui.item.sortable.droptarget = droptarget;
+                ui.item.sortable.droptargetModel = droptarget.scope().$eval(droptarget.attr('ng-model'));
 
                 // Cancel the sort (let ng-repeat do the sort for us)
                 // Don't cancel if this is the received list because it has
