@@ -101,11 +101,9 @@ angular.module('ui.sortable', [])
                 _isCanceled: false,
                 _isCustomHelperUsed: ui.item.sortable._isCustomHelperUsed,
                 _destroy: function () {
-                  for (var key in ui.item.sortable) {
-                    if (ui.item.sortable.hasOwnProperty(key)) {
-                      ui.item.sortable[key] = undefined;
-                    }
-                  }
+                  angular.forEach(ui.item.sortable, function(value, key) {
+                    ui.item.sortable[key] = undefined;
+                  });
                 }
               };
             };
