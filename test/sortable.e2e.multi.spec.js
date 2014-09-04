@@ -471,6 +471,145 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should properly set ui.item.sortable properties', function() {
+      inject(function($compile, $rootScope) {
+        var elementTop, elementBottom, updateCallbackExpectations, stopCallbackExpectations;
+        elementTop = $compile('<ul ui-sortable="opts" class="cross-sortable" ng-model="itemsTop"><li ng-repeat="item in itemsTop" id="s-top-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        elementBottom = $compile('<ul ui-sortable="opts" class="cross-sortable" ng-model="itemsBottom"><li ng-repeat="item in itemsBottom" id="s-bottom-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.itemsTop = ['Top One', 'Top Two', 'Top Three'];
+          $rootScope.itemsBottom = ['Bottom One', 'Bottom Two', 'Bottom Three'];
+          $rootScope.opts = {
+            connectWith: '.cross-sortable',
+            update: function(e, ui) {
+              if (ui.item.scope() &&
+                (typeof ui.item.scope().item === 'string') &&
+                ui.item.scope().item.indexOf('Two') >= 0) {
+                ui.item.sortable.cancel();
+              }
+              updateCallbackExpectations(ui.item.sortable);
+            },
+            stop: function(e, ui) {
+              stopCallbackExpectations(ui.item.sortable);
+            }
+          };
+        });
+
+        host.append(elementTop).append(elementBottom).append('<div class="clear"></div>');
+
+        var li1 = elementTop.find(':eq(1)');
+        var li2 = elementBottom.find(':eq(0)');
+        updateCallbackExpectations = function(uiItemSortable) {
+          expect(uiItemSortable.model).toEqual('Top Two');
+          expect(uiItemSortable.index).toEqual(1);
+          expect(uiItemSortable.source.length).toEqual(1);
+          expect(uiItemSortable.source[0]).toBe(host.children()[0]);
+          expect(uiItemSortable.sourceModel).toBe($rootScope.itemsTop);
+          expect(uiItemSortable.isCanceled()).toBe(true);
+          expect(uiItemSortable.isCustomHelperUsed()).toBe(false);
+
+          expect(uiItemSortable.dropindex).toEqual(1);
+          expect(uiItemSortable.droptarget.length).toBe(1);
+          expect(uiItemSortable.droptarget[0]).toBe(host.children()[1]);
+          expect(uiItemSortable.droptargetModel).toBe($rootScope.itemsBottom);
+        };
+        stopCallbackExpectations = function(uiItemSortable) {
+          expect(uiItemSortable.received).toBe(true);
+          expect(uiItemSortable.moved).toBe(undefined);
+        };
+        simulateElementDrag(li1, li2, { place: 'below', extradx: -20, extrady: -10 });
+        expect($rootScope.itemsTop).toEqual(['Top One', 'Top Two', 'Top Three']);
+        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual(listContent(elementTop));
+        expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
+        updateCallbackExpectations = stopCallbackExpectations = undefined;
+
+        li1 = elementBottom.find(':eq(1)');
+        li2 = elementTop.find(':eq(1)');
+        updateCallbackExpectations = function(uiItemSortable) {
+          expect(uiItemSortable.model).toEqual('Bottom Two');
+          expect(uiItemSortable.index).toEqual(1);
+          expect(uiItemSortable.source.length).toEqual(1);
+          expect(uiItemSortable.source[0]).toBe(host.children()[1]);
+          expect(uiItemSortable.sourceModel).toBe($rootScope.itemsBottom);
+          expect(uiItemSortable.isCanceled()).toBe(true);
+          expect(uiItemSortable.isCustomHelperUsed()).toBe(false);
+
+          expect(uiItemSortable.dropindex).toEqual(1);
+          expect(uiItemSortable.droptarget.length).toBe(1);
+          expect(uiItemSortable.droptarget[0]).toBe(host.children()[0]);
+          expect(uiItemSortable.droptargetModel).toBe($rootScope.itemsTop);
+        };
+        stopCallbackExpectations = function(uiItemSortable) {
+          expect(uiItemSortable.received).toBe(true);
+          expect(uiItemSortable.moved).toBe(undefined);
+        };
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
+        expect($rootScope.itemsTop).toEqual(['Top One', 'Top Two', 'Top Three']);
+        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual(listContent(elementTop));
+        expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
+        updateCallbackExpectations = stopCallbackExpectations = undefined;
+
+        li1 = elementTop.find(':eq(0)');
+        li2 = elementBottom.find(':eq(0)');
+        updateCallbackExpectations = function(uiItemSortable) {
+          expect(uiItemSortable.model).toEqual('Top One');
+          expect(uiItemSortable.index).toEqual(0);
+          expect(uiItemSortable.source.length).toEqual(1);
+          expect(uiItemSortable.source[0]).toBe(host.children()[0]);
+          expect(uiItemSortable.sourceModel).toBe($rootScope.itemsTop);
+          expect(uiItemSortable.isCanceled()).toBe(false);
+          expect(uiItemSortable.isCustomHelperUsed()).toBe(false);
+
+          expect(uiItemSortable.dropindex).toEqual(1);
+          expect(uiItemSortable.droptarget.length).toBe(1);
+          expect(uiItemSortable.droptarget[0]).toBe(host.children()[1]);
+          expect(uiItemSortable.droptargetModel).toBe($rootScope.itemsBottom);
+        };
+        stopCallbackExpectations = function(uiItemSortable) {
+          expect(uiItemSortable.received).toBe(true);
+          expect(uiItemSortable.moved).toBe('Top One');
+        };
+        simulateElementDrag(li1, li2, 'below');
+        expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three']);
+        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Top One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual(listContent(elementTop));
+        expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
+        updateCallbackExpectations = stopCallbackExpectations = undefined;
+
+        li1 = elementBottom.find(':eq(1)');
+        li2 = elementTop.find(':eq(1)');
+        updateCallbackExpectations = function(uiItemSortable) {
+          expect(uiItemSortable.model).toEqual('Top One');
+          expect(uiItemSortable.index).toEqual(1);
+          expect(uiItemSortable.source.length).toEqual(1);
+          expect(uiItemSortable.source[0]).toBe(host.children()[1]);
+          expect(uiItemSortable.sourceModel).toBe($rootScope.itemsBottom);
+          expect(uiItemSortable.isCanceled()).toBe(false);
+          expect(uiItemSortable.isCustomHelperUsed()).toBe(false);
+
+          expect(uiItemSortable.dropindex).toEqual(1);
+          expect(uiItemSortable.droptarget.length).toBe(1);
+          expect(uiItemSortable.droptarget[0]).toBe(host.children()[0]);
+          expect(uiItemSortable.droptargetModel).toBe($rootScope.itemsTop);
+        };
+        stopCallbackExpectations = function(uiItemSortable) {
+          expect(uiItemSortable.received).toBe(true);
+          expect(uiItemSortable.moved).toBe('Top One');
+        };
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
+        expect($rootScope.itemsTop).toEqual(['Top Two', 'Top One', 'Top Three']);
+        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual(listContent(elementTop));
+        expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
+        updateCallbackExpectations = stopCallbackExpectations = undefined;
+
+        $(elementTop).remove();
+        $(elementBottom).remove();
+      });
+    });
+
     it('should properly free ui.item.sortable object', function() {
       inject(function($compile, $rootScope) {
         var elementTop, elementBottom, uiItem, uiItemSortable_Destroy;

@@ -189,6 +189,78 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should properly set ui.item.sortable properties', function() {
+      inject(function($compile, $rootScope) {
+        var element, updateCallbackExpectations;
+        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            update: function(e, ui) {
+              if (ui.item.scope().item === 'Two') {
+                ui.item.sortable.cancel();
+              }
+              updateCallbackExpectations(ui.item.sortable);
+            }
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element);
+
+        $rootScope.$apply(function() {
+        });
+        var li = element.find(':eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        updateCallbackExpectations = function(uiItemSortable) {
+          expect(uiItemSortable.model).toEqual('Two');
+          expect(uiItemSortable.index).toEqual(1);
+          expect(uiItemSortable.source.length).toEqual(1);
+          expect(uiItemSortable.source[0]).toBe(host.children()[0]);
+          expect(uiItemSortable.sourceModel).toBe($rootScope.items);
+          expect(uiItemSortable.isCanceled()).toBe(true);
+          expect(uiItemSortable.isCustomHelperUsed()).toBe(false);
+        };
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+        updateCallbackExpectations = undefined;
+
+        li = element.find(':eq(0)');
+        dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        updateCallbackExpectations = function(uiItemSortable) {
+          expect(uiItemSortable.model).toEqual('One');
+          expect(uiItemSortable.index).toEqual(0);
+          expect(uiItemSortable.source.length).toEqual(1);
+          expect(uiItemSortable.source[0]).toBe(host.children()[0]);
+          expect(uiItemSortable.sourceModel).toBe($rootScope.items);
+          expect(uiItemSortable.isCanceled()).toBe(false);
+          expect(uiItemSortable.isCustomHelperUsed()).toBe(false);
+        };
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
+        expect($rootScope.items).toEqual(listContent(element));
+        updateCallbackExpectations = undefined;
+
+        li = element.find(':eq(2)');
+        dy = -(2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        updateCallbackExpectations = function(uiItemSortable) {
+          expect(uiItemSortable.model).toEqual('One');
+          expect(uiItemSortable.index).toEqual(2);
+          expect(uiItemSortable.source.length).toEqual(1);
+          expect(uiItemSortable.source[0]).toBe(host.children()[0]);
+          expect(uiItemSortable.sourceModel).toBe($rootScope.items);
+          expect(uiItemSortable.isCanceled()).toBe(false);
+          expect(uiItemSortable.isCustomHelperUsed()).toBe(false);
+        };
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+        updateCallbackExpectations = undefined;
+
+        $(element).remove();
+      });
+    });
+
     it('should properly free ui.item.sortable object', function() {
       inject(function($compile, $rootScope) {
         var element, uiItem, uiItemSortable_Destroy;
