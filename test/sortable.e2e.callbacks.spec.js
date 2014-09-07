@@ -73,6 +73,9 @@ describe('uiSortable', function() {
         element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
+            helper: function (e, item) {
+              return item;
+            },
             update: function(e, ui) {
               if (ui.item.scope().item === 'Two') {
                 ui.item.sortable.cancel();
