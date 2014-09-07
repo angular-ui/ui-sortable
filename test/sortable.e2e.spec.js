@@ -401,6 +401,12 @@ describe('uiSortable', function() {
         expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
         expect($rootScope.items).toEqual(listContent(element));
 
+        li = element.find(':eq(2)');
+        dy = -(1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+
         $(element).remove();
       });
     });
