@@ -42,7 +42,7 @@ Apply the directive to your form elements:
 * `ui-sortable` element should only contain one `ng-repeat` and not any other elements (above or below).  
   Otherwise the index matching of the generated DOM elements and the `ng-model`'s items will break.  
   **In other words: The items of `ng-model` must match the indexes of the generated DOM elements.**
-* `ui-sortable` lists containing many 'types' of items can be implemented by using dynamic template loading [with ng-include](http://stackoverflow.com/questions/14607879/angularjs-load-dynamic-template-html-within-directive/14621927#14621927) or a [loader directive](https://gist.github.com/thgreasi/7152499c0e91973c4820), to determine how each model item should be rendered. Also take a look at the [Tree with dynamic template](http://codepen.io/thgreasi/pen/uyHFC) example.
+* `ui-sortable` lists containing many 'types' of items can be implemented by using dynamic template loading [with ng-include](http://stackoverflow.com/questions/14607879/angularjs-load-dynamic-template-html-within-directive/14621927#14621927) or a [loader directive](https://github.com/thgreasi/tg-dynamic-directive), to determine how each model item should be rendered. Also take a look at the [Tree with dynamic template](http://codepen.io/thgreasi/pen/uyHFC) example.
 
 ### Options
 
