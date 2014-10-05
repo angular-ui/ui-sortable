@@ -46,7 +46,8 @@ Apply the directive to your form elements:
 
 ### Options
 
-All the [jQueryUI Sortable options](http://api.jqueryui.com/sortable/) can be passed through the directive.
+All the [jQueryUI Sortable options](http://api.jqueryui.com/sortable/) can be passed through the directive.  
+Additionally, the `ui` argument of the available callbacks gets enriched with some extra properties as specified to the [API.md file](API.md#uiitemsortable-api-documentation).
 
 
 ```js
