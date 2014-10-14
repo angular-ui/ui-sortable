@@ -1,3 +1,8 @@
+.inline-block {
+	display: inline-block;
+}
+
+.floatleft,
 .cross-sortable {
 	float: left;
 }

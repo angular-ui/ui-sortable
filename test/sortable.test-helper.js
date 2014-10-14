@@ -62,10 +62,20 @@ angular.module('ui.sortable.testHelper', [])
       draggedElement.simulate('drag', dragOptions);
     }
 
+    function hasUndefinedProperties(testObject) {
+      return testObject && Object.keys(testObject)
+        .filter(function(key) {
+          return testObject.hasOwnProperty(key) &&
+                 testObject[key] !== undefined;
+        })
+        .length === 0;
+    }
+
     return {
       EXTRA_DY_PERCENTAGE: EXTRA_DY_PERCENTAGE,
       listContent: listContent,
       listInnerContent: listInnerContent,
-      simulateElementDrag: simulateElementDrag
+      simulateElementDrag: simulateElementDrag,
+      hasUndefinedProperties: hasUndefinedProperties
     };
   });
