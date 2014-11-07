@@ -287,7 +287,7 @@ angular.module('ui.sortable', [])
                   } else if (wrappers[key]) {
                     value = wrappers[key](value);
                   }
-                  
+
                   opts[key] = value;
                   element.sortable('option', key, value);
                 });
