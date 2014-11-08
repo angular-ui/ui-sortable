@@ -77,7 +77,7 @@ angular.module('ui.sortable', [])
                 if (!!element.data('ui-sortable')) {
                   element.sortable('refresh');
                 }
-              });
+              }, 0, false);
             });
 
             callbacks.start = function(e, ui) {
