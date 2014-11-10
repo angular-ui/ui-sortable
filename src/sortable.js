@@ -151,9 +151,7 @@ angular.module('ui.sortable', [])
                 var droptarget = ui.item.parent();
                 ui.item.sortable.droptarget = droptarget;
                 var attr = droptarget.attr('ng-model') || droptarget.attr('data-ng-model');
-                if (attr) {
-                  ui.item.sortable.droptargetModel = scope.$eval(attr);
-                }
+                ui.item.sortable.droptargetModel = droptarget.scope().$eval(attr);
 
                 // Cancel the sort (let ng-repeat do the sort for us)
                 // Don't cancel if this is the received list because it has
