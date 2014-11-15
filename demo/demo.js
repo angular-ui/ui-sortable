@@ -29,3 +29,23 @@ myapp.controller('sortableController', function ($scope) {
     }
   };
 });
+
+myapp.controller('connectedController', function ($scope) {
+  function buildArray(name, size) {
+      var i, array = [];
+      for (i = 1; i <= size; i = i + 1){
+        array.push({
+          text: name + ' ' + i ,
+          value: i
+        });
+      }
+
+      return array;
+    }
+
+  $scope.leftArray = buildArray('Left', 5);
+  $scope.rightArray = buildArray('Right', 7);
+  $scope.sortableOptions = {
+    connectWith: '.list'
+  };
+});
