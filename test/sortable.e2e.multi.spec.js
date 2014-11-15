@@ -64,6 +64,45 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should update model when sorting between sortables of different scopes', function() {
+      inject(function($compile, $rootScope) {
+        var elementTop, elementBottom,
+            wrapperTop, wrapperBottom,
+            itemsTop, itemsBottom;
+        wrapperTop = $compile('<div ng-controller="dummyController"><ul ui-sortable="opts" class="cross-sortable" ng-model="itemsTop"><li ng-repeat="item in itemsTop" id="s-top-{{$index}}">{{ item }}</li></ul></div>')($rootScope);
+        wrapperBottom = $compile('<div ng-controller="dummyController"><ul ui-sortable="opts" class="cross-sortable" ng-model="itemsBottom"><li ng-repeat="item in itemsBottom" id="s-bottom-{{$index}}">{{ item }}</li></ul></div>')($rootScope);
+
+        host.append(wrapperTop).append(wrapperBottom).append('<div class="clear"></div>');
+        $rootScope.$apply(function() {
+          wrapperTop.scope().itemsTop = itemsTop = ['Top One', 'Top Two', 'Top Three'];
+          wrapperBottom.scope().itemsBottom = itemsBottom = ['Bottom One', 'Bottom Two', 'Bottom Three'];
+          $rootScope.opts = { connectWith: '.cross-sortable' };
+        });
+
+        elementTop = wrapperTop.find('> [ui-sortable]');
+        elementBottom = wrapperBottom.find('> [ui-sortable]');
+
+        var li1 = elementTop.find(':eq(0)');
+        var li2 = elementBottom.find(':eq(0)');
+        simulateElementDrag(li1, li2, 'below');
+        expect(itemsTop).toEqual(['Top Two', 'Top Three']);
+        expect(itemsBottom).toEqual(['Bottom One', 'Top One', 'Bottom Two', 'Bottom Three']);
+        expect(itemsTop).toEqual(listContent(elementTop));
+        expect(itemsBottom).toEqual(listContent(elementBottom));
+
+        li1 = elementBottom.find(':eq(1)');
+        li2 = elementTop.find(':eq(1)');
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -10 });
+        expect(itemsTop).toEqual(['Top Two', 'Top One', 'Top Three']);
+        expect(itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect(itemsTop).toEqual(listContent(elementTop));
+        expect(itemsBottom).toEqual(listContent(elementBottom));
+
+        $(elementTop).remove();
+        $(elementBottom).remove();
+      });
+    });
+
     it('should update model when sorting a "falsy" item between sortables', function() {
       inject(function($compile, $rootScope) {
         var elementTop, elementBottom;

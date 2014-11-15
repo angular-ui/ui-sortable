@@ -78,4 +78,7 @@ angular.module('ui.sortable.testHelper', [])
       simulateElementDrag: simulateElementDrag,
       hasUndefinedProperties: hasUndefinedProperties
     };
+  })
+  .controller('dummyController', function ($scope) {
+    $scope.testItems = ['One', 'Two', 'Three'];
   });
