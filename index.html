@@ -102,20 +102,36 @@
 ================================================== -->
 <div class="container">
 
-  <section ng-app="sortableApp" ng-controller="sortableController">
-  <div class="row">
-    <div class="col-md-6">
+  <section ng-app="sortableApp">
+  <h1>Sortable items</h1>
+  <div ng-controller="sortableController" class="section row">
+    <div class="col-sm-offset-2 col-sm-4">
       <ul ui-sortable="sortableOptions" ng-model="list" class="list">
         <li ng-repeat="item in list" class="item">{{item.text}}</li>
       </ul>
     </div>
-    <div class="col-md-6">
+    <div class="col-sm-4">
       <ul class="list logList">
         <li ng-repeat="entry in sortingLog" class="logItem">{{entry.Text}}</li>
       </ul>
     </div>
   </div>
+
+  <h1>Connected items</h1>
+  <div ng-controller="connectedController" class="section row connectedItemsExample">
+    <div class="col-sm-offset-2 col-sm-4">
+      <ul ui-sortable="sortableOptions" ng-model="leftArray" class="list">
+        <li ng-repeat="item in leftArray" class="item">{{item.text}}</li>
+      </ul>
+    </div>
+    <div class="col-sm-4">
+      <ul ui-sortable="sortableOptions" ng-model="rightArray" class="list">
+        <li ng-repeat="item in rightArray" class="item">{{item.text}}</li>
+      </ul>
+    </div>
+  </div>
 </section>
+
 
 </div>
 
@@ -135,20 +151,22 @@
   
 var myapp = angular.module('sortableApp', ['ui.sortable']);
 
-myapp.controller('sortableController', function ($scope) {
-  'use strict';
-
-  var tmpList = [];
-
-  for (var i = 1; i <= 6; i++){
-    tmpList.push({
-      text: 'Item ' + i,
+myapp.buildArray = function(name, size) {
+  var i, array = [];
+  for (i = 1; i <= size; i++){
+    array.push({
+      text: name + ' ' + i ,
       value: i
     });
   }
 
-  $scope.list = tmpList;
+  return array;
+};
 
+myapp.controller('sortableController', function ($scope) {
+  'use strict';
+
+  $scope.list = myapp.buildArray('Item', 5);
 
   $scope.sortingLog = [];
 
@@ -163,6 +181,15 @@ myapp.controller('sortableController', function ($scope) {
     }
   };
 });
+
+myapp.controller('connectedController', function ($scope) {
+  $scope.leftArray = myapp.buildArray('Left', 5);
+  $scope.rightArray = myapp.buildArray('Right', 7);
+  $scope.sortableOptions = {
+    connectWith: '.connectedItemsExample .list'
+  };
+});
+
 </script>
 
 </body>
