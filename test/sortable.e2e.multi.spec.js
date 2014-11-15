@@ -98,8 +98,8 @@ describe('uiSortable', function() {
         expect(itemsTop).toEqual(listContent(elementTop));
         expect(itemsBottom).toEqual(listContent(elementBottom));
 
-        $(elementTop).remove();
-        $(elementBottom).remove();
+        $(wrapperBottom).remove();
+        $(wrapperTop).remove();
       });
     });
 
