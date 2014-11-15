@@ -77,7 +77,7 @@ angular.module('ui.sortable', [])
                 if (!!element.data('ui-sortable')) {
                   element.sortable('refresh');
                 }
-              });
+              }, 0, false);
             });
 
             callbacks.start = function(e, ui) {
@@ -152,7 +152,8 @@ angular.module('ui.sortable', [])
                 ui.item.sortable.dropindex = ui.item.index();
                 var droptarget = ui.item.parent();
                 ui.item.sortable.droptarget = droptarget;
-                ui.item.sortable.droptargetModel = droptarget.scope().$eval(droptarget.attr('ng-model'));
+                var attr = droptarget.attr('ng-model') || droptarget.attr('data-ng-model');
+                ui.item.sortable.droptargetModel = droptarget.scope().$eval(attr);
 
                 // Cancel the sort (let ng-repeat do the sort for us)
                 // Don't cancel if this is the received list because it has
@@ -286,7 +287,7 @@ angular.module('ui.sortable', [])
                   } else if (wrappers[key]) {
                     value = wrappers[key](value);
                   }
-                  
+
                   opts[key] = value;
                   element.sortable('option', key, value);
                 });
