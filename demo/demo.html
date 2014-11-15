@@ -14,7 +14,7 @@
   </div>
 
   <h1>Connected items</h1>
-  <div ng-controller="connectedController" class="section row">
+  <div ng-controller="connectedController" class="section row connectedItemsExample">
     <div class="col-sm-offset-2 col-sm-4">
       <ul ui-sortable="sortableOptions" ng-model="leftArray" class="list">
         <li ng-repeat="item in leftArray" class="item">{{item.text}}</li>
