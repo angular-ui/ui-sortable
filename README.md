@@ -179,6 +179,7 @@ For more details about the events check the [jQueryUI API documentation](http://
 - Canceling
   - [Connected Lists With Max Size](http://codepen.io/thgreasi/pen/IdvFc)
   - [Connected Lists Without Duplicates](http://codepen.io/thgreasi/pen/uKfyt)
+- [Draggable Handle](http://codepen.io/thgreasi/pen/ihAyr)
 
 ## Reporting Issues
 
