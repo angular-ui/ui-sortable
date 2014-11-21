@@ -187,8 +187,9 @@ angular.module('ui.sortable', [])
               // moved here from another list
               if(ui.item.sortable.received && !ui.item.sortable.isCanceled()) {
                 scope.$apply(function () {
-                  ngModel.$modelValue.splice(ui.item.sortable.dropindex, 0,
-                                             ui.item.sortable.moved);
+                  Array.prototype.splice.call(ngModel.$modelValue,
+                                              ui.item.sortable.dropindex, 0,
+                                              ui.item.sortable.moved);
                 });
               }
             };
@@ -202,9 +203,10 @@ angular.module('ui.sortable', [])
                  !ui.item.sortable.isCanceled()) {
 
                 scope.$apply(function () {
-                  ngModel.$modelValue.splice(
-                    ui.item.sortable.dropindex, 0,
-                    ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0]);
+                  Array.prototype.splice.call(ngModel.$modelValue,
+                      ui.item.sortable.dropindex, 0,
+                      Array.prototype.splice.call(ngModel.$modelValue,
+                        ui.item.sortable.index, 1)[0]);
                 });
               } else {
                 // if the item was not moved, then restore the elements
@@ -239,8 +241,8 @@ angular.module('ui.sortable', [])
               // so the next list can retrive it
               if (!ui.item.sortable.isCanceled()) {
                 scope.$apply(function () {
-                  ui.item.sortable.moved = ngModel.$modelValue.splice(
-                    ui.item.sortable.index, 1)[0];
+                  ui.item.sortable.moved = Array.prototype.splice.call(
+                    ngModel.$modelValue, ui.item.sortable.index, 1)[0];
                 });
               }
             };
