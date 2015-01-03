@@ -10,6 +10,10 @@ angular.module('ui.sortable', [])
     function(uiSortableConfig, $timeout, $log) {
       return {
         require: '?ngModel',
+        scope: {
+          ngModel: '=ngModel',
+          uiSortable: '=uiSortable'
+        },
         link: function(scope, element, attrs, ngModel) {
           var savedNodes;
 
@@ -56,7 +60,7 @@ angular.module('ui.sortable', [])
             helper: null
           };
 
-          angular.extend(opts, directiveOpts, uiSortableConfig, scope.$eval(attrs.uiSortable));
+          angular.extend(opts, directiveOpts, uiSortableConfig, scope.uiSortable);
 
           if (!angular.element.fn || !angular.element.fn.jquery) {
             $log.error('ui.sortable: jQuery should be included before AngularJS!');
@@ -67,7 +71,7 @@ angular.module('ui.sortable', [])
 
             // When we add or remove elements, we need the sortable to 'refresh'
             // so it can find the new/removed elements.
-            scope.$watch(attrs.ngModel+'.length', function() {
+            scope.$watch('ngModel.length', function() {
               // Timeout to let ng-repeat modify the DOM
               $timeout(function() {
                 // ensure that the jquery-ui-sortable widget instance
@@ -256,7 +260,7 @@ angular.module('ui.sortable', [])
               return inner;
             };
 
-            scope.$watch(attrs.uiSortable, function(newVal /*, oldVal*/) {
+            scope.$watch('uiSortable', function(newVal /*, oldVal*/) {
               // ensure that the jquery-ui-sortable widget instance
               // is still bound to the directive's element
               if (!!element.data('ui-sortable')) {
