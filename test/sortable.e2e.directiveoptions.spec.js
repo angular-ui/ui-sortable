@@ -2,6 +2,12 @@
 
 describe('uiSortable', function() {
 
+  beforeEach(module(function($compileProvider) {
+    if (typeof $compileProvider.debugInfoEnabled === 'function') {
+      $compileProvider.debugInfoEnabled(false);
+    }
+  }));
+
   // Ensure the sortable angular module is loaded
   beforeEach(module('ui.sortable'));
   beforeEach(module('ui.sortable.testHelper'));
