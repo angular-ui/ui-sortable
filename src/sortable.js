@@ -47,6 +47,16 @@ angular.module('ui.sortable', [])
             return (/left|right/).test(item.css('float')) || (/inline|table-cell/).test(item.css('display'));
           }
 
+          function getElementScope(elementScopes, element) {
+            for (var i = 0; i < elementScopes.length; i++) {
+              var x = elementScopes[i];
+              if (x.element[0] === element[0]) {
+                return x.scope;
+              }
+            }
+            return null;
+          }
+
           function afterStop(e, ui) {
             ui.item.sortable._destroy();
           }
@@ -126,7 +136,7 @@ angular.module('ui.sortable', [])
               };
             };
 
-            callbacks.activate = function(/*e, ui*/) {
+            callbacks.activate = function(e, ui) {
               // We need to make a copy of the current element's contents so
               // we can restore it after sortable has messed it up.
               // This is inside activate (instead of start) in order to save
@@ -151,10 +161,20 @@ angular.module('ui.sortable', [])
                 // exact match with the placeholder's class attribute to handle
                 // the case that multiple connected sortables exist and
                 // the placehoilder option equals the class of sortable items
-                var excludes = element.find('[class="' + phElement.attr('class') + '"]');
+                var excludes = element.find('[class="' + phElement.attr('class') + '"]:not([ng-repeat], [data-ng-repeat])');
 
                 savedNodes = savedNodes.not(excludes);
               }
+
+              // save the directive's scope so that it is accessible from ui.item.sortable
+              var connectedSortables = ui.item.sortable._connectedSortables || [];
+
+              connectedSortables.push({
+                element: element,
+                scope: scope
+              });
+
+              ui.item.sortable._connectedSortables = connectedSortables;
             };
 
             callbacks.update = function(e, ui) {
@@ -165,8 +185,9 @@ angular.module('ui.sortable', [])
                 ui.item.sortable.dropindex = ui.item.index();
                 var droptarget = ui.item.parent();
                 ui.item.sortable.droptarget = droptarget;
-                var attr = droptarget.attr('ng-model') || droptarget.attr('data-ng-model');
-                ui.item.sortable.droptargetModel = droptarget.scope().$eval(attr);
+
+                var droptargetScope = getElementScope(ui.item.sortable._connectedSortables, droptarget);
+                ui.item.sortable.droptargetModel = droptargetScope.ngModel;
 
                 // Cancel the sort (let ng-repeat do the sort for us)
                 // Don't cancel if this is the received list because it has
