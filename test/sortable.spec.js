@@ -77,6 +77,25 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should refresh sortable properly after an apply [data-* anotation]', function() {
+      inject(function($compile, $rootScope, $timeout) {
+        var element;
+        var childScope = $rootScope.$new();
+        element = $compile('<ul data-ui-sortable="opts" data-ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>')(childScope);
+        $rootScope.$apply(function() {
+          childScope.items = ['One', 'Two', 'Three'];
+          childScope.opts = {};
+        });
+
+        expect(function() {
+          $timeout.flush();
+        }).not.toThrow();
+
+        expect(childScope.items).toEqual(['One', 'Two', 'Three']);
+        expect(childScope.items).toEqual(listContent(element));
+      });
+    });
+
     it('should not refresh sortable if destroyed', function() {
       inject(function($compile, $rootScope, $timeout) {
         var element;
@@ -94,11 +113,50 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should not refresh sortable if destroyed [data-* anotation]', function() {
+      inject(function($compile, $rootScope, $timeout) {
+        var element;
+        var childScope = $rootScope.$new();
+        element = $compile('<div><ul data-ui-sortable="opts" data-ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul></div>')(childScope);
+        $rootScope.$apply(function() {
+          childScope.items = ['One', 'Two', 'Three'];
+          childScope.opts = {};
+        });
+
+        element.remove(element.firstChild);
+        expect(function() {
+          $timeout.flush();
+        }).not.toThrow();
+
+      });
+    });
+
     it('should not try to apply options to a destroyed sortable', function() {
       inject(function($compile, $rootScope, $timeout) {
         var element;
         var childScope = $rootScope.$new();
         element = $compile('<div><ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul></div>')(childScope);
+        $rootScope.$apply(function() {
+          childScope.items = ['One', 'Two', 'Three'];
+          childScope.opts = {
+            update: function() {}
+          };
+
+          element.remove(element.firstChild);
+        });
+
+        expect(function() {
+          $timeout.flush();
+        }).not.toThrow();
+
+      });
+    });
+
+    it('should not try to apply options to a destroyed sortable [data-* anotation]', function() {
+      inject(function($compile, $rootScope, $timeout) {
+        var element;
+        var childScope = $rootScope.$new();
+        element = $compile('<div><ul data-ui-sortable="opts" data-ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul></div>')(childScope);
         $rootScope.$apply(function() {
           childScope.items = ['One', 'Two', 'Three'];
           childScope.opts = {
