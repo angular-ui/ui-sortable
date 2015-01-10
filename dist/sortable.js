@@ -78,7 +78,7 @@ angular.module('ui.sortable', [])
               $timeout(function() {
                 // ensure that the jquery-ui-sortable widget instance
                 // is still bound to the directive's element
-                if (!!element.data('ui-sortable')) {
+                if (!!element.sortable('instance')) {
                   element.sortable('refresh');
                 }
               }, 0, false);
@@ -89,7 +89,7 @@ angular.module('ui.sortable', [])
                 // since the drag has started, the element will be
                 // absolutely positioned, so we check its siblings
                 var siblings = ui.item.siblings();
-                angular.element(e.target).data('ui-sortable').floating = isFloating(siblings);
+                angular.element(e.target).sortable('instance').floating = isFloating(siblings);
               }
 
               // Save the starting position of dragged item
@@ -265,13 +265,13 @@ angular.module('ui.sortable', [])
             scope.$watch('uiSortable', function(newVal /*, oldVal*/) {
               // ensure that the jquery-ui-sortable widget instance
               // is still bound to the directive's element
-              if (!!element.data('ui-sortable')) {
+              if (!!element.sortable('instance')) {
                 angular.forEach(newVal, function(value, key) {
                   // if it's a custom option of the directive,
                   // handle it approprietly
                   if (key in directiveOpts) {
                     if (key === 'ui-floating' && (value === false || value === true)) {
-                      element.data('ui-sortable').floating = value;
+                      element.sortable('instance').floating = value;
                     }
 
                     opts[key] = value;
