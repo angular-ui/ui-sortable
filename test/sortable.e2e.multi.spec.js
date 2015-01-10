@@ -74,14 +74,17 @@ describe('uiSortable', function() {
       inject(function($compile, $rootScope) {
         var elementTop, elementBottom,
             wrapperTop, wrapperBottom,
+            wrapperTopScope, wrapperBottomScope,
             itemsTop, itemsBottom;
-        wrapperTop = $compile('<div ng-controller="dummyController"><ul ui-sortable="opts" class="cross-sortable" ng-model="itemsTop"><li ng-repeat="item in itemsTop" id="s-top-{{$index}}">{{ item }}</li></ul></div>')($rootScope);
-        wrapperBottom = $compile('<div ng-controller="dummyController"><ul ui-sortable="opts" class="cross-sortable" ng-model="itemsBottom"><li ng-repeat="item in itemsBottom" id="s-bottom-{{$index}}">{{ item }}</li></ul></div>')($rootScope);
+        wrapperTopScope = $rootScope.$new();
+        wrapperBottomScope = $rootScope.$new();
+        wrapperTop = $compile('<div ng-controller="dummyController"><ul ui-sortable="opts" class="cross-sortable" ng-model="itemsTop"><li ng-repeat="item in itemsTop" id="s-top-{{$index}}">{{ item }}</li></ul></div>')(wrapperTopScope);
+        wrapperBottom = $compile('<div ng-controller="dummyController"><ul ui-sortable="opts" class="cross-sortable" ng-model="itemsBottom"><li ng-repeat="item in itemsBottom" id="s-bottom-{{$index}}">{{ item }}</li></ul></div>')(wrapperBottomScope);
 
         host.append(wrapperTop).append(wrapperBottom).append('<div class="clear"></div>');
         $rootScope.$apply(function() {
-          wrapperTop.scope().itemsTop = itemsTop = ['Top One', 'Top Two', 'Top Three'];
-          wrapperBottom.scope().itemsBottom = itemsBottom = ['Bottom One', 'Bottom Two', 'Bottom Three'];
+          wrapperTopScope.itemsTop = itemsTop = ['Top One', 'Top Two', 'Top Three'];
+          wrapperBottomScope.itemsBottom = itemsBottom = ['Bottom One', 'Bottom Two', 'Bottom Three'];
           $rootScope.opts = { connectWith: '.cross-sortable' };
         });
 
@@ -468,9 +471,9 @@ describe('uiSortable', function() {
           $rootScope.opts = {
             connectWith: '.cross-sortable',
             update: function(e, ui) {
-              if (ui.item.scope() &&
-                (typeof ui.item.scope().item === 'string') &&
-                ui.item.scope().item.indexOf('Two') >= 0) {
+              if (ui.item.sortable.model &&
+                (typeof ui.item.sortable.model === 'string') &&
+                ui.item.sortable.model.indexOf('Two') >= 0) {
                 ui.item.sortable.cancel();
               }
             }
@@ -527,9 +530,9 @@ describe('uiSortable', function() {
           $rootScope.opts = {
             connectWith: '.cross-sortable',
             update: function(e, ui) {
-              if (ui.item.scope() &&
-                (typeof ui.item.scope().item === 'string') &&
-                ui.item.scope().item.indexOf('Two') >= 0) {
+              if (ui.item.sortable.model &&
+                (typeof ui.item.sortable.model === 'string') &&
+                ui.item.sortable.model.indexOf('Two') >= 0) {
                 ui.item.sortable.cancel();
               }
               updateCallbackExpectations(ui.item.sortable);
@@ -666,9 +669,9 @@ describe('uiSortable', function() {
           $rootScope.opts = {
             connectWith: '.cross-sortable',
             update: function(e, ui) {
-              if (ui.item.scope() &&
-                (typeof ui.item.scope().item === 'string') &&
-                ui.item.scope().item.indexOf('Two') >= 0) {
+              if (ui.item.sortable.model &&
+                (typeof ui.item.sortable.model === 'string') &&
+                ui.item.sortable.model.indexOf('Two') >= 0) {
                 ui.item.sortable.cancel();
               }
               updateCallbackExpectations(ui.item.sortable);
@@ -735,21 +738,24 @@ describe('uiSortable', function() {
       inject(function($compile, $rootScope) {
         var elementTop, elementBottom,
             wrapperTop, wrapperBottom,
+            wrapperTopScope, wrapperBottomScope,
             itemsTop, itemsBottom,
             updateCallbackExpectations;
-        wrapperTop = $compile('<div ng-controller="dummyController"><ul ui-sortable="opts" class="cross-sortable" ng-model="itemsTop"><li ng-repeat="item in itemsTop" id="s-top-{{$index}}">{{ item }}</li></ul></div>')($rootScope);
-        wrapperBottom = $compile('<div ng-controller="dummyController"><ul ui-sortable="opts" class="cross-sortable" ng-model="itemsBottom"><li ng-repeat="item in itemsBottom" id="s-bottom-{{$index}}">{{ item }}</li></ul></div>')($rootScope);
+        wrapperTopScope = $rootScope.$new();
+        wrapperBottomScope = $rootScope.$new();
+        wrapperTop = $compile('<div ng-controller="dummyController"><ul ui-sortable="opts" class="cross-sortable" ng-model="itemsTop"><li ng-repeat="item in itemsTop" id="s-top-{{$index}}">{{ item }}</li></ul></div>')(wrapperTopScope);
+        wrapperBottom = $compile('<div ng-controller="dummyController"><ul ui-sortable="opts" class="cross-sortable" ng-model="itemsBottom"><li ng-repeat="item in itemsBottom" id="s-bottom-{{$index}}">{{ item }}</li></ul></div>')(wrapperBottomScope);
 
         host.append(wrapperTop).append(wrapperBottom).append('<div class="clear"></div>');
         $rootScope.$apply(function() {
-          wrapperTop.scope().itemsTop = itemsTop = ['Top One', 'Top Two', 'Top Three'];
-          wrapperBottom.scope().itemsBottom = itemsBottom = ['Bottom One', 'Bottom Two', 'Bottom Three'];
+          wrapperTopScope.itemsTop = itemsTop = ['Top One', 'Top Two', 'Top Three'];
+          wrapperBottomScope.itemsBottom = itemsBottom = ['Bottom One', 'Bottom Two', 'Bottom Three'];
           $rootScope.opts = {
             connectWith: '.cross-sortable',
             update: function(e, ui) {
-              if (ui.item.scope() &&
-                (typeof ui.item.scope().item === 'string') &&
-                ui.item.scope().item.indexOf('Two') >= 0) {
+              if (ui.item.sortable.model &&
+                (typeof ui.item.sortable.model === 'string') &&
+                ui.item.sortable.model.indexOf('Two') >= 0) {
                 ui.item.sortable.cancel();
               }
               updateCallbackExpectations(ui.item.sortable);
@@ -830,9 +836,9 @@ describe('uiSortable', function() {
             },
             update: function(e, ui) {
               uiItem.sortable = ui.item.sortable;
-              if (ui.item.scope() &&
-                (typeof ui.item.scope().item === 'string') &&
-                ui.item.scope().item.indexOf('Two') >= 0) {
+              if (ui.item.sortable.model &&
+                (typeof ui.item.sortable.model === 'string') &&
+                ui.item.sortable.model.indexOf('Two') >= 0) {
                 ui.item.sortable.cancel();
               }
             }

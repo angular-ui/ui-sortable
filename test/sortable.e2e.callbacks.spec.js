@@ -41,7 +41,7 @@ describe('uiSortable', function() {
         $rootScope.$apply(function() {
           $rootScope.opts = {
             update: function(e, ui) {
-              if (ui.item.scope().item === 'Two') {
+              if (ui.item.sortable.model === 'Two') {
                 ui.item.sortable.cancel();
               }
             }
@@ -83,7 +83,7 @@ describe('uiSortable', function() {
               return item;
             },
             update: function(e, ui) {
-              if (ui.item.scope().item === 'Two') {
+              if (ui.item.sortable.model === 'Two') {
                 ui.item.sortable.cancel();
               }
             }
@@ -123,7 +123,7 @@ describe('uiSortable', function() {
         $rootScope.$apply(function() {
           $rootScope.opts = {
             update: function(e, ui) {
-              $rootScope.logs.push('Moved element ' + ui.item.scope().item);
+              $rootScope.logs.push('Moved element ' + ui.item.sortable.model);
             }
           };
           $rootScope.items = ['One', 'Two', 'Three'];
@@ -154,7 +154,7 @@ describe('uiSortable', function() {
         $rootScope.$apply(function() {
           $rootScope.opts = {
             stop: function(e, ui) {
-              $rootScope.logs.push('Moved element ' + ui.item.scope().item);
+              $rootScope.logs.push('Moved element ' + ui.item.sortable.model);
             }
           };
           $rootScope.items = ['One', 'Two', 'Three'];
@@ -205,7 +205,7 @@ describe('uiSortable', function() {
         $rootScope.$apply(function() {
           $rootScope.opts = {
             update: function(e, ui) {
-              if (ui.item.scope().item === 'Two') {
+              if (ui.item.sortable.model === 'Two') {
                 ui.item.sortable.cancel();
               }
               updateCallbackExpectations(ui.item.sortable);
@@ -282,7 +282,7 @@ describe('uiSortable', function() {
               uiItemSortable_Destroy = ui.item.sortable._destroy;
             },
             update: function(e, ui) {
-              if (ui.item.scope().item === 'Two') {
+              if (ui.item.sortable.model === 'Two') {
                 ui.item.sortable.cancel();
               }
             }
