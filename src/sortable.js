@@ -48,13 +48,15 @@ angular.module('ui.sortable', [])
           }
 
           function getElementScope(elementScopes, element) {
+            var result = null;
             for (var i = 0; i < elementScopes.length; i++) {
               var x = elementScopes[i];
               if (x.element[0] === element[0]) {
-                return x.scope;
+                result = x.scope;
+                break;
               }
             }
-            return null;
+            return result;
           }
 
           function afterStop(e, ui) {
