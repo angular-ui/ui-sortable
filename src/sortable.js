@@ -11,8 +11,8 @@ angular.module('ui.sortable', [])
       return {
         require: '?ngModel',
         scope: {
-          ngModel: '=ngModel',
-          uiSortable: '=uiSortable'
+          ngModel: '=',
+          uiSortable: '='
         },
         link: function(scope, element, attrs, ngModel) {
           var savedNodes;
