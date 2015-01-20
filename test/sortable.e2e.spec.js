@@ -2,6 +2,12 @@
 
 describe('uiSortable', function() {
 
+  beforeEach(module(function($compileProvider) {
+    if (typeof $compileProvider.debugInfoEnabled === 'function') {
+      $compileProvider.debugInfoEnabled(false);
+    }
+  }));
+
   // Ensure the sortable angular module is loaded
   beforeEach(module('ui.sortable'));
   beforeEach(module('ui.sortable.testHelper'));
@@ -135,6 +141,35 @@ describe('uiSortable', function() {
       inject(function($compile, $rootScope) {
         var element;
         element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li></ul>')($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            placeholder: 'sortable-item'
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element);
+
+        var li = element.find(':eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        li = element.find(':eq(1)');
+        dy = -(1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Three', 'One', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        $(element).remove();
+      });
+    });
+
+    it('should work when "placeholder" option equals the class of items [data-ng-repeat]', function() {
+      inject(function($compile, $rootScope) {
+        var element;
+        element = $compile('<ul ui-sortable="opts" ng-model="items"><li data-ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li></ul>')($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             placeholder: 'sortable-item'
