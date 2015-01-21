@@ -270,6 +270,81 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should call all callbacks with the proper context', function() {
+      inject(function($compile, $rootScope) {
+        var element, callbackContexts = {};
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            helper: function(e, item) {
+              callbackContexts.helper = this;
+              return item;
+            },
+            create: function() {
+              callbackContexts.create = this;
+            },
+            start: function() {
+              callbackContexts.start = this;
+            },
+            activate: function() {
+              callbackContexts.activate = this;
+            },
+            beforeStop: function() {
+              callbackContexts.beforeStop = this;
+            },
+            update: function() {
+              callbackContexts.update = this;
+            },
+            deactivate: function() {
+              callbackContexts.deactivate = this;
+            },
+            stop: function() {
+              callbackContexts.stop = this;
+            }
+          };
+          spyOn($rootScope.opts, 'helper').andCallThrough();
+          spyOn($rootScope.opts, 'create').andCallThrough();
+          spyOn($rootScope.opts, 'start').andCallThrough();
+          spyOn($rootScope.opts, 'activate').andCallThrough();
+          spyOn($rootScope.opts, 'beforeStop').andCallThrough();
+          spyOn($rootScope.opts, 'update').andCallThrough();
+          spyOn($rootScope.opts, 'deactivate').andCallThrough();
+          spyOn($rootScope.opts, 'stop').andCallThrough();
+          $rootScope.items = ['One', 'Two', 'Three'];
+          element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        });
+
+        host.append(element);
+
+        $rootScope.$apply(function() {
+        });
+        var li = element.find(':eq(0)');
+        var dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        expect($rootScope.opts.helper).toHaveBeenCalled();
+        expect($rootScope.opts.create).toHaveBeenCalled();
+        expect($rootScope.opts.start).toHaveBeenCalled();
+        expect($rootScope.opts.activate).toHaveBeenCalled();
+        expect($rootScope.opts.beforeStop).toHaveBeenCalled();
+        expect($rootScope.opts.update).toHaveBeenCalled();
+        expect($rootScope.opts.deactivate).toHaveBeenCalled();
+        expect($rootScope.opts.stop).toHaveBeenCalled();
+
+        expect(callbackContexts.helper).toEqual(element[0]);
+        expect(callbackContexts.create).toEqual(element[0]);
+        expect(callbackContexts.start).toEqual(element[0]);
+        expect(callbackContexts.activate).toEqual(element[0]);
+        expect(callbackContexts.beforeStop).toEqual(element[0]);
+        expect(callbackContexts.update).toEqual(element[0]);
+        expect(callbackContexts.deactivate).toEqual(element[0]);
+        expect(callbackContexts.stop).toEqual(element[0]);
+
+        $(element).remove();
+      });
+    });
+
     it('should properly free ui.item.sortable object', function() {
       inject(function($compile, $rootScope) {
         var element, uiItem, uiItemSortable_Destroy;
