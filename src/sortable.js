@@ -19,9 +19,9 @@ angular.module('ui.sortable', [])
 
           function combineCallbacks(first,second){
             if(second && (typeof second === 'function')) {
-              return function(e, ui) {
-                first(e, ui);
-                second(e, ui);
+              return function() {
+                first.apply(this, arguments);
+                second.apply(this, arguments);
               };
             }
             return first;
@@ -286,7 +286,7 @@ angular.module('ui.sortable', [])
             wrappers.helper = function (inner) {
               if (inner && typeof inner === 'function') {
                 return function (e, item) {
-                  var innerResult = inner(e, item);
+                  var innerResult = inner.apply(this, arguments);
                   item.sortable._isCustomHelperUsed = item !== innerResult;
                   return innerResult;
                 };
