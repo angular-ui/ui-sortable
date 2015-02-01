@@ -184,6 +184,9 @@ For more details about the events check the [jQueryUI API documentation](http://
   - [Connected Lists Without Duplicates](http://codepen.io/thgreasi/pen/uKfyt)
 - [Draggable Handle](http://codepen.io/thgreasi/pen/ihAyr)
 
+## Integrations
+- [ui.bootstrap.accordion](http://plnkr.co/edit/TGIeeEbbvJwpJ3WRqo2z?p=preview)
+
 ## Reporting Issues
 
 The [above](#examples) pen's are provided as a good starting point to demonstrate issues, proposals and use cases.
