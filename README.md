@@ -183,6 +183,7 @@ For more details about the events check the [jQueryUI API documentation](http://
   - [Connected Lists With Max Size](http://codepen.io/thgreasi/pen/IdvFc)
   - [Connected Lists Without Duplicates](http://codepen.io/thgreasi/pen/uKfyt)
 - [Draggable Handle](http://codepen.io/thgreasi/pen/ihAyr)
+- [Drop Zone](http://codepen.io/anon/pen/JorbqZ)
 
 ## Integrations
 - [ui.bootstrap.accordion](http://plnkr.co/edit/TGIeeEbbvJwpJ3WRqo2z?p=preview)
