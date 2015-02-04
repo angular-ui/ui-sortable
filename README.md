@@ -115,7 +115,7 @@ Inside the `update` callback, you can check the item that is dragged and cancel 
 ```js
 $scope.sortableOptions = {
   update: function(e, ui) {
-    if (ui.item.scope().item == "can't be moved") {
+    if (ui.item.sortable.model == "can't be moved") {
       ui.item.sortable.cancel();
     }
   }
@@ -181,7 +181,7 @@ For more details about the events check the [jQueryUI API documentation](http://
 - [Tree with dynamic template](http://codepen.io/thgreasi/pen/uyHFC)
 - Canceling
   - [Connected Lists With Max Size](http://codepen.io/thgreasi/pen/IdvFc)
-  - [Connected Lists Without Duplicates](http://codepen.io/thgreasi/pen/uKfyt)
+  - [Connected Lists Without Duplicates](http://codepen.io/thgreasi/pen/NPaJyb)
 - [Draggable Handle](http://codepen.io/thgreasi/pen/ihAyr)
 - [Drop Zone](http://codepen.io/anon/pen/JorbqZ)
 
