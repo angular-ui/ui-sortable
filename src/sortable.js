@@ -294,7 +294,7 @@ angular.module('ui.sortable', [])
               return inner;
             };
 
-            scope.$watch('uiSortable', function(newVal /*, oldVal*/) {
+            scope.$watchCollection('uiSortable', function(newVal /*, oldVal*/) {
               // ensure that the jquery-ui-sortable widget instance
               // is still bound to the directive's element
               var sortableWidgetInstance = getSortableWidgetInstance(element);
