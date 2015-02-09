@@ -28,8 +28,7 @@ myapp.controller('sortableController', function ($scope) {
         Text: 'Moved element: ' + ui.item.scope().item.text
       };
       $scope.sortingLog.push(logEntry);
-    },
-    appendTo: angular.element('body')
+    }
   };
 });
 

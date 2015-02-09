@@ -4,3 +4,5 @@ coverage/
 junit/
 dist/
 out/
+.idea/
+.DS_Store
