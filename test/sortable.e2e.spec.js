@@ -416,7 +416,7 @@ describe('uiSortable', function() {
       });
     });
 
-    it('should work when "helper: clone" and "appendTo" options are used together', function() {
+    it('should work when "helper: clone" and "appendTo [selector]" options are used together', function() {
       inject(function($compile, $rootScope) {
         var element;
         element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li></ul>')($rootScope);
@@ -446,7 +446,7 @@ describe('uiSortable', function() {
       });
     });
 
-    it('should work when "helper: clone" and "appendTo" options are used together', function() {
+    it('should work when "helper: clone" and "appendTo [element]" options are used together', function() {
       inject(function($compile, $rootScope) {
         var element;
         element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li></ul>')($rootScope);
