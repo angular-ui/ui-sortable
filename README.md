@@ -172,7 +172,7 @@ For more details about the events check the [jQueryUI API documentation](http://
 
 ## Examples
 
-- [Simple Demo](http://codepen.io/thgreasi/pen/jlkhr)
+- [Simple Demo](http://codepen.io/thgreasi/pen/jlkhr) ([Simple RequireJS Demo](http://codepen.io/thgreasi/pen/bNaxRq))
 - [Connected Lists](http://codepen.io/thgreasi/pen/uFile)
 - [Filtering](http://codepen.io/thgreasi/pen/mzGbq) ([details](https://github.com/angular-ui/ui-sortable/issues/113))
 - [Ordering 1](http://codepen.io/thgreasi/pen/iKEHd) & [Ordering 2](http://plnkr.co/edit/XPUzJjdvwE0QWQ6py6mQ?p=preview) ([details](https://github.com/angular-ui/ui-sortable/issues/70))
