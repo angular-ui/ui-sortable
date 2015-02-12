@@ -237,10 +237,10 @@ angular.module('ui.sortable', [])
               if(!ui.item.sortable.received &&
                  ('dropindex' in ui.item.sortable) &&
                  !ui.item.sortable.isCanceled()) {
-                 ngModel.$modelValue.splice(
+                ngModel.$modelValue.splice(
                     ui.item.sortable.dropindex, 0,
                     ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0]);
-                 scope.$parent.$digest();
+                scope.$parent.$digest();
               } else {
                 // if the item was not moved, then restore the elements
                 // so that the ngRepeat's comment are correct.
