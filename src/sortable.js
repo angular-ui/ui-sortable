@@ -224,10 +224,9 @@ angular.module('ui.sortable', [])
               // stop event where we will know if it was a sort or item was
               // moved here from another list
               if(ui.item.sortable.received && !ui.item.sortable.isCanceled()) {
-                scope.$apply(function () {
-                  ngModel.$modelValue.splice(ui.item.sortable.dropindex, 0,
+                ngModel.$modelValue.splice(ui.item.sortable.dropindex, 0,
                                              ui.item.sortable.moved);
-                });
+                scope.$parent.$digest();
               }
             };
 
@@ -238,12 +237,10 @@ angular.module('ui.sortable', [])
               if(!ui.item.sortable.received &&
                  ('dropindex' in ui.item.sortable) &&
                  !ui.item.sortable.isCanceled()) {
-
-                scope.$apply(function () {
-                  ngModel.$modelValue.splice(
+                ngModel.$modelValue.splice(
                     ui.item.sortable.dropindex, 0,
                     ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0]);
-                });
+                scope.$parent.$digest();
               } else {
                 // if the item was not moved, then restore the elements
                 // so that the ngRepeat's comment are correct.
@@ -276,10 +273,9 @@ angular.module('ui.sortable', [])
               // Remove the item from this list's model and copy data into item,
               // so the next list can retrive it
               if (!ui.item.sortable.isCanceled()) {
-                scope.$apply(function () {
-                  ui.item.sortable.moved = ngModel.$modelValue.splice(
-                    ui.item.sortable.index, 1)[0];
-                });
+                ui.item.sortable.moved = ngModel.$modelValue.splice(
+                ui.item.sortable.index, 1)[0];
+                scope.$parent.$digest();
               }
             };
 
@@ -315,7 +311,7 @@ angular.module('ui.sortable', [])
                     if( key === 'stop' ){
                       // call apply after stop
                       value = combineCallbacks(
-                        value, function() { scope.$apply(); });
+                        value, function() { scope.$parent.$digest(); });
 
                       value = combineCallbacks(value, afterStop);
                     }
