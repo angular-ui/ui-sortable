@@ -75,6 +75,12 @@ The suggested pattern is to use callbacks for emmiting events and altering the s
 
 #### Floating
 
+**Update**: Issue [~~7498~~](bugs.jqueryui.com/ticket/7498) was resolved in jquery-ui v1.11.4.
+Calling `angular.element('ui-sortable').sortable('refresh')` (use a more appropriate selector in your use case)
+should make jquery-ui-sortable recognize the position and orientation of the existing and any new items.
+As a result, since ui-sortable makes a call to `sortable('refresh')` after the sortable items are created by the repeater, it is not any more necessary to use the `ui-floating` property if the orientation of your list is not changing dynamically.  
+**TL;DR:** If you are using jquery-ui v1.11.4+ and you are not changing the orientation of your list dynamically, then you probably don't need to use `ui-floating` property.
+
 To have a smooth horizontal-list reordering, jquery.ui.sortable needs to detect the orientation of the list.
 This detection takes place during the initialization of the plugin (and some of the checks include: whether the first item is floating left/right or if 'axis' parameter is 'x', etc).
 There is also a [known issue](bugs.jqueryui.com/ticket/7498) about initially empty horizontal lists.
