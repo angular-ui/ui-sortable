@@ -93,7 +93,7 @@ angular.module('ui.sortable', [])
 
             // When we add or remove elements, we need the sortable to 'refresh'
             // so it can find the new/removed elements.
-            scope.$watch('ngModel.length', function() {
+            scope.$watchCollection('ngModel', function() {
               // Timeout to let ng-repeat modify the DOM
               $timeout(function() {
                 // ensure that the jquery-ui-sortable widget instance
