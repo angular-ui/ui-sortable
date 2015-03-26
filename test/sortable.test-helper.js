@@ -6,7 +6,7 @@ angular.module('ui.sortable.testHelper', [])
 
     function listContent (list) {
       if (list && list.length) {
-        return list.children().map(function(){ return this.innerHTML; }).toArray();
+        return list.children('[ng-repeat], [data-ng-repeat], [x-ng-repeat]').map(function(){ return this.innerHTML; }).toArray();
       }
       return [];
     }
