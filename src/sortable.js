@@ -63,7 +63,20 @@ angular.module('ui.sortable', [])
             ui.item.sortable._destroy();
           }
 
-          var opts = {};
+          // return the index of ui.item among the items
+          // we can't just do ui.item.index() because there it might have siblings
+          // which are not items
+          function getItemIndex(ui) {
+            return ui.item.parent().find('> [ng-repeat],> [data-ng-repeat],> [x-ng-repeat]')
+              .index(ui.item);
+          }
+
+          var opts = {
+            // the default for jquery-ui sortable is "> *", we need to restrict this to
+            // ng-repeat items
+            // if the user uses
+            items: '> [ng-repeat],> [data-ng-repeat],> [x-ng-repeat]'
+          };
 
           // directive specific options
           var directiveOpts = {
@@ -114,9 +127,10 @@ angular.module('ui.sortable', [])
               }
 
               // Save the starting position of dragged item
+              var index = getItemIndex(ui);
               ui.item.sortable = {
-                model: ngModel.$modelValue[ui.item.index()],
-                index: ui.item.index(),
+                model: ngModel.$modelValue[index],
+                index: index,
                 source: ui.item.parent(),
                 sourceModel: ngModel.$modelValue,
                 cancel: function () {
@@ -184,7 +198,7 @@ angular.module('ui.sortable', [])
               // update that happens when moving between lists because then
               // the value will be overwritten with the old value
               if(!ui.item.sortable.received) {
-                ui.item.sortable.dropindex = ui.item.index();
+                ui.item.sortable.dropindex = getItemIndex(ui);
                 var droptarget = ui.item.parent();
                 ui.item.sortable.droptarget = droptarget;
 
@@ -323,6 +337,10 @@ angular.module('ui.sortable', [])
                     value = combineCallbacks(callbacks[key], value);
                   } else if (wrappers[key]) {
                     value = wrappers[key](value);
+                  }
+
+                  if (key === 'items' && !value) {
+                    value = '> [ng-repeat],> [data-ng-repeat],> [x-ng-repeat]';
                   }
 
                   opts[key] = value;
