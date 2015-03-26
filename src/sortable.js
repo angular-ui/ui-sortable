@@ -63,7 +63,25 @@ angular.module('ui.sortable', [])
             ui.item.sortable._destroy();
           }
 
-          var opts = {};
+          // return the index of ui.item among the items
+          // we can't just do ui.item.index() because there it might have siblings
+          // which are not items
+          function getItemIndex(ui) {
+            return ui.item.parent().find('> [ng-repeat], > [data-ng-repeat], > [x-ng-repeat]')
+              .index(ui.item);
+          }
+
+          // restrict the items option to include only ng-repeat items
+          function restrictItemsOption(items) {
+            items = items.trim();
+            return items + '[ng-repeat],' + items + '[data-ng-repeat],' + items + '[x-ng-repeat]';
+          }
+
+          var opts = {
+            // this is jquery-ui sortable's default, we state it explicitly so even
+            // if it's not specified, we will apply restrictItemsOption on it
+            items: '> *'
+          };
 
           // directive specific options
           var directiveOpts = {
@@ -83,6 +101,8 @@ angular.module('ui.sortable', [])
           };
 
           angular.extend(opts, directiveOpts, uiSortableConfig, scope.uiSortable);
+
+          opts.items = restrictItemsOption(opts.items);
 
           if (!angular.element.fn || !angular.element.fn.jquery) {
             $log.error('ui.sortable: jQuery should be included before AngularJS!');
@@ -114,9 +134,10 @@ angular.module('ui.sortable', [])
               }
 
               // Save the starting position of dragged item
+              var index = getItemIndex(ui);
               ui.item.sortable = {
-                model: ngModel.$modelValue[ui.item.index()],
-                index: ui.item.index(),
+                model: ngModel.$modelValue[index],
+                index: index,
                 source: ui.item.parent(),
                 sourceModel: ngModel.$modelValue,
                 cancel: function () {
@@ -184,7 +205,7 @@ angular.module('ui.sortable', [])
               // update that happens when moving between lists because then
               // the value will be overwritten with the old value
               if(!ui.item.sortable.received) {
-                ui.item.sortable.dropindex = ui.item.index();
+                ui.item.sortable.dropindex = getItemIndex(ui);
                 var droptarget = ui.item.parent();
                 ui.item.sortable.droptarget = droptarget;
 
@@ -323,6 +344,10 @@ angular.module('ui.sortable', [])
                     value = combineCallbacks(callbacks[key], value);
                   } else if (wrappers[key]) {
                     value = wrappers[key](value);
+                  }
+
+                  if (key === 'items') {
+                    value = restrictItemsOption(value);
                   }
 
                   opts[key] = value;
