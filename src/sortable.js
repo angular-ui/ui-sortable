@@ -37,9 +37,46 @@ angular.module('ui.sortable', [])
             return null;
           }
 
+          function getPlaceholderElement (element) {
+            var placeholder = element.sortable('option','placeholder');
+
+            // placeholder.element will be a function if the placeholder, has
+            // been created (placeholder will be an object).  If it hasn't
+            // been created, either placeholder will be false if no
+            // placeholder class was given or placeholder.element will be
+            // undefined if a class was given (placeholder will be a string)
+            if (placeholder && placeholder.element && typeof placeholder.element === 'function') {
+              var result = placeholder.element();
+              // workaround for jquery ui 1.9.x,
+              // not returning jquery collection
+              result = angular.element(result);
+              return result;
+            }
+            return null;
+          }
+
+          function getPlaceholderExcludesludes (element, placeholder) {
+            // exact match with the placeholder's class attribute to handle
+            // the case that multiple connected sortables exist and
+            // the placehoilder option equals the class of sortable items
+            var excludes = element.find('[class="' + placeholder.attr('class') + '"]:not([ng-repeat], [data-ng-repeat])');
+            return excludes;
+          }
+
           function hasSortingHelper (element, ui) {
             var helperOption = element.sortable('option','helper');
             return helperOption === 'clone' || (typeof helperOption === 'function' && ui.item.sortable.isCustomHelperUsed());
+          }
+
+          function getSortingHelper (element, ui, savedNodes) {
+            var result = null;
+            if (hasSortingHelper(element, ui) &&
+                element.sortable( 'option', 'appendTo' ) === 'parent') {
+              // The .ui-sortable-helper element (that's the default class name)
+              // is placed last.
+              result = savedNodes.last();
+            }
+            return result;
           }
 
           // thanks jquery-ui
@@ -161,24 +198,9 @@ angular.module('ui.sortable', [])
 
               // If this list has a placeholder (the connected lists won't),
               // don't inlcude it in saved nodes.
-              var placeholder = element.sortable('option','placeholder');
-
-              // placeholder.element will be a function if the placeholder, has
-              // been created (placeholder will be an object).  If it hasn't
-              // been created, either placeholder will be false if no
-              // placeholder class was given or placeholder.element will be
-              // undefined if a class was given (placeholder will be a string)
-              if (placeholder && placeholder.element && typeof placeholder.element === 'function') {
-                var phElement = placeholder.element();
-                // workaround for jquery ui 1.9.x,
-                // not returning jquery collection
-                phElement = angular.element(phElement);
-
-                // exact match with the placeholder's class attribute to handle
-                // the case that multiple connected sortables exist and
-                // the placehoilder option equals the class of sortable items
-                var excludes = element.find('[class="' + phElement.attr('class') + '"]:not([ng-repeat], [data-ng-repeat])');
-
+              var placeholder = getPlaceholderElement(element);
+              if (placeholder && placeholder.length) {
+                var excludes = getPlaceholderExcludesludes(element, placeholder);
                 savedNodes = savedNodes.not(excludes);
               }
 
@@ -217,11 +239,11 @@ angular.module('ui.sortable', [])
               // the start and stop of repeat sections and sortable doesn't
               // respect their order (even if we cancel, the order of the
               // comments are still messed up).
-              if (hasSortingHelper(element, ui) && !ui.item.sortable.received &&
-                  element.sortable( 'option', 'appendTo' ) === 'parent') {
-                // restore all the savedNodes except .ui-sortable-helper element
-                // (which is placed last). That way it will be garbage collected.
-                savedNodes = savedNodes.not(savedNodes.last());
+              var sortingHelper = !ui.item.sortable.received && getSortingHelper(element, ui, savedNodes);
+              if (sortingHelper && sortingHelper.length) {
+                // Restore all the savedNodes except from the sorting helper element.
+                // That way it will be garbage collected.
+                savedNodes = savedNodes.not(sortingHelper);
               }
               savedNodes.appendTo(element);
 
@@ -264,11 +286,13 @@ angular.module('ui.sortable', [])
                 if ((!('dropindex' in ui.item.sortable) || ui.item.sortable.isCanceled()) &&
                     !angular.equals(element.contents(), savedNodes)) {
 
-                  if (hasSortingHelper(element, ui) && element.sortable( 'option', 'appendTo' ) === 'parent') {
-                    // restore all the savedNodes except .ui-sortable-helper element
-                    // (which is placed last). That way it will be garbage collected.
-                    savedNodes = savedNodes.not(savedNodes.last());
+                  var sortingHelper = getSortingHelper(element, ui, savedNodes);
+                  if (sortingHelper && sortingHelper.length) {
+                    // Restore all the savedNodes except from the sorting helper element.
+                    // That way it will be garbage collected.
+                    savedNodes = savedNodes.not(sortingHelper);
                   }
+                  savedNodes.appendTo(element);
                   savedNodes.appendTo(element);
                 }
               }
