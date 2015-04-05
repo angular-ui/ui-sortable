@@ -262,7 +262,13 @@ angular.module('ui.sortable', [])
                 // if the item was not moved, then restore the elements
                 // so that the ngRepeat's comment are correct.
                 if ((!('dropindex' in ui.item.sortable) || ui.item.sortable.isCanceled()) &&
-                    !hasSortingHelper(element, ui)) {
+                    !angular.equals(element.contents(), savedNodes)) {
+
+                  if (hasSortingHelper(element, ui) && element.sortable( 'option', 'appendTo' ) === 'parent') {
+                    // restore all the savedNodes except .ui-sortable-helper element
+                    // (which is placed last). That way it will be garbage collected.
+                    savedNodes = savedNodes.not(savedNodes.last());
+                  }
                   savedNodes.appendTo(element);
                 }
               }
