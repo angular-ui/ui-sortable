@@ -26,7 +26,8 @@ angular.module('ui.sortable.testHelper', [])
       var dragOptions = {
         dx: dropTarget.position().left - draggedElement.position().left,
         dy: dropTarget.position().top - draggedElement.position().top,
-        moves: 30
+        moves: 30,
+        action: (options && options.action) || 'drag'
       };
 
       if (options === 'above') {
@@ -59,7 +60,7 @@ angular.module('ui.sortable.testHelper', [])
         }
       }
 
-      draggedElement.simulate('drag', dragOptions);
+      draggedElement.simulate(dragOptions.action, dragOptions);
     }
 
     function hasUndefinedProperties(testObject) {
@@ -76,7 +77,11 @@ angular.module('ui.sortable.testHelper', [])
       listContent: listContent,
       listInnerContent: listInnerContent,
       simulateElementDrag: simulateElementDrag,
-      hasUndefinedProperties: hasUndefinedProperties
+      hasUndefinedProperties: hasUndefinedProperties,
+      extraElements: {
+        beforeLiElement: '<li>extra element</li>',
+        afterLiElement: '<li>extra element</li>'
+      }
     };
   })
   .controller('dummyController', function ($scope) {
