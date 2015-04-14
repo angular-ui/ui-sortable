@@ -12,20 +12,27 @@ describe('uiSortable', function() {
   beforeEach(module('ui.sortable'));
   beforeEach(module('ui.sortable.testHelper'));
 
-  var EXTRA_DY_PERCENTAGE, listContent;
+  var EXTRA_DY_PERCENTAGE, listContent, beforeLiElement, afterLiElement;
 
   beforeEach(inject(function (sortableTestHelper) {
     EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
     listContent = sortableTestHelper.listContent;
+    beforeLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.beforeLiElement;
+    afterLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.afterLiElement;
   }));
 
-  describe('Custom directive options related', function() {
+  tests.description = 'Custom directive options related';
+  function tests (useExtraElements) {
 
     var host;
 
     beforeEach(inject(function() {
       host = $('<div id="test-host"></div>');
       $('body').append(host);
+
+      if (!useExtraElements) {
+        beforeLiElement = afterLiElement = '';
+      }
     }));
 
     afterEach(function() {
@@ -36,7 +43,12 @@ describe('uiSortable', function() {
     it('should work when "ui-floating: false" option is used', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li></ul>')($rootScope);
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+          afterLiElement,
+          '</ul>'))($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             'ui-floating': false
@@ -46,19 +58,19 @@ describe('uiSortable', function() {
 
         host.append(element);
 
-        var li = element.find(':eq(0)');
+        var li = element.find('[ng-repeat]:eq(0)');
         var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['Two', 'One', 'Three']);
         expect($rootScope.items).toEqual(listContent(element));
 
-        li = element.find(':eq(1)');
+        li = element.find('[ng-repeat]:eq(1)');
         dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
         expect($rootScope.items).toEqual(listContent(element));
 
-        li = element.find(':eq(1)');
+        li = element.find('[ng-repeat]:eq(1)');
         dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['Two', 'One', 'Three']);
@@ -71,7 +83,12 @@ describe('uiSortable', function() {
     it('should work when "ui-floating: true" option is used', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile('<ul ui-sortable="opts" ng-model="items"><li class="floatleft" ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li></ul>')($rootScope);
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeEach,
+          '<li class="floatleft" ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+          afterLiElement,
+          '</ul>'))($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             'ui-floating': true
@@ -81,19 +98,19 @@ describe('uiSortable', function() {
 
         host.append(element).append('<div class="clear"></div>');
 
-        var li = element.find(':eq(0)');
+        var li = element.find('[ng-repeat]:eq(0)');
         var dx = (1 + EXTRA_DY_PERCENTAGE) * li.outerWidth();
         li.simulate('drag', { dx: dx });
         expect($rootScope.items).toEqual(['Two', 'One', 'Three']);
         expect($rootScope.items).toEqual(listContent(element));
 
-        li = element.find(':eq(1)');
+        li = element.find('[ng-repeat]:eq(1)');
         dx = (1 + EXTRA_DY_PERCENTAGE) * li.outerWidth();
         li.simulate('drag', { dx: dx });
         expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
         expect($rootScope.items).toEqual(listContent(element));
 
-        li = element.find(':eq(1)');
+        li = element.find('[ng-repeat]:eq(1)');
         dx = (1 + EXTRA_DY_PERCENTAGE) * li.outerWidth();
         li.simulate('drag', { dx: dx, moves: 5 });
         expect($rootScope.items).toEqual(['Two', 'One', 'Three']);
@@ -106,7 +123,12 @@ describe('uiSortable', function() {
     it('should work when "ui-floating: \'auto\'" option is used and elements are "float"ing', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile('<ul ui-sortable="opts" ng-model="items"><li class="floatleft" ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li></ul>')($rootScope);
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeEach,
+          '<li class="floatleft" ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+          afterLiElement,
+          '</ul>'))($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             'ui-floating': 'auto'
@@ -116,19 +138,19 @@ describe('uiSortable', function() {
 
         host.append(element).append('<div class="clear"></div>');
 
-        var li = element.find(':eq(0)');
+        var li = element.find('[ng-repeat]:eq(0)');
         var dx = (1 + EXTRA_DY_PERCENTAGE) * li.outerWidth();
         li.simulate('drag', { dx: dx });
         expect($rootScope.items).toEqual(['Two', 'One', 'Three']);
         expect($rootScope.items).toEqual(listContent(element));
 
-        li = element.find(':eq(1)');
+        li = element.find('[ng-repeat]:eq(1)');
         dx = (1 + EXTRA_DY_PERCENTAGE) * li.outerWidth();
         li.simulate('drag', { dx: dx });
         expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
         expect($rootScope.items).toEqual(listContent(element));
 
-        li = element.find(':eq(1)');
+        li = element.find('[ng-repeat]:eq(1)');
         dx = (1 + EXTRA_DY_PERCENTAGE) * li.outerWidth();
         li.simulate('drag', { dx: dx, moves: 5 });
         expect($rootScope.items).toEqual(['Two', 'One', 'Three']);
@@ -141,7 +163,12 @@ describe('uiSortable', function() {
     it('should work when "ui-floating: \'auto\'" option is used and elements are "display: inline-block"', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile('<ul ui-sortable="opts" ng-model="items"><li class="inline-block" ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li></ul>')($rootScope);
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement.replace('<li>', '<li class="inline-block">'),
+          '<li class="inline-block" ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+          afterLiElement.replace('<li>', '<li class="inline-block">'),
+          '</ul>'))($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             'ui-floating': 'auto'
@@ -151,19 +178,19 @@ describe('uiSortable', function() {
 
         host.append(element);
 
-        var li = element.find(':eq(0)');
+        var li = element.find('[ng-repeat]:eq(0)');
         var dx = (1 + EXTRA_DY_PERCENTAGE) * li.outerWidth();
         li.simulate('drag', { dx: dx });
         expect($rootScope.items).toEqual(['Two', 'One', 'Three']);
         expect($rootScope.items).toEqual(listContent(element));
 
-        li = element.find(':eq(1)');
+        li = element.find('[ng-repeat]:eq(1)');
         dx = (1 + EXTRA_DY_PERCENTAGE) * li.outerWidth();
         li.simulate('drag', { dx: dx });
         expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
         expect($rootScope.items).toEqual(listContent(element));
 
-        li = element.find(':eq(1)');
+        li = element.find('[ng-repeat]:eq(1)');
         dx = (1 + EXTRA_DY_PERCENTAGE) * li.outerWidth();
         li.simulate('drag', { dx: dx, moves: 5 });
         expect($rootScope.items).toEqual(['Two', 'One', 'Three']);
@@ -173,6 +200,18 @@ describe('uiSortable', function() {
       });
     });
 
+  }
+
+  [0, 1].forEach(function(useExtraElements){
+    var testDescription = tests.description;
+
+    if (useExtraElements) {
+      testDescription += ' with extra elements';
+    }
+
+    describe(testDescription, function(){
+      tests(useExtraElements);
+    });
   });
 
 });

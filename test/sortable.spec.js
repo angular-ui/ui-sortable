@@ -179,6 +179,95 @@ describe('uiSortable', function() {
       });
     });
 
+    describe('items option', function() {
+
+      it('should use a default items that is restricted to ng-repeat items', function() {
+
+        inject(function($compile, $rootScope, $timeout) {
+          var element;
+          var childScope = $rootScope.$new();
+          element = $compile('<div><ul data-ui-sortable="opts" data-ng-model="items"></ul></div>')(childScope);
+
+          $rootScope.$digest();
+
+          expect(element.find('ul').sortable('option', 'items')).toBe('> [ng-repeat],> [data-ng-repeat],> [x-ng-repeat]');
+
+          element.remove(element.firstChild);
+
+          expect(function() {
+            $timeout.flush();
+          }).not.toThrow();
+
+        });
+
+      });
+
+      it('should not change items option if given', function() {
+
+        inject(function($compile, $rootScope, $timeout) {
+          var element;
+          var childScope = $rootScope.$new();
+          childScope.opts = {
+            items: '> .class'
+          };
+
+          element = $compile('<div><ul data-ui-sortable="opts" data-ng-model="items"></ul></div>')(childScope);
+
+          $rootScope.$digest();
+
+          expect(element.find('ul').sortable('option', 'items')).toBe('> .class');
+
+          element.remove(element.firstChild);
+
+          expect(function() {
+            $timeout.flush();
+          }).not.toThrow();
+
+        });
+
+      });
+
+      it('should restrict to ng-items if items is removed after initialization', function() {
+
+        inject(function($compile, $rootScope, $timeout) {
+          var element;
+          var childScope = $rootScope.$new();
+          childScope.opts = {
+            items: '> .class'
+          };
+
+          element = $compile('<div><ul data-ui-sortable="opts" data-ng-model="items"></ul></div>')(childScope);
+
+          $rootScope.$digest();
+
+          $rootScope.$apply(function() {
+            childScope.opts = { items: null };
+          });
+
+          expect(element.find('ul').sortable('option', 'items')).toBe('> [ng-repeat],> [data-ng-repeat],> [x-ng-repeat]');
+
+          element.remove(element.firstChild);
+
+          expect(function() {
+            $timeout.flush();
+          }).not.toThrow();
+
+        });
+
+      });
+
+
+
+
+
+
+
+    });
+
+
+
+
+
   });
 
 });
