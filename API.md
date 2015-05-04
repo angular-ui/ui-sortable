@@ -2,6 +2,9 @@
 
 ## Properties
 
+**Note:**
+The properties of `ui.item.sortable` object are cleared right after the stop callback fires. If you need to access them after the sorting ends, you should keep references in separate variables in your code.
+
 ### dropindex
 Type: [Integer](http://api.jquery.com/Types/#Integer)  
 Holds the index of the drop target that the dragged item was dropped.
