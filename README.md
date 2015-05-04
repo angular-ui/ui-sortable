@@ -192,6 +192,7 @@ For more details about the events check the [jQueryUI API documentation](http://
 - [Locked Items](http://codepen.io/thgreasi/pen/GgdeEO)
 - [Draggable Handle](http://codepen.io/thgreasi/pen/ihAyr)
 - [Drop Zone](http://codepen.io/anon/pen/JorbqZ)
+- [Draggable-Sortable like interaction](http://codepen.io/thgreasi/pen/LVVJgK)
 
 ## Integrations
 - [ui.bootstrap.accordion](http://plnkr.co/edit/TGIeeEbbvJwpJ3WRqo2z?p=preview)
