@@ -185,8 +185,7 @@ For more details about the events check the [jQueryUI API documentation](http://
   - [Connected Lists Without Duplicates](http://codepen.io/thgreasi/pen/NPaJyb)
 - [Draggable Handle](http://codepen.io/thgreasi/pen/ihAyr)
 - [Drop Zone](http://codepen.io/anon/pen/JorbqZ)
-
-- *[Static HTML Sorting](http://codepen.io/thgreasi/pen/qdmjwy)*
+- [Static HTML Sorting](http://codepen.io/thgreasi/pen/qdmjwy)
 
 ## Integrations
 - [ui.bootstrap.accordion](http://plnkr.co/edit/TGIeeEbbvJwpJ3WRqo2z?p=preview)
