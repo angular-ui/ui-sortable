@@ -1,3 +1,9 @@
+
+/* commonjs package manager support */
+if (typeof module !== "undefined" && typeof exports !== "undefined" && module.exports === exports){
+  module.exports = 'ui.sortable';
+}
+
 /*
  jQuery UI Sortable plugin wrapper
 
