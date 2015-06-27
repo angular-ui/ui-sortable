@@ -18,6 +18,12 @@ This directive allows you to sort an array with drag & drop.
 > * JQueryUI dependecies include [core](http://api.jqueryui.com/category/ui-core/), [widget](http://api.jqueryui.com/jQuery.widget/), [mouse](http://api.jqueryui.com/mouse/) & [sortable](http://api.jqueryui.com/sortable/). Creating a [custom build](http://jqueryui.com/download/#!version=1.10&components=1110000010000000000000000000000000) will [greatly reduce](https://github.com/angular-ui/ui-sortable/issues/154#issuecomment-40279430) the required file size. ([CDN](http://www.jsdelivr.com/) links for comparison: [full](http://cdn.jsdelivr.net/g/jquery.ui@1.10) vs  [minimal](http://cdn.jsdelivr.net/g/jquery.ui@1.10%28jquery.ui.core.min.js+jquery.ui.widget.min.js+jquery.ui.mouse.min.js+jquery.ui.sortable.min.js%29))
 > * Users of AngularJS pre v1.2 can use [v0.10.x](https://github.com/angular-ui/ui-sortable/tree/v0.10.x-stable) or [v0.12.x](https://github.com/angular-ui/ui-sortable/tree/v0.12.x-stable) branches.
 
+## Installation
+
+* Install with Bower `bower install -S angular-ui-sortable`
+* Install with npm `npm install -S angular-ui-sortable`
+* Download one of the [Releases](https://github.com/angular-ui/ui-sortable/releases) or the [latest Master branch](https://github.com/angular-ui/ui-sortable/archive/master.zip)
+
 ## Usage
 
 Load the script file: sortable.js in your application:
