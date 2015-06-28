@@ -256,16 +256,55 @@ describe('uiSortable', function() {
 
       });
 
+      it('should properly reset the value of a deleted option', function() {
 
+        inject(function($compile, $rootScope, $timeout) {
+          var element;
+          var childScope = $rootScope.$new();
+          childScope.opts = {
+            opacity: 0.7,
+            placeholder: 'phClass',
+            update: function() { }
+          };
 
+          element = $compile('<div><ul data-ui-sortable="opts" data-ng-model="items"></ul></div>')(childScope);
+          var $sortableElement = element.find('[data-ui-sortable]');
 
+          expect($sortableElement.sortable('option', 'opacity')).toBe(0.7);
+          expect($sortableElement.sortable('option', 'placeholder')).toBe('phClass');
+          expect(typeof $sortableElement.sortable('option', 'update')).toBe('function');
 
+          $rootScope.$digest();
 
+          $rootScope.$apply(function() {
+            delete childScope.opts.opacity;
+          });
+
+          expect($sortableElement.sortable('option', 'opacity')).toBe(false);
+          expect($sortableElement.sortable('option', 'placeholder')).toBe('phClass');
+          expect(typeof $sortableElement.sortable('option', 'update')).toBe('function');
+
+          $rootScope.$digest();
+
+          $rootScope.$apply(function() {
+            childScope.opts = {};
+          });
+
+          expect($sortableElement.sortable('option', 'opacity')).toBe(false);
+          expect($sortableElement.sortable('option', 'placeholder')).toBe(false);
+          expect(typeof $sortableElement.sortable('option', 'update')).toBe('function');
+
+          element.remove(element.firstChild);
+
+          expect(function() {
+            $timeout.flush();
+          }).not.toThrow();
+
+        });
+
+      });
 
     });
-
-
-
 
 
   });

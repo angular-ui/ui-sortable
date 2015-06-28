@@ -200,6 +200,46 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should properly reset deleted directive options', function() {
+      inject(function($compile, $rootScope) {
+        var element, logsElement;
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+          afterLiElement +
+          '</ul>'))($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            'ui-floating': true
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element).append(logsElement);
+
+        var sortableWidgetInstance = element.data('ui-sortable');
+        
+        expect(sortableWidgetInstance.floating).toBe(true);
+
+        $rootScope.$digest();
+          
+        $rootScope.$apply(function() {
+          $rootScope.opts = {};
+        });
+
+        var li = element.find('[ng-repeat]:eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element));
+        expect(sortableWidgetInstance.floating).toBe(false);
+
+        $(element).remove();
+        $(logsElement).remove();
+      });
+    });
+
   }
 
   [0, 1].forEach(function(useExtraElements){

@@ -457,6 +457,61 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should properly reset a deleted callback option', function() {
+      inject(function($compile, $rootScope) {
+        var element, logsElement;
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+          afterLiElement +
+          '</ul>'))($rootScope);
+        logsElement = $compile(''.concat(
+          '<ul ng-model="logs">',
+          beforeLiElement,
+          '<li ng-repeat="log in logs" id="l-{{$index}}">{{ log }}</li>',
+          afterLiElement +
+          '</ul>'))($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            stop: function(e, ui) {
+              $rootScope.logs.push('Moved element ' + ui.item.sortable.model);
+            }
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+          $rootScope.logs = [];
+        });
+
+        host.append(element).append(logsElement);
+
+        var li = element.find('[ng-repeat]:eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
+        expect($rootScope.logs).toEqual(['Moved element Two']);
+        expect($rootScope.items).toEqual(listContent(element));
+        expect($rootScope.logs).toEqual(listContent(logsElement));
+
+        $rootScope.$digest();
+          
+        $rootScope.$apply(function() {
+          $rootScope.opts = {};
+        });
+
+        li = element.find('[ng-repeat]:eq(0)');
+        dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Three', 'One', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element));
+        // the log should be the same
+        expect($rootScope.logs).toEqual(['Moved element Two']);
+        expect($rootScope.logs).toEqual(listContent(logsElement));
+
+        $(element).remove();
+        $(logsElement).remove();
+      });
+    });
+
   }
 
   [0, 1].forEach(function(useExtraElements){
