@@ -52,8 +52,8 @@ Apply the directive to your form elements:
 * `ui-sortable` element should only contain one `ng-repeat` and not any other elements (above or below).  
   Otherwise the index matching of the generated DOM elements and the `ng-model`'s items will break.  
   **In other words: The items of `ng-model` must match the indexes of the generated DOM elements.**
-* [`Filters`](https://docs.angularjs.org/guide/filter) that manipulate the model (like [filter](https://docs.angularjs.org/api/ng/filter/filter), [orderBy](https://docs.angularjs.org/api/ng/filter/orderBy), [limitTo](https://docs.angularjs.org/api/ng/filter/limitTo),...) should be applied in the `controller` instead of the `ng-repeat` (refer to [the provided exaples](#examples)).  
-This is the prefered way since it:
+* [`Filters`](https://docs.angularjs.org/guide/filter) that manipulate the model (like [filter](https://docs.angularjs.org/api/ng/filter/filter), [orderBy](https://docs.angularjs.org/api/ng/filter/orderBy), [limitTo](https://docs.angularjs.org/api/ng/filter/limitTo),...) should be applied in the `controller` instead of the `ng-repeat` (refer to [the provided examples](#examples)).  
+This is the preferred way since it:
   - is performance wise better
   - reduces the chance of code duplication
   - [is suggested by the angularJS team](https://www.youtube.com/watch?feature=player_detailpage&v=ZhfUv0spHCY#t=3048)
