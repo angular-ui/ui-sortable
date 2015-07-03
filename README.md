@@ -201,6 +201,7 @@ For more details about the events check the [jQueryUI API documentation](http://
 - Canceling
   - [Connected Lists With Max Size](http://codepen.io/thgreasi/pen/IdvFc)
   - [Connected Lists Without Duplicates](http://codepen.io/thgreasi/pen/NPaJyb)
+  - [Promised Reverting](http://codepen.io/thgreasi/pen/MwQqdg)
 - [Locked Items](http://codepen.io/thgreasi/pen/GgdeEO)
 - [Draggable Handle](http://codepen.io/thgreasi/pen/ihAyr)
 - [Drop Zone](http://codepen.io/anon/pen/JorbqZ)
