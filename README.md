@@ -64,7 +64,7 @@ This is the preferred way since it:
 
 All the [jQueryUI Sortable options](http://api.jqueryui.com/sortable/) can be passed through the directive.  
 Additionally, the `ui` argument of the available callbacks gets enriched with some extra properties as specified to the [API.md file](API.md#uiitemsortable-api-documentation).
-
+Any model changes that happen inside the available callbacks, are applied right after the stop event. We are not wrapping callbacks like `start`/`change`/... with `$apply`, in order to minimize the number of digest loops and avoid possible modifications of the model (eg: by watchers) before the drop takes place.
 
 ```js
 myAppModule.controller('MyController', function($scope) {
