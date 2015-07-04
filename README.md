@@ -209,6 +209,7 @@ For more details about the events check the [jQueryUI API documentation](http://
 
 ## Integrations
 - [ui.bootstrap.accordion](http://plnkr.co/edit/TGIeeEbbvJwpJ3WRqo2z?p=preview)
+- [Asynchronous loading jQuery+jQueryUI with crisbeto/angular-ui-sortable-loader](https://github.com/crisbeto/angular-ui-sortable-loader)
 
 ## Reporting Issues
 
