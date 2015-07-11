@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/angular-ui/ui-sortable.svg)](https://travis-ci.org/angular-ui/ui-sortable)
 [![Coverage Status](https://coveralls.io/repos/angular-ui/ui-sortable/badge.svg?branch=master)](https://coveralls.io/r/angular-ui/ui-sortable?branch=master)
 [![debugInfoEnabled(false) Ready Badge](https://rawgit.com/thgreasi/ng-debugInfoDisabled-badges/master/badge1.svg)](https://docs.angularjs.org/guide/production#disabling-debug-data)
+[![Join the chat at https://gitter.im/angular-ui/ui-sortable](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/angular-ui/ui-sortable?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This directive allows you to sort an array with drag & drop.
 
