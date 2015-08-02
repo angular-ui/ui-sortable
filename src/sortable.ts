@@ -1,13 +1,15 @@
-///<reference path="typings/angular2/angular2.d.ts" />
-///<reference path="typings/es6-promise/es6-promise.d.ts" />
-/*///<reference path="node_modules/angular2/angular2.d.ts" />
-///<reference path="node_modules/angular2/annotations.d.ts" />*/
+///<reference path="../typings/angular2/angular2.d.ts" />
+///<reference path="../typings/es6-promise/es6-promise.d.ts" />
+////<reference path="../typings/jquery/jquery.d.ts" />
+////<reference path="../typings/jqueryui/jqueryui.d.ts" />
+//////<reference path="../typings/angular-ui2-sortable/angular-ui2-sortable.d.ts" />
 
 import {
   Component, View, bootstrap, NgIf, NgFor, forwardRef, Inject,
   Directive, onCheck,
   ElementRef
 } from 'angular2/angular2';
+// import {formDirectives} from 'angular2/forms';
 // import {Directive, onCheck} from 'angular2/angular2';
 // import {ElementRef} from 'angular2/angular2';
 // import {Renderer} from 'angular2/src/render/api';
@@ -19,10 +21,6 @@ import {
   properties: ['uiSortable', 'ngModel']
 })
 
-// @Component({
-//   selector: '[ui-sortable]'
-// })
-
 export class UiSortableComponent {
   static uiSortableConfig = {
     // the default for jquery-ui sortable is "> *", we need to restrict this to
@@ -31,7 +29,7 @@ export class UiSortableComponent {
     items: '> *:not(template)'
   };
 
-  private static combineCallbacks(first, second) {
+  static combineCallbacks(first, second) {
     var firstIsFunc = first && (typeof first === 'function');
     var secondIsFunc = second && (typeof second === 'function');
     if(firstIsFunc && secondIsFunc) {
@@ -45,7 +43,7 @@ export class UiSortableComponent {
     return first;
   }
 
-  private static getSortableWidgetInstance(element) {
+  static getSortableWidgetInstance(element) {
     // this is a fix to support jquery-ui prior to v1.11.x
     // otherwise we should be using `element.sortable('instance')`
     var data = element.data('ui-sortable');
@@ -55,7 +53,7 @@ export class UiSortableComponent {
     return null;
   }
 
-  private static getPlaceholderElement(element) {
+  static getPlaceholderElement(element) {
     var placeholder = element.sortable('option','placeholder');
 
     // placeholder.element will be a function if the placeholder, has
@@ -73,7 +71,7 @@ export class UiSortableComponent {
     return null;
   }
 
-  private static getPlaceholderExcludes(element, placeholder) {
+  static getPlaceholderExcludes(element, placeholder) {
     // exact match with the placeholder's class attribute to handle
     // the case that multiple connected sortables exist and
     // the placehoilder option equals the class of sortable items
@@ -81,12 +79,12 @@ export class UiSortableComponent {
     return excludes;
   }
 
-  private static hasSortingHelper(element, ui) {
+  static hasSortingHelper(element, ui) {
     var helperOption = element.sortable('option','helper');
     return helperOption === 'clone' || (typeof helperOption === 'function' && ui.item.sortable.isCustomHelperUsed());
   }
 
-  private static getSortingHelper(element, ui, savedNodes) {
+  static getSortingHelper(element, ui, savedNodes) {
     var result = null;
     if (UiSortableComponent.hasSortingHelper(element, ui) &&
         element.sortable( 'option', 'appendTo' ) === 'parent') {
@@ -98,21 +96,21 @@ export class UiSortableComponent {
   }
 
   // thanks jquery-ui
-  private static isFloating(item) {
+  static isFloating(item) {
     return (/left|right/).test(item.css('float')) || (/inline|table-cell/).test(item.css('display'));
   }
 
   // return the index of ui.item among the items
   // we can't just do ui.item.index() because there it might have siblings
   // which are not items
-  private static getItemIndex(ui) {
+  static getItemIndex(ui) {
     return ui.item.parent()
       .find(UiSortableComponent.uiSortableConfig.items)
       .index(ui.item);
   }
 
   // TODO
-  private static getElementInstance(elementScopes, element) {
+  static getElementInstance(elementScopes, element) {
     var result = null;
     for (var i = 0; i < elementScopes.length; i++) {
       var x = elementScopes[i];
@@ -125,7 +123,7 @@ export class UiSortableComponent {
   }
 
   // thanks angular v1.4
-  private static equals(o1, o2) {
+  static equals(o1, o2) {
     var isArray = Array.isArray;
     function isDate(value) { return toString.call(value) === '[object Date]'; }
     function isFunction(value) { return typeof value === 'function'; }
@@ -171,16 +169,16 @@ export class UiSortableComponent {
 
 
 
-  private savedNodes: Array<any>;
+  savedNodes: any;
 
-  private opts = {};
+  opts = {};
 
   // directive specific options
-  private directiveOpts = {
+  directiveOpts = {
     'ui-floating': undefined
   };
 
-  private callbacks = {
+  callbacks = {
     activate:null,
     receive: null,
     remove:null,
@@ -189,7 +187,7 @@ export class UiSortableComponent {
     update:null
   };
 
-  private wrappers = {
+  wrappers = {
     helper: null
   };
 
@@ -205,8 +203,11 @@ export class UiSortableComponent {
   // the options & model setters and init have run
   isComponentReady = false;
 
-  constructor(private _ngEl: ElementRef) {
+  constructor(_ngEl: ElementRef) {
     this.element = $(_ngEl.nativeElement);
+    if (!this.element || !this.element.length) {
+      console.log('ui.sortable: could not retrieve element from ElementRef');
+    }
 
     // console.log('ctor', this.ngModel, this.uiSortable);
     this.element.sortable();
@@ -261,7 +262,7 @@ export class UiSortableComponent {
     this.modelSetPromiseResolve();
   }
 
-  private init() {
+  init() {
     $.extend(this.opts, this.directiveOpts, UiSortableComponent.uiSortableConfig, this.options);
 
     if (!$.fn || !$.fn.jquery) {
@@ -460,7 +461,7 @@ export class UiSortableComponent {
     this.element.sortable(this.opts);
   }
 
-  private updateUiSortableOptions(newOptions, oldOptions) {
+  updateUiSortableOptions(newOptions, oldOptions) {
     // ensure that the jquery-ui-sortable widget instance
     // is still bound to the directive's element
     var sortableWidgetInstance = UiSortableComponent.getSortableWidgetInstance(this.element);
@@ -473,7 +474,7 @@ export class UiSortableComponent {
     }
   }
 
-  private patchUISortableOptions(newOptions: Object, oldOptions: Object = undefined, sortableWidgetInstance: any = undefined) {
+  patchUISortableOptions(newOptions: Object, oldOptions: Object = undefined, sortableWidgetInstance: any = undefined) {
     var self = this;
     function addDummyOptionKey(key) {
       if (!(key in self.opts)) {
@@ -540,7 +541,7 @@ export class UiSortableComponent {
     return optsDiff;
   }
 
-  private patchSortableOption(key, value) {
+  patchSortableOption(key, value) {
     if (this.callbacks[key]) {
       if( key === 'stop' ){
         value = UiSortableComponent.combineCallbacks(value, this.afterStop);
@@ -558,7 +559,7 @@ export class UiSortableComponent {
     return value;
   }
 
-  private afterStop(e, ui) {
+  afterStop(e, ui) {
     ui.item.sortable._destroy();
   }
 
