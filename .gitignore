@@ -1,6 +1,9 @@
 bower_components/
 node_modules/
+npm-debug.log
 coverage/
 junit/
 dist/
 out/
+build/
+typings/

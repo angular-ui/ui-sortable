@@ -1,0 +1,10 @@
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+hello,
+my-app {
+    display: block;
+    margin: auto;
+}

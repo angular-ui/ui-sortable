@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="list.css">
+</head>
+<body>
+    <section class="SortableItemsSection">
+        <h1>Sortable items</h1>
+
+        <ul [ui-sortable]="sortableOptions" [ng-model]="items">
+            <li *ng-for="#name of items">
+                <div>{{ name }}</div>
+            </li>
+        </ul>
+        <ul [ui-sortable]="sortableOptions" [ng-model]="items">
+            <li *ng-for="#name of items">
+                <div>{{ name }}</div>
+            </li>
+        </ul>
+        <div class="clear"></div>
+    </section>
+    <input #itemname (keyup)="doneTyping($event)">
+    <button (click)="addItem(itemname.value)">Add Item</button>
+</body>
+</html>

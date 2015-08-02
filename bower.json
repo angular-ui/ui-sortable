@@ -1,26 +1,26 @@
 {
   "name": "angular-ui-sortable",
-  "version": "0.13.3",
-  "description": "This directive allows you to jQueryUI Sortable.",
+  "version": "2.0.0-alpha.32",
+  "description": "This directive allows you to sort an array with drag & drop.",
   "author": "https://github.com/angular-ui/ui-sortable/graphs/contributors",
   "license": "MIT",
   "homepage": "http://angular-ui.github.com",
-  "main": "./src/sortable.js",
+  "main": "./src/sortable.ts",
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
-    "test*",
-    "demo*",
+    "test",
+    "demo",
+    "build",
+    "typings",
     "gruntFile.js",
     "package.json"
   ],
   "dependencies": {
-    "angular": ">=1.2.x",
     "jquery-ui": ">=1.9"
   },
   "devDependencies": {
-    "angular-mocks": ">=1.2.x",
     "jquery-simulate": "latest"
   }
 }
