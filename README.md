@@ -5,7 +5,7 @@ This directive allows you to sort an array with drag & drop.
 
 This is currently a dev&test repo for the migration of [ui-sortable](https://github.com/angular-ui/ui-sortable) to Angular2.0 and ES6
 
-* Based on the great [ng2-play "walking skeleton" project](https://github.com/pkozlowski-opensource/ng2-play) *
+*Based on the great [ng2-play "walking skeleton" project](https://github.com/pkozlowski-opensource/ng2-play)*
 
 ## Install
 
@@ -23,6 +23,7 @@ After completing installation type in your favourite shell:
 ## Dependencies
 
 * JQuery
+
 * JQueryUI 1.9+
 
 * ES6 -> ES5 transpilation
