@@ -1,9 +1,9 @@
-UI.Sortable directive
-=====================
+UI.Sortable directive (for [Angular2.0](https://angular.io))
+============================================================
 
 This directive allows you to sort an array with drag & drop.
 
-This is currently a dev&test repo for the migration of [ui-sortable](https://github.com/angular-ui/ui-sortable) to Angular2.0 and ES6
+This is currently a dev&test repo for the migration of [ui-sortable](https://github.com/angular-ui/ui-sortable) to [Angular2.0](https://angular.io) and ES6
 
 *Based on the great [ng2-play "walking skeleton" project](https://github.com/pkozlowski-opensource/ng2-play)*
 
