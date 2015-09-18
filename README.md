@@ -193,7 +193,9 @@ For more details about the events check the [jQueryUI API documentation](http://
 
 ## Examples
 
-- [Simple Demo](http://codepen.io/thgreasi/pen/jlkhr) ([Simple RequireJS Demo](http://codepen.io/thgreasi/pen/bNaxRq))
+- [Simple Demo](http://codepen.io/thgreasi/pen/jlkhr)
+  - [Simple RequireJS Demo](http://codepen.io/thgreasi/pen/bNaxRq)
+  - [Simple Touch-Enabled Demo](http://codepen.io/thgreasi/pen/rOevyv) using [jQuery UI Touch Punch](https://github.com/furf/jquery-ui-touch-punch/)
 - [Connected Lists](http://codepen.io/thgreasi/pen/uFile)
 - [Filtering](http://codepen.io/thgreasi/pen/mzGbq) ([details](https://github.com/angular-ui/ui-sortable/issues/113))
 - [Ordering 1](http://codepen.io/thgreasi/pen/iKEHd) & [Ordering 2](http://plnkr.co/edit/XPUzJjdvwE0QWQ6py6mQ?p=preview) ([details](https://github.com/angular-ui/ui-sortable/issues/70))
