@@ -44,7 +44,7 @@ angular.module('ui.sortable', [])
 
           // thanks jquery-ui
           function isFloating (item) {
-            return (/left|right/).test(item.css('float')) || (/inline|table-cell/).test(item.css('display')) || ( /flex/ ).test( this.element.css( "display" ) );
+            return (/left|right/).test(item.css('float')) || (/inline|table-cell/).test(item.css('display')) || ( /flex/ ).test( this.element.css( 'display' ) );
           }
 
           function getElementScope(elementScopes, element) {
