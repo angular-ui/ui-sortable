@@ -63,6 +63,14 @@ angular.module('ui.sortable', [])
             ui.item.sortable._destroy();
           }
 
+          function getItemIndex(target, ui) {
+            var items = getSortableWidgetInstance(angular.element(target)).items;
+            var index = items.map(function(item) {
+              return item.item.get(0);
+            }).indexOf(ui.item.get(0));
+            return index;
+          }
+
           var opts = {};
 
           // directive specific options
@@ -113,10 +121,12 @@ angular.module('ui.sortable', [])
                 sortableWidgetInstance.floating = isFloating(siblings);
               }
 
+              var index = getItemIndex(e.target, ui);
+
               // Save the starting position of dragged item
               ui.item.sortable = {
-                model: ngModel.$modelValue[ui.item.index()],
-                index: ui.item.index(),
+                model: ngModel.$modelValue[index],
+                index: index,
                 source: ui.item.parent(),
                 sourceModel: ngModel.$modelValue,
                 cancel: function () {
@@ -184,7 +194,7 @@ angular.module('ui.sortable', [])
               // update that happens when moving between lists because then
               // the value will be overwritten with the old value
               if(!ui.item.sortable.received) {
-                ui.item.sortable.dropindex = ui.item.index();
+                ui.item.sortable.dropindex = getItemIndex(e.target, ui);
                 var droptarget = ui.item.parent();
                 ui.item.sortable.droptarget = droptarget;
 
