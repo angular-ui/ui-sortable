@@ -448,7 +448,7 @@ angular.module('ui.sortable', [])
             $log.info('ui.sortable: ngModel not provided!', element);
           }
 
-          var listener = function() {};
+          var stopDisabledWatcher = angular.noop;
 
           var startIfEnabled = function()
           {
@@ -458,7 +458,7 @@ angular.module('ui.sortable', [])
               element.sortable(opts);
 
               // Stop Watcher
-              listener();
+              stopDisabledWatcher();
 
               return true;
             }
@@ -467,7 +467,7 @@ angular.module('ui.sortable', [])
 
           if(!startIfEnabled())
           {
-            listener = scope.$watch('uiSortable.disabled', startIfEnabled);
+            stopDisabledWatcher = scope.$watch('uiSortable.disabled', startIfEnabled);
           }
         }
       };
