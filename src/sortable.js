@@ -448,17 +448,27 @@ angular.module('ui.sortable', [])
             $log.info('ui.sortable: ngModel not provided!', element);
           }
 
-          var created = false;
-          scope.$watch('uiSortable.disabled', function()
-          {
-            if(!created && !scope.uiSortable.disabled)
-            {
-              created = true;
+          var listener = function() {};
 
+          var startIfEnabled = function()
+          {
+            if(!scope.uiSortable.disabled)
+            {
               // Create sortable
               element.sortable(opts);
+
+              // Stop Watcher
+              listener();
+
+              return true;
             }
-          });
+            return false;
+          };
+
+          if(!startIfEnabled())
+          {
+            listener = scope.$watch('uiSortable.disabled', startIfEnabled);
+          }
         }
       };
     }
