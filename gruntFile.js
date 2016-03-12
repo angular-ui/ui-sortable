@@ -7,7 +7,8 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'karma:unit']);
+  grunt.registerTask('default', ['test']);
+  grunt.registerTask('test', ['jshint', 'karma:unit']);
   grunt.registerTask('serve', ['karma:continuous', 'dist', 'build:gh-pages', 'connect:continuous', 'watch']);
   grunt.registerTask('dist', ['ngmin', 'surround:main', 'uglify', 'surround:banner' ]);
   grunt.registerTask('coverage', ['jshint', 'karma:coverage']);
