@@ -348,14 +348,14 @@ describe('uiSortable', function() {
               callbackContexts.stop = this;
             }
           };
-          spyOn($rootScope.opts, 'helper').andCallThrough();
-          spyOn($rootScope.opts, 'create').andCallThrough();
-          spyOn($rootScope.opts, 'start').andCallThrough();
-          spyOn($rootScope.opts, 'activate').andCallThrough();
-          spyOn($rootScope.opts, 'beforeStop').andCallThrough();
-          spyOn($rootScope.opts, 'update').andCallThrough();
-          spyOn($rootScope.opts, 'deactivate').andCallThrough();
-          spyOn($rootScope.opts, 'stop').andCallThrough();
+          spyOn($rootScope.opts, 'helper').and.callThrough();
+          spyOn($rootScope.opts, 'create').and.callThrough();
+          spyOn($rootScope.opts, 'start').and.callThrough();
+          spyOn($rootScope.opts, 'activate').and.callThrough();
+          spyOn($rootScope.opts, 'beforeStop').and.callThrough();
+          spyOn($rootScope.opts, 'update').and.callThrough();
+          spyOn($rootScope.opts, 'deactivate').and.callThrough();
+          spyOn($rootScope.opts, 'stop').and.callThrough();
           $rootScope.items = ['One', 'Two', 'Three'];
           element = $compile(''.concat(
             '<ul ui-sortable="opts" ng-model="items">',
@@ -410,7 +410,7 @@ describe('uiSortable', function() {
           $rootScope.opts = {
             start: function (e, ui) {
               uiItem = ui.item;
-              spyOn(ui.item.sortable, '_destroy').andCallThrough();
+              spyOn(ui.item.sortable, '_destroy').and.callThrough();
               uiItemSortable_Destroy = ui.item.sortable._destroy;
             },
             update: function(e, ui) {

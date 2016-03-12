@@ -49,10 +49,6 @@ describe('uiSortable', function() {
         mockJQliteFn.jquery = null;
         angular.element.fn = mockJQliteFn;
 
-        this.after(function () {
-          angular.element.fn = oldAngularElementFn;
-        });
-
         var element;
         element = $compile('<ul ui-sortable><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
         $rootScope.$apply(function() {
@@ -62,6 +58,8 @@ describe('uiSortable', function() {
         expect($log.error.logs.length).toEqual(1);
         expect($log.error.logs[0].length).toEqual(1);
         expect($log.error.logs[0][0]).toEqual('ui.sortable: jQuery should be included before AngularJS!');
+
+        angular.element.fn = oldAngularElementFn;
       });
     });
 

@@ -1064,7 +1064,7 @@ describe('uiSortable', function() {
             connectWith: '.cross-sortable',
             start: function (e, ui) {
               uiItem = ui.item;
-              spyOn(ui.item.sortable, '_destroy').andCallThrough();
+              spyOn(ui.item.sortable, '_destroy').and.callThrough();
               uiItemSortable_Destroy = ui.item.sortable._destroy;
             },
             update: function(e, ui) {
