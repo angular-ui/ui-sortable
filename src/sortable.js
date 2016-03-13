@@ -448,8 +448,27 @@ angular.module('ui.sortable', [])
             $log.info('ui.sortable: ngModel not provided!', element);
           }
 
-          // Create sortable
-          element.sortable(opts);
+          var stopDisabledWatcher = angular.noop;
+
+          var startIfEnabled = function()
+          {
+            if(!scope.uiSortable.disabled)
+            {
+              // Create sortable
+              element.sortable(opts);
+
+              // Stop Watcher
+              stopDisabledWatcher();
+
+              return true;
+            }
+            return false;
+          };
+
+          if(!startIfEnabled())
+          {
+            stopDisabledWatcher = scope.$watch('uiSortable.disabled', startIfEnabled);
+          }
         }
       };
     }
