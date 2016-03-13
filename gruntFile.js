@@ -41,7 +41,7 @@ module.exports = function(grunt) {
   var testConfig = function(configFile, customOptions) {
     var options = { configFile: configFile, singleRun: true };
     var travisOptions = process.env.TRAVIS && {
-      browsers: ['Firefox', 'PhantomJS'],
+      browsers: ['Chrome', 'Firefox'],
       reporters: ['dots', 'coverage', 'coveralls'],
       preprocessors: { 'src/*.js': ['coverage'] },
       coverageReporter: {
