@@ -230,7 +230,7 @@ angular.module('ui.sortable', [])
             return;
           }
 
-          function init () {
+          function wireUp () {
             // When we add or remove elements, we need the sortable to 'refresh'
             // so it can find the new/removed elements.
             scope.$watchCollection('ngModel', function() {
@@ -444,31 +444,30 @@ angular.module('ui.sortable', [])
             patchUISortableOptions(opts);
           }
 
-          var stopDisabledWatcher = angular.noop;
-
-          var startIfEnabled = function () {
-            if (scope.uiSortable && scope.uiSortable.disabled) {
-              return false;
-            }
-
-            if (ngModel) {
-              init();
-            } else {
-              $log.info('ui.sortable: ngModel not provided!', element);
-            }
-            
-            // Create sortable
-            element.sortable(opts);
-
-            // Stop Watcher
-            stopDisabledWatcher();
-
-            return true;
-          };
-
-          if (!startIfEnabled()) {
-            stopDisabledWatcher = scope.$watch('uiSortable.disabled', startIfEnabled);
+          function watchOnce (watchExpr, fn) {
+            var cancelWatcher = scope.$watch(watchExpr, function () {
+              fn.apply(this, arguments);
+              cancelWatcher();
+            });
           }
+
+          function lazyInit () {
+            if (scope.uiSortable && scope.uiSortable.disabled) {
+              watchOnce('uiSortable.disabled', lazyInit);
+            } else {
+
+              if (ngModel) {
+                wireUp();
+              } else {
+                $log.info('ui.sortable: ngModel not provided!', element);
+              }
+              
+              // Create sortable
+              element.sortable(opts);
+            }
+          }
+
+          lazyInit();
         }
       };
     }
