@@ -302,6 +302,67 @@ describe('uiSortable', function() {
 
       });
 
+      it('should not initialize a disabled sortable', function() {
+        inject(function($compile, $rootScope) {
+          var element;
+          var childScope = $rootScope.$new();
+          spyOn(angular.element.fn, 'sortable');
+
+          childScope.items = ['One', 'Two', 'Three'];
+          childScope.opts = {
+            disabled: true
+          };
+          element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>')(childScope);
+
+          expect(angular.element.fn.sortable).not.toHaveBeenCalled();
+        });
+      });
+
+      it('should lazily initialize a latelly enabled sortable (set disabled = false)', function() {
+        inject(function($compile, $rootScope) {
+          var element;
+          var childScope = $rootScope.$new();
+          spyOn(angular.element.fn, 'sortable');
+
+          childScope.items = ['One', 'Two', 'Three'];
+          childScope.opts = {
+            disabled: true
+          };
+          element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>')(childScope);
+
+          expect(angular.element.fn.sortable).not.toHaveBeenCalled();
+
+          $rootScope.$apply(function() {
+            childScope.opts.disabled = false;
+          });
+
+          expect(angular.element.fn.sortable).toHaveBeenCalled();
+        });
+      });
+
+      it('should lazily initialize a latelly enabled sortable (delete disabled option)', function() {
+        inject(function($compile, $rootScope) {
+          var element;
+          var childScope = $rootScope.$new();
+          spyOn(angular.element.fn, 'sortable');
+
+          childScope.items = ['One', 'Two', 'Three'];
+          childScope.opts = {
+            disabled: true
+          };
+          element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>')(childScope);
+
+          expect(angular.element.fn.sortable).not.toHaveBeenCalled();
+
+          $rootScope.$apply(function() {
+            childScope.opts = {};
+          });
+
+          expect(angular.element.fn.sortable).toHaveBeenCalled();
+        });
+      });
+
+
     });
 
 
