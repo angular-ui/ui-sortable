@@ -155,7 +155,8 @@ angular.module('ui.sortable', [])
             // exact match with the placeholder's class attribute to handle
             // the case that multiple connected sortables exist and
             // the placehoilder option equals the class of sortable items
-            var excludes = element.find('[class="' + placeholder.attr('class') + '"]:not([ng-repeat], [data-ng-repeat])');
+            var notCssSelector = uiSortableConfig.items.replace(/>/g, '');
+            var excludes = element.find('[class="' + placeholder.attr('class') + '"]:not(' + notCssSelector + ')');
             return excludes;
           }
 
