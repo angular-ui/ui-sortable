@@ -85,9 +85,9 @@ describe('uiSortable', function() {
         var element;
         element = $compile(''.concat(
           '<ul ui-sortable="opts" ng-model="items">',
-          beforeEach,
-          '<li class="floatleft" ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
+          beforeLiElement.replace('<li>', '<li class="floatleft">'),
+          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item floatleft">{{ item }}</li>',
+          afterLiElement.replace('<li>', '<li class="floatleft">'),
           '</ul>'))($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
@@ -125,9 +125,9 @@ describe('uiSortable', function() {
         var element;
         element = $compile(''.concat(
           '<ul ui-sortable="opts" ng-model="items">',
-          beforeEach,
-          '<li class="floatleft" ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
+          beforeLiElement.replace('<li>', '<li class="floatleft">'),
+          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item floatleft">{{ item }}</li>',
+          afterLiElement.replace('<li>', '<li class="floatleft">'),
           '</ul>'))($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
@@ -166,7 +166,7 @@ describe('uiSortable', function() {
         element = $compile(''.concat(
           '<ul ui-sortable="opts" ng-model="items">',
           beforeLiElement.replace('<li>', '<li class="inline-block">'),
-          '<li class="inline-block" ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item inline-block">{{ item }}</li>',
           afterLiElement.replace('<li>', '<li class="inline-block">'),
           '</ul>'))($rootScope);
         $rootScope.$apply(function() {
