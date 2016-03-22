@@ -444,30 +444,36 @@ angular.module('ui.sortable', [])
             patchUISortableOptions(opts);
           }
 
-          function watchOnce (watchExpr, fn) {
-            var cancelWatcher = scope.$watch(watchExpr, function () {
-              fn.apply(this, arguments);
-              cancelWatcher();
-            });
-          }
-
-          function lazyInit () {
-            if (scope.uiSortable && scope.uiSortable.disabled) {
-              watchOnce('uiSortable.disabled', lazyInit);
+          function init () {
+            if (ngModel) {
+              wireUp();
             } else {
-
-              if (ngModel) {
-                wireUp();
-              } else {
-                $log.info('ui.sortable: ngModel not provided!', element);
-              }
-              
-              // Create sortable
-              element.sortable(opts);
+              $log.info('ui.sortable: ngModel not provided!', element);
             }
+            
+            // Create sortable
+            element.sortable(opts);
           }
 
-          lazyInit();
+          function initIfEnabled () {
+            if (scope.uiSortable && scope.uiSortable.disabled) {
+              return false;
+            }
+
+            init();
+
+            // Stop Watcher
+            initIfEnabled.cancelWatcher();
+            initIfEnabled.cancelWatcher = angular.noop;
+
+            return true;
+          }
+
+          initIfEnabled.cancelWatcher = angular.noop;
+
+          if (!initIfEnabled()) {
+            initIfEnabled.cancelWatcher = scope.$watch('uiSortable.disabled', initIfEnabled);
+          }
         }
       };
     }
