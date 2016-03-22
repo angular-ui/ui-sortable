@@ -319,7 +319,7 @@ describe('uiSortable', function() {
       });
 
       it('should lazily initialize a latelly enabled sortable (set disabled = false)', function() {
-        inject(function($compile, $rootScope) {
+        inject(function($compile, $rootScope, $timeout) {
           var element;
           var childScope = $rootScope.$new();
           spyOn(angular.element.fn, 'sortable');
@@ -336,12 +336,45 @@ describe('uiSortable', function() {
             childScope.opts.disabled = false;
           });
 
+          expect(function() {
+            $timeout.flush();
+          }).not.toThrow();
+
           expect(angular.element.fn.sortable).toHaveBeenCalled();
         });
       });
 
+      it('should lazily initialize a sortable enabled in $timeout (set disabled = false)', function() {
+        inject(function($compile, $rootScope, $timeout) {
+          var element;
+          var childScope = $rootScope.$new();
+          spyOn(angular.element.fn, 'sortable');
+
+          childScope.items = ['One', 'Two', 'Three'];
+          childScope.opts = {
+            disabled: true
+          };
+          element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>')(childScope);
+
+          expect(angular.element.fn.sortable).not.toHaveBeenCalled();
+
+          $timeout(function () {
+            childScope.opts.disabled = false;
+          });
+
+          $timeout(function () {
+            expect(angular.element.fn.sortable).toHaveBeenCalled();
+          });
+
+          expect(function() {
+            $timeout.flush();
+          }).not.toThrow();
+
+        });
+      });
+
       it('should lazily initialize a latelly enabled sortable (delete disabled option)', function() {
-        inject(function($compile, $rootScope) {
+        inject(function($compile, $rootScope, $timeout) {
           var element;
           var childScope = $rootScope.$new();
           spyOn(angular.element.fn, 'sortable');
@@ -358,10 +391,46 @@ describe('uiSortable', function() {
             childScope.opts = {};
           });
 
+          expect(function() {
+            $timeout.flush();
+          }).not.toThrow();
+
           expect(angular.element.fn.sortable).toHaveBeenCalled();
         });
       });
 
+      it('should lazily initialize a sortable enabled in $timeout (delete disabled option)', function() {
+        inject(function($compile, $rootScope, $timeout) {
+          var element;
+          var childScope = $rootScope.$new();
+          spyOn(angular.element.fn, 'sortable');
+
+          childScope.items = ['One', 'Two', 'Three'];
+          childScope.opts = {
+            disabled: true
+          };
+          element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>')(childScope);
+
+          expect(angular.element.fn.sortable).not.toHaveBeenCalled();
+
+          expect(function() {
+            $timeout.flush();
+          }).not.toThrow();
+
+          $timeout(function () {
+            childScope.opts = {};
+          });
+
+          $timeout(function () {
+            expect(angular.element.fn.sortable).toHaveBeenCalled();
+          });
+
+          expect(function() {
+            $timeout.flush();
+          }).not.toThrow();
+
+        });
+      });
 
     });
 
