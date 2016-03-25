@@ -384,7 +384,6 @@ angular.module('ui.sortable', [])
                     savedNodes = savedNodes.not(sortingHelper);
                   }
                   savedNodes.appendTo(element);
-                  savedNodes.appendTo(element);
                 }
               }
 
