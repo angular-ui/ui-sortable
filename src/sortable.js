@@ -210,7 +210,8 @@ angular.module('ui.sortable', [])
           // we can't just do ui.item.index() because there it might have siblings
           // which are not items
           function getItemIndex(ui) {
-            return ui.item.parent().find(opts['ui-model-items'])
+            return ui.item.parent()
+              .find(opts['ui-model-items'])
               .index(ui.item);
           }
 
@@ -224,10 +225,10 @@ angular.module('ui.sortable', [])
 
           var callbacks = {
             receive: null,
-            remove:null,
-            start:null,
-            stop:null,
-            update:null
+            remove: null,
+            start: null,
+            stop: null,
+            update: null
           };
 
           var wrappers = {
