@@ -4,9 +4,13 @@ angular.module('ui.sortable.testHelper', [])
   .factory('sortableTestHelper', function () {
     var EXTRA_DY_PERCENTAGE = 0.25;
 
-    function listContent (list) {
+    function listContent (list, contentSelector) {
+      if (!contentSelector) {
+        contentSelector = '[ng-repeat], [data-ng-repeat], [x-ng-repeat]';
+      }
+
       if (list && list.length) {
-        return list.children('[ng-repeat], [data-ng-repeat], [x-ng-repeat]').map(function(){ return this.innerHTML; }).toArray();
+        return list.children(contentSelector).map(function(){ return this.innerHTML; }).toArray();
       }
       return [];
     }

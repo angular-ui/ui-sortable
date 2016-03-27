@@ -61,8 +61,13 @@ angular.module('ui.sortable', [])
               value = wrappers[key](value);
             }
 
-            if (key === 'items' && !value) {
-              value = uiSortableConfig.items;
+            // patch the options that need to have values set
+            if (!value) {
+              if (key === 'items') {
+                value = uiSortableConfig.items;
+              } else if (key === 'ui-model-items') {
+                value = uiSortableConfig.items;
+              }
             }
 
             return value;
@@ -89,7 +94,11 @@ angular.module('ui.sortable', [])
               angular.forEach(oldVal, function(oldValue, key) {
                 if (!newVal || !(key in newVal)) {
                   if (key in directiveOpts) {
-                    opts[key] = 'auto';
+                    if (key === 'ui-floating') {
+                      opts[key] = 'auto';
+                    } else {
+                      opts[key] = patchSortableOption(key, undefined);
+                    }
                     return;
                   }
                   
@@ -117,7 +126,7 @@ angular.module('ui.sortable', [])
                   sortableWidgetInstance.floating = value;
                 }
 
-                opts[key] = value;
+                opts[key] = patchSortableOption(key, value);
                 return;
               }
 
@@ -154,8 +163,9 @@ angular.module('ui.sortable', [])
           function getPlaceholderExcludesludes (element, placeholder) {
             // exact match with the placeholder's class attribute to handle
             // the case that multiple connected sortables exist and
-            // the placehoilder option equals the class of sortable items
-            var excludes = element.find('[class="' + placeholder.attr('class') + '"]:not([ng-repeat], [data-ng-repeat])');
+            // the placeholder option equals the class of sortable items
+            var notCssSelector = opts['ui-model-items'].replace(/[^,]*>/g, '');
+            var excludes = element.find('[class="' + placeholder.attr('class') + '"]:not(' + notCssSelector + ')');
             return excludes;
           }
 
@@ -200,7 +210,8 @@ angular.module('ui.sortable', [])
           // we can't just do ui.item.index() because there it might have siblings
           // which are not items
           function getItemIndex(ui) {
-            return ui.item.parent().find(uiSortableConfig.items)
+            return ui.item.parent()
+              .find(opts['ui-model-items'])
               .index(ui.item);
           }
 
@@ -208,15 +219,16 @@ angular.module('ui.sortable', [])
 
           // directive specific options
           var directiveOpts = {
-            'ui-floating': undefined
+            'ui-floating': undefined,
+            'ui-model-items': uiSortableConfig.items
           };
 
           var callbacks = {
             receive: null,
-            remove:null,
-            start:null,
-            stop:null,
-            update:null
+            remove: null,
+            start: null,
+            stop: null,
+            update: null
           };
 
           var wrappers = {
@@ -382,7 +394,6 @@ angular.module('ui.sortable', [])
                     // That way it will be garbage collected.
                     savedNodes = savedNodes.not(sortingHelper);
                   }
-                  savedNodes.appendTo(element);
                   savedNodes.appendTo(element);
                 }
               }

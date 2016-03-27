@@ -85,9 +85,9 @@ describe('uiSortable', function() {
         var element;
         element = $compile(''.concat(
           '<ul ui-sortable="opts" ng-model="items">',
-          beforeEach,
-          '<li class="floatleft" ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
+          beforeLiElement.replace('<li>', '<li class="floatleft">'),
+          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item floatleft">{{ item }}</li>',
+          afterLiElement.replace('<li>', '<li class="floatleft">'),
           '</ul>'))($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
@@ -125,9 +125,9 @@ describe('uiSortable', function() {
         var element;
         element = $compile(''.concat(
           '<ul ui-sortable="opts" ng-model="items">',
-          beforeEach,
-          '<li class="floatleft" ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
+          beforeLiElement.replace('<li>', '<li class="floatleft">'),
+          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item floatleft">{{ item }}</li>',
+          afterLiElement.replace('<li>', '<li class="floatleft">'),
           '</ul>'))($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
@@ -166,7 +166,7 @@ describe('uiSortable', function() {
         element = $compile(''.concat(
           '<ul ui-sortable="opts" ng-model="items">',
           beforeLiElement.replace('<li>', '<li class="inline-block">'),
-          '<li class="inline-block" ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item inline-block">{{ item }}</li>',
           afterLiElement.replace('<li>', '<li class="inline-block">'),
           '</ul>'))($rootScope);
         $rootScope.$apply(function() {
@@ -206,12 +206,13 @@ describe('uiSortable', function() {
         element = $compile(''.concat(
           '<ul ui-sortable="opts" ng-model="items">',
           beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+          '<li ng-repeat="item in items" id="s-{{$index}}" sortable-item>{{ item }}</li>',
           afterLiElement +
           '</ul>'))($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
-            'ui-floating': true
+            'ui-floating': true,
+            'ui-model-items': '> [sortable-item]'
           };
           $rootScope.items = ['One', 'Two', 'Three'];
         });
@@ -237,6 +238,158 @@ describe('uiSortable', function() {
 
         $(element).remove();
         $(logsElement).remove();
+      });
+    });
+
+    it('should work when custom "ui-model-items" option is used with an attribute selector', function() {
+      inject(function($compile, $rootScope) {
+        var element;
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item" ui-sortable-item>{{ item }}</li>',
+          afterLiElement,
+          '</ul>'))($rootScope);
+
+        var itemsSelector = '[ui-sortable-item]';
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            items: '> ' + itemsSelector,
+            'ui-model-items': '> ' + itemsSelector
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element).append('<div class="clear"></div>');
+
+        var li = element.find(itemsSelector + ':eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        li = element.find(itemsSelector + ':eq(1)');
+        dy = -(1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Three', 'One', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        $(element).remove();
+      });
+    });
+
+    it('should work when custom "ui-model-items" option is used with a class selector', function() {
+      inject(function($compile, $rootScope) {
+        var element;
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item ui-sortable-item">{{ item }}</li>',
+          afterLiElement,
+          '</ul>'))($rootScope);
+
+        var itemsSelector = '.ui-sortable-item';
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            items: '> ' + itemsSelector,
+            'ui-model-items': '> ' + itemsSelector
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element).append('<div class="clear"></div>');
+
+        var li = element.find(itemsSelector + ':eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        li = element.find(itemsSelector + ':eq(1)');
+        dy = -(1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Three', 'One', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        $(element).remove();
+      });
+    });
+
+    xit('should work with multiple [ng-repeat] when attribute "ui-model-items" selector', function() {
+      inject(function($compile, $rootScope) {
+        var element;
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          beforeLiElement.replace('<li>', '<li ng-repeat="item in items" id="pre-{{$index}}" class="sortable-item">{{ item }}'),
+          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item" ui-sortable-item>{{ item }}</li>',
+          afterLiElement.replace('<li>', '<li ng-repeat="item in items" id="after-{{$index}}" class="sortable-item">{{ item }}'),
+          afterLiElement,
+          '</ul>'))($rootScope);
+
+        var itemsSelector = '[ui-sortable-item]';
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            items: '> ' + itemsSelector,
+            'ui-model-items': '> ' + itemsSelector
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element).append('<div class="clear"></div>');
+
+        var li = element.find(itemsSelector + ':eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element, itemsSelector));
+
+        li = element.find(itemsSelector + ':eq(1)');
+        dy = -(1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Three', 'One', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element, itemsSelector));
+
+        $(element).remove();
+      });
+    });
+
+    xit('should work with multiple [ng-repeat] when class "ui-model-items" selector', function() {
+      inject(function($compile, $rootScope) {
+        var element;
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          beforeLiElement.replace('<li>', '<li ng-repeat="item in items" id="pre-{{$index}}" class="sortable-item">{{ item }}'),
+          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item ui-sortable-item">{{ item }}</li>',
+          afterLiElement.replace('<li>', '<li ng-repeat="item in items" id="after-{{$index}}" class="sortable-item">{{ item }}'),
+          afterLiElement,
+          '</ul>'))($rootScope);
+
+        var itemsSelector = '.ui-sortable-item';
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            items: '> ' + itemsSelector,
+            'ui-model-items': '> ' + itemsSelector
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element).append('<div class="clear"></div>');
+
+        var li = element.find(itemsSelector + ':eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element, itemsSelector));
+
+        li = element.find(itemsSelector + ':eq(1)');
+        dy = -(1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Three', 'One', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element, itemsSelector));
+
+        $(element).remove();
       });
     });
 
