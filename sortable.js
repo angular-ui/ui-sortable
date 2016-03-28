@@ -1,6 +1,6 @@
 /**
  * angular-ui-sortable - This directive allows you to jQueryUI Sortable.
- * @version v0.13.4 - 2015-06-07
+ * @version v0.14.0 - 2016-03-28
  * @link http://angular-ui.github.com
  * @license MIT
  */
@@ -13,7 +13,12 @@
  @param [ui-sortable] {object} Options to pass to $.fn.sortable() merged onto ui.config
  */
 angular.module('ui.sortable', [])
-  .value('uiSortableConfig',{})
+  .value('uiSortableConfig',{
+    // the default for jquery-ui sortable is "> *", we need to restrict this to
+    // ng-repeat items
+    // if the user uses
+    items: '> [ng-repeat],> [data-ng-repeat],> [x-ng-repeat]'
+  })
   .directive('uiSortable', [
     'uiSortableConfig', '$timeout', '$log',
     function(uiSortableConfig, $timeout, $log) {
@@ -26,12 +31,16 @@ angular.module('ui.sortable', [])
         link: function(scope, element, attrs, ngModel) {
           var savedNodes;
 
-          function combineCallbacks(first,second){
-            if(second && (typeof second === 'function')) {
+          function combineCallbacks(first, second){
+            var firstIsFunc = first && (typeof first === 'function');
+            var secondIsFunc = second && (typeof second === 'function');
+            if(firstIsFunc && secondIsFunc) {
               return function() {
                 first.apply(this, arguments);
                 second.apply(this, arguments);
               };
+            } else if (secondIsFunc) {
+              return second;
             }
             return first;
           }
@@ -46,9 +55,143 @@ angular.module('ui.sortable', [])
             return null;
           }
 
+          function patchSortableOption(key, value) {
+            if (callbacks[key]) {
+              if( key === 'stop' ){
+                // call apply after stop
+                value = combineCallbacks(
+                  value, function() { scope.$apply(); });
+
+                value = combineCallbacks(value, afterStop);
+              }
+              // wrap the callback
+              value = combineCallbacks(callbacks[key], value);
+            } else if (wrappers[key]) {
+              value = wrappers[key](value);
+            }
+
+            // patch the options that need to have values set
+            if (!value) {
+              if (key === 'items') {
+                value = uiSortableConfig.items;
+              } else if (key === 'ui-model-items') {
+                value = uiSortableConfig.items;
+              }
+            }
+
+            return value;
+          }
+
+          function patchUISortableOptions(newVal, oldVal, sortableWidgetInstance) {
+            function addDummyOptionKey(value, key) {
+              if (!(key in opts)) {
+                // add the key in the opts object so that
+                // the patch function detects and handles it
+                opts[key] = null;
+              }
+            }
+            // for this directive to work we have to attach some callbacks
+            angular.forEach(callbacks, addDummyOptionKey);
+
+            // only initialize it in case we have to
+            // update some options of the sortable
+            var optsDiff = null;
+
+            if (oldVal) {
+              // reset deleted options to default
+              var defaultOptions;
+              angular.forEach(oldVal, function(oldValue, key) {
+                if (!newVal || !(key in newVal)) {
+                  if (key in directiveOpts) {
+                    if (key === 'ui-floating') {
+                      opts[key] = 'auto';
+                    } else {
+                      opts[key] = patchSortableOption(key, undefined);
+                    }
+                    return;
+                  }
+                  
+                  if (!defaultOptions) {
+                    defaultOptions = angular.element.ui.sortable().options;
+                  }
+                  var defaultValue = defaultOptions[key];
+                  defaultValue = patchSortableOption(key, defaultValue);
+
+                  if (!optsDiff) {
+                    optsDiff = {};
+                  }
+                  optsDiff[key] = defaultValue;
+                  opts[key] = defaultValue;
+                }
+              });
+            }
+
+            // update changed options
+            angular.forEach(newVal, function(value, key) {
+              // if it's a custom option of the directive,
+              // handle it approprietly
+              if (key in directiveOpts) {
+                if (key === 'ui-floating' && (value === false || value === true) && sortableWidgetInstance) {
+                  sortableWidgetInstance.floating = value;
+                }
+
+                opts[key] = patchSortableOption(key, value);
+                return;
+              }
+
+              value = patchSortableOption(key, value);
+
+              if (!optsDiff) {
+                optsDiff = {};
+              }
+              optsDiff[key] = value;
+              opts[key] = value;
+            });
+
+            return optsDiff;
+          }
+
+          function getPlaceholderElement (element) {
+            var placeholder = element.sortable('option','placeholder');
+
+            // placeholder.element will be a function if the placeholder, has
+            // been created (placeholder will be an object).  If it hasn't
+            // been created, either placeholder will be false if no
+            // placeholder class was given or placeholder.element will be
+            // undefined if a class was given (placeholder will be a string)
+            if (placeholder && placeholder.element && typeof placeholder.element === 'function') {
+              var result = placeholder.element();
+              // workaround for jquery ui 1.9.x,
+              // not returning jquery collection
+              result = angular.element(result);
+              return result;
+            }
+            return null;
+          }
+
+          function getPlaceholderExcludesludes (element, placeholder) {
+            // exact match with the placeholder's class attribute to handle
+            // the case that multiple connected sortables exist and
+            // the placeholder option equals the class of sortable items
+            var notCssSelector = opts['ui-model-items'].replace(/[^,]*>/g, '');
+            var excludes = element.find('[class="' + placeholder.attr('class') + '"]:not(' + notCssSelector + ')');
+            return excludes;
+          }
+
           function hasSortingHelper (element, ui) {
             var helperOption = element.sortable('option','helper');
             return helperOption === 'clone' || (typeof helperOption === 'function' && ui.item.sortable.isCustomHelperUsed());
+          }
+
+          function getSortingHelper (element, ui, savedNodes) {
+            var result = null;
+            if (hasSortingHelper(element, ui) &&
+                element.sortable( 'option', 'appendTo' ) === 'parent') {
+              // The .ui-sortable-helper element (that's the default class name)
+              // is placed last.
+              result = savedNodes.last();
+            }
+            return result;
           }
 
           // thanks jquery-ui
@@ -72,19 +215,29 @@ angular.module('ui.sortable', [])
             ui.item.sortable._destroy();
           }
 
+          // return the index of ui.item among the items
+          // we can't just do ui.item.index() because there it might have siblings
+          // which are not items
+          function getItemIndex(ui) {
+            return ui.item.parent()
+              .find(opts['ui-model-items'])
+              .index(ui.item);
+          }
+
           var opts = {};
 
           // directive specific options
           var directiveOpts = {
-            'ui-floating': undefined
+            'ui-floating': undefined,
+            'ui-model-items': uiSortableConfig.items
           };
 
           var callbacks = {
             receive: null,
-            remove:null,
-            start:null,
-            stop:null,
-            update:null
+            remove: null,
+            start: null,
+            stop: null,
+            update: null
           };
 
           var wrappers = {
@@ -98,11 +251,10 @@ angular.module('ui.sortable', [])
             return;
           }
 
-          if (ngModel) {
-
+          function wireUp () {
             // When we add or remove elements, we need the sortable to 'refresh'
             // so it can find the new/removed elements.
-            scope.$watch('ngModel.length', function() {
+            scope.$watchCollection('ngModel', function() {
               // Timeout to let ng-repeat modify the DOM
               $timeout(function() {
                 // ensure that the jquery-ui-sortable widget instance
@@ -123,9 +275,10 @@ angular.module('ui.sortable', [])
               }
 
               // Save the starting position of dragged item
+              var index = getItemIndex(ui);
               ui.item.sortable = {
-                model: ngModel.$modelValue[ui.item.index()],
-                index: ui.item.index(),
+                model: ngModel.$modelValue[index],
+                index: index,
                 source: ui.item.parent(),
                 sourceModel: ngModel.$modelValue,
                 cancel: function () {
@@ -156,24 +309,9 @@ angular.module('ui.sortable', [])
 
               // If this list has a placeholder (the connected lists won't),
               // don't inlcude it in saved nodes.
-              var placeholder = element.sortable('option','placeholder');
-
-              // placeholder.element will be a function if the placeholder, has
-              // been created (placeholder will be an object).  If it hasn't
-              // been created, either placeholder will be false if no
-              // placeholder class was given or placeholder.element will be
-              // undefined if a class was given (placeholder will be a string)
-              if (placeholder && placeholder.element && typeof placeholder.element === 'function') {
-                var phElement = placeholder.element();
-                // workaround for jquery ui 1.9.x,
-                // not returning jquery collection
-                phElement = angular.element(phElement);
-
-                // exact match with the placeholder's class attribute to handle
-                // the case that multiple connected sortables exist and
-                // the placehoilder option equals the class of sortable items
-                var excludes = element.find('[class="' + phElement.attr('class') + '"]:not([ng-repeat], [data-ng-repeat])');
-
+              var placeholder = getPlaceholderElement(element);
+              if (placeholder && placeholder.length) {
+                var excludes = getPlaceholderExcludesludes(element, placeholder);
                 savedNodes = savedNodes.not(excludes);
               }
 
@@ -193,7 +331,7 @@ angular.module('ui.sortable', [])
               // update that happens when moving between lists because then
               // the value will be overwritten with the old value
               if(!ui.item.sortable.received) {
-                ui.item.sortable.dropindex = ui.item.index();
+                ui.item.sortable.dropindex = getItemIndex(ui);
                 var droptarget = ui.item.parent();
                 ui.item.sortable.droptarget = droptarget;
 
@@ -212,11 +350,11 @@ angular.module('ui.sortable', [])
               // the start and stop of repeat sections and sortable doesn't
               // respect their order (even if we cancel, the order of the
               // comments are still messed up).
-              if (hasSortingHelper(element, ui) && !ui.item.sortable.received &&
-                  element.sortable( 'option', 'appendTo' ) === 'parent') {
-                // restore all the savedNodes except .ui-sortable-helper element
-                // (which is placed last). That way it will be garbage collected.
-                savedNodes = savedNodes.not(savedNodes.last());
+              var sortingHelper = !ui.item.sortable.received && getSortingHelper(element, ui, savedNodes);
+              if (sortingHelper && sortingHelper.length) {
+                // Restore all the savedNodes except from the sorting helper element.
+                // That way it will be garbage collected.
+                savedNodes = savedNodes.not(sortingHelper);
               }
               savedNodes.appendTo(element);
 
@@ -257,7 +395,14 @@ angular.module('ui.sortable', [])
                 // if the item was not moved, then restore the elements
                 // so that the ngRepeat's comment are correct.
                 if ((!('dropindex' in ui.item.sortable) || ui.item.sortable.isCanceled()) &&
-                    !hasSortingHelper(element, ui)) {
+                    !angular.equals(element.contents(), savedNodes)) {
+
+                  var sortingHelper = getSortingHelper(element, ui, savedNodes);
+                  if (sortingHelper && sortingHelper.length) {
+                    // Restore all the savedNodes except from the sorting helper element.
+                    // That way it will be garbage collected.
+                    savedNodes = savedNodes.not(sortingHelper);
+                  }
                   savedNodes.appendTo(element);
                 }
               }
@@ -303,56 +448,52 @@ angular.module('ui.sortable', [])
               return inner;
             };
 
-            scope.$watch('uiSortable', function(newVal /*, oldVal*/) {
+            scope.$watchCollection('uiSortable', function(newVal, oldVal) {
               // ensure that the jquery-ui-sortable widget instance
               // is still bound to the directive's element
               var sortableWidgetInstance = getSortableWidgetInstance(element);
               if (!!sortableWidgetInstance) {
-                angular.forEach(newVal, function(value, key) {
-                  // if it's a custom option of the directive,
-                  // handle it approprietly
-                  if (key in directiveOpts) {
-                    if (key === 'ui-floating' && (value === false || value === true)) {
-                      sortableWidgetInstance.floating = value;
-                    }
-
-                    opts[key] = value;
-                    return;
-                  }
-
-                  if (callbacks[key]) {
-                    if( key === 'stop' ){
-                      // call apply after stop
-                      value = combineCallbacks(
-                        value, function() { scope.$apply(); });
-
-                      value = combineCallbacks(value, afterStop);
-                    }
-                    // wrap the callback
-                    value = combineCallbacks(callbacks[key], value);
-                  } else if (wrappers[key]) {
-                    value = wrappers[key](value);
-                  }
-
-                  opts[key] = value;
-                  element.sortable('option', key, value);
-                });
+                var optsDiff = patchUISortableOptions(newVal, oldVal, sortableWidgetInstance);
+                
+                if (optsDiff) {
+                  element.sortable('option', optsDiff);
+                }
               }
             }, true);
 
-            angular.forEach(callbacks, function(value, key) {
-              opts[key] = combineCallbacks(value, opts[key]);
-              if( key === 'stop' ){
-                opts[key] = combineCallbacks(opts[key], afterStop);
-              }
-            });
-
-          } else {
-            $log.info('ui.sortable: ngModel not provided!', element);
+            patchUISortableOptions(opts);
           }
 
-          // Create sortable
-          element.sortable(opts);
+          function init () {
+            if (ngModel) {
+              wireUp();
+            } else {
+              $log.info('ui.sortable: ngModel not provided!', element);
+            }
+            
+            // Create sortable
+            element.sortable(opts);
+          }
+
+          function initIfEnabled () {
+            if (scope.uiSortable && scope.uiSortable.disabled) {
+              return false;
+            }
+
+            init();
+
+            // Stop Watcher
+            initIfEnabled.cancelWatcher();
+            initIfEnabled.cancelWatcher = angular.noop;
+
+            return true;
+          }
+
+          initIfEnabled.cancelWatcher = angular.noop;
+
+          if (!initIfEnabled()) {
+            initIfEnabled.cancelWatcher = scope.$watch('uiSortable.disabled', initIfEnabled);
+          }
         }
       };
     }
