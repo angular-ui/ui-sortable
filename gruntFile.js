@@ -10,7 +10,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['test']);
   grunt.registerTask('test', ['jshint', 'karma:unit']);
   grunt.registerTask('serve', ['karma:continuous', 'dist', 'build:gh-pages', 'connect:continuous', 'watch']);
-  grunt.registerTask('dist', ['ngmin', 'surround', 'uglify' ]);
+  grunt.registerTask('dist', ['ngmin', 'surround:main', 'uglify', 'surround:banner' ]);
   grunt.registerTask('coverage', ['jshint', 'karma:coverage']);
   grunt.registerTask('junit', ['jshint', 'karma:junit']);
 
@@ -142,16 +142,25 @@ module.exports = function(grunt) {
     },
 
     surround: {
-      options: {
-        prepend: ['(function(window, angular, undefined) {',
-                  '\'use strict\';'].join('\n'),
-        append: '})(window, window.angular);'
-      },
       main: {
         expand: true,
         cwd: 'src',
         src: ['*.js'],
-        dest: 'dist'
+        dest: 'dist',
+        options: {
+          prepend: ['(function(window, angular, undefined) {',
+                    '\'use strict\';'].join('\n'),
+          append: '})(window, window.angular);'
+        }
+      },
+      banner: {
+        expand: true,
+        cwd: 'dist',
+        src: ['*.js'],
+        dest: 'dist',
+        options: {
+          prepend: '<%= meta.banner %>'
+        }
       }
     },
 
