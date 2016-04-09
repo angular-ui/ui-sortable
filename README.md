@@ -207,6 +207,7 @@ For more details about the events check the [jQueryUI API documentation](http://
 - [Static HTML Sorting](http://codepen.io/thgreasi/pen/qdmjwy)
 
 ## Integrations
+- [firebase](http://codepen.io/thgreasi/pen/repEZg?editors=0010)
 - [ui.bootstrap.accordion](http://plnkr.co/edit/TGIeeEbbvJwpJ3WRqo2z?p=preview)
 - [Asynchronous loading jQuery+jQueryUI with crisbeto/angular-ui-sortable-loader](https://github.com/crisbeto/angular-ui-sortable-loader)
 
