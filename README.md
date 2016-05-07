@@ -92,7 +92,7 @@ The suggested pattern is to use callbacks for emmiting events and altering the s
 
 To have a smooth horizontal-list reordering, jquery.ui.sortable needs to detect the orientation of the list.
 This detection takes place during the initialization of the plugin (and some of the checks include: whether the first item is floating left/right or if 'axis' parameter is 'x', etc).
-There is also a [known issue](bugs.jqueryui.com/ticket/7498) about initially empty horizontal lists.
+There is also a [known issue](https://bugs.jqueryui.com/ticket/7498) about initially empty horizontal lists.
 
 To provide a solution/workaround (till jquery.ui.sortable.refresh() also tests the orientation or a more appropriate method is provided), ui-sortable directive provides a `ui-floating` option as an extra to the [jquery.ui.sortable options](http://api.jqueryui.com/sortable/).
 
