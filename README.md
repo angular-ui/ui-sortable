@@ -226,12 +226,12 @@ npm install && bower install
 grunt
 ```
 
-The karma task will try to open Firefox and Chrome as browser in which to run the tests.  Make sure this is available or change the configuration in `test\karma.conf.js`
+The karma task will try to open Firefox and Chrome as browser in which to run the tests.  Make sure this is available or change the configuration in `test\karma.conf.js`.
 
 
 ### Grunt Serve
 
-We have one task to serve them all !
+We have one task to serve them all!
 
 ```sh
 grunt serve
