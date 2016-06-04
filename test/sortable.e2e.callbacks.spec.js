@@ -457,6 +457,64 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should provide the item.sortable properties on helper callback', function() {
+      inject(function($compile, $rootScope) {
+        var element, helperItem, itemSortable_Restore, sortableAfterRestore, helperCallbackExpectations;
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+          afterLiElement +
+          '</ul>'))($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            helper: function(e, item) {
+              helperItem = item;
+
+              var oldRestore = item.sortable._restore;
+              item.sortable._restore = function () {
+                oldRestore.apply(this, arguments);
+                // hold the value of the sortable object
+                // right after the _restore method completes
+                sortableAfterRestore = item.sortable;
+              };
+
+              spyOn(item.sortable, '_restore').and.callThrough();
+              itemSortable_Restore = item.sortable._restore;
+              helperCallbackExpectations(item.sortable);
+              return item.clone();
+            }
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element);
+
+        $rootScope.$apply(function() {
+        });
+
+        var li = element.find('[ng-repeat]:eq(0)');
+        var dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        helperCallbackExpectations = function(helperItemSortable) {
+          expect(helperItemSortable.model).toEqual('One');
+          expect(helperItemSortable.index).toEqual(0);
+          expect(helperItemSortable.source.length).toEqual(1);
+          expect(helperItemSortable.source[0]).toBe(host.children()[0]);
+          expect(helperItemSortable.sourceModel).toBe($rootScope.items);
+        };
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
+        expect($rootScope.items).toEqual(listContent(element));
+        expect(itemSortable_Restore).toHaveBeenCalled();
+        expect(hasUndefinedProperties(helperItem.sortable)).toBe(true);
+        // this happens after the update callback, so everything is udnefined
+        expect(typeof sortableAfterRestore).toBe('function');
+        helperItem = itemSortable_Restore = sortableAfterRestore = helperCallbackExpectations = undefined;
+
+        $(element).remove();
+      });
+    });
+
     it('should properly reset a deleted callback option', function() {
       inject(function($compile, $rootScope) {
         var element, logsElement;
