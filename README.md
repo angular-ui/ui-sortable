@@ -1,4 +1,5 @@
 # UI.Sortable directive
+[![npm](https://img.shields.io/npm/dm/angular-ui-sortable.svg)](https://www.npmjs.com/package/angular-ui-sortable)
 [![Build Status](https://travis-ci.org/angular-ui/ui-sortable.svg?branch=master)](https://travis-ci.org/angular-ui/ui-sortable)
 [![Coverage Status](https://coveralls.io/repos/angular-ui/ui-sortable/badge.svg?branch=master)](https://coveralls.io/r/angular-ui/ui-sortable?branch=master)
 [![debugInfoEnabled(false) Ready Badge](https://rawgit.com/thgreasi/ng-debugInfoDisabled-badges/master/badge1.svg)](https://docs.angularjs.org/guide/production#disabling-debug-data)
