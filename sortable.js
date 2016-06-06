@@ -1,6 +1,6 @@
 /**
  * angular-ui-sortable - This directive allows you to jQueryUI Sortable.
- * @version v0.14.0 - 2016-03-28
+ * @version v0.14.1 - 2016-06-06
  * @link http://angular-ui.github.com
  * @license MIT
  */
@@ -218,10 +218,10 @@ angular.module('ui.sortable', [])
           // return the index of ui.item among the items
           // we can't just do ui.item.index() because there it might have siblings
           // which are not items
-          function getItemIndex(ui) {
-            return ui.item.parent()
+          function getItemIndex(item) {
+            return item.parent()
               .find(opts['ui-model-items'])
-              .index(ui.item);
+              .index(item);
           }
 
           var opts = {};
@@ -275,7 +275,7 @@ angular.module('ui.sortable', [])
               }
 
               // Save the starting position of dragged item
-              var index = getItemIndex(ui);
+              var index = getItemIndex(ui.item);
               ui.item.sortable = {
                 model: ngModel.$modelValue[index],
                 index: index,
@@ -331,7 +331,7 @@ angular.module('ui.sortable', [])
               // update that happens when moving between lists because then
               // the value will be overwritten with the old value
               if(!ui.item.sortable.received) {
-                ui.item.sortable.dropindex = getItemIndex(ui);
+                ui.item.sortable.dropindex = getItemIndex(ui.item);
                 var droptarget = ui.item.parent();
                 ui.item.sortable.droptarget = droptarget;
 
@@ -440,7 +440,24 @@ angular.module('ui.sortable', [])
             wrappers.helper = function (inner) {
               if (inner && typeof inner === 'function') {
                 return function (e, item) {
+                  var oldItemSortable = item.sortable;
+                  var index = getItemIndex(item);
+                  item.sortable = {
+                    model: ngModel.$modelValue[index],
+                    index: index,
+                    source: item.parent(),
+                    sourceModel: ngModel.$modelValue,
+                    _restore: function () {
+                      angular.forEach(item.sortable, function(value, key) {
+                        item.sortable[key] = undefined;
+                      });
+
+                      item.sortable = oldItemSortable;
+                    }
+                  };
+
                   var innerResult = inner.apply(this, arguments);
+                  item.sortable._restore();
                   item.sortable._isCustomHelperUsed = item !== innerResult;
                   return innerResult;
                 };
