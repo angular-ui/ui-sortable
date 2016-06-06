@@ -1,6 +1,6 @@
 /**
  * angular-ui-sortable - This directive allows you to jQueryUI Sortable.
- * @version v0.14.1 - 2016-06-04
+ * @version v0.14.2 - 2016-06-06
  * @link http://angular-ui.github.com
  * @license MIT
  */
