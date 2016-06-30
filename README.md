@@ -142,7 +142,19 @@ $scope.sortableOptions = {
 **Notes:**
 * `update` is the appropriate place to cancel a sorting, since it occurs before any model/scope changes but after the DOM position has been updated.
 So `ui.item.scope` and the directive's `ng-model`, are equal to the scope before the drag start.
-* To [cancel a sorting between connected lists](https://github.com/angular-ui/ui-sortable/issues/107#issuecomment-33633638), `cancel` should be called inside the `update` callback of the originating list.
+* To [cancel a sorting between connected lists](https://github.com/angular-ui/ui-sortable/issues/107#issuecomment-33633638), `cancel` should be called inside the `update` callback of the originating list. A simple way to is to use the `ui.item.sortable.received` property:
+```js
+update: function(event, ui) {
+  if (// ensure we are in the first update() callback
+      !ui.item.sortable.received &&
+      // check that its an actual moving between the two lists
+      ui.item.sortable.source[0] !== ui.item.sortable.droptarget[0] &&
+      // check the size limitation
+      ui.item.sortable.model == "can't be moved between lists") {
+    ui.item.sortable.cancel();
+  }
+}
+```
 
 ### jQueryUI Sortable Event order
 
