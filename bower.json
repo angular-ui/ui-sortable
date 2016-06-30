@@ -4,6 +4,7 @@
   "main": ["./sortable.js"],
   "dependencies": {
     "angular": ">=1.2.x",
+    "jquery": "<3.0.0",
     "jquery-ui": ">=1.9"
   }
 }
