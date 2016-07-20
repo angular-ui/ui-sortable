@@ -35,6 +35,28 @@ angular.module('ui.sortable', [])
             return first;
           }
 
+          function wrappersHelper(inner) {
+            return function (e, item) {
+              var oldItemSortable = item.sortable;
+              var index = getItemIndex(item);
+              item.sortable = {
+                model: ngModel.$modelValue[index],
+                index: index,
+                source: item.parent(),
+                sourceModel: ngModel.$modelValue,
+                _restore: function () {
+                  delete item.sortable;
+                  item.sortable = oldItemSortable;
+                }
+              };
+            
+              var innerResult = inner.apply(this, arguments);
+              item.sortable._restore();
+              item.sortable._isCustomHelperUsed = item !== innerResult;
+              return innerResult;
+            };
+          }
+
           function getSortableWidgetInstance(element) {
             // this is a fix to support jquery-ui prior to v1.11.x
             // otherwise we should be using `element.sortable('instance')`
@@ -361,28 +383,6 @@ angular.module('ui.sortable', [])
                     ui.item.sortable.index, 1)[0];
                 });
               }
-            };
-
-            function wrappersHelper(inner) {
-              return function (e, item) {
-                var oldItemSortable = item.sortable;
-                var index = getItemIndex(item);
-                item.sortable = {
-                  model: ngModel.$modelValue[index],
-                  index: index,
-                  source: item.parent(),
-                  sourceModel: ngModel.$modelValue,
-                  _restore: function () {
-                    delete item.sortable;
-                    item.sortable = oldItemSortable;
-                  }
-                };
-              
-                var innerResult = inner.apply(this, arguments);
-                item.sortable._restore();
-                item.sortable._isCustomHelperUsed = item !== innerResult;
-                return innerResult;
-              };
             };
 
             scope.$watchCollection('uiSortable', function(newVal, oldVal) {
