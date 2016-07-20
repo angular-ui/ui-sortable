@@ -12,21 +12,28 @@ describe('uiSortable', function() {
   beforeEach(module('ui.sortable'));
   beforeEach(module('ui.sortable.testHelper'));
 
-  var EXTRA_DY_PERCENTAGE, listContent, hasUndefinedProperties;
+  var EXTRA_DY_PERCENTAGE, listContent, hasUndefinedProperties, beforeLiElement, afterLiElement;
 
   beforeEach(inject(function (sortableTestHelper) {
     EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
     listContent = sortableTestHelper.listContent;
     hasUndefinedProperties = sortableTestHelper.hasUndefinedProperties;
+    beforeLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.beforeLiElement;
+    afterLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.afterLiElement;
   }));
 
-  describe('Callbacks related', function() {
+  tests.description = 'Callbacks related';
+  function tests (useExtraElements) {
 
     var host;
 
     beforeEach(inject(function() {
       host = $('<div id="test-host"></div>');
       $('body').append(host);
+
+      if (!useExtraElements) {
+        beforeLiElement = afterLiElement = '';
+      }
     }));
 
     afterEach(function() {
@@ -37,7 +44,12 @@ describe('uiSortable', function() {
     it('should cancel sorting of node "Two"', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+          afterLiElement,
+          '</ul>'))($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             update: function(e, ui) {
@@ -51,19 +63,19 @@ describe('uiSortable', function() {
 
         host.append(element);
 
-        var li = element.find(':eq(1)');
+        var li = element.find('[ng-repeat]:eq(1)');
         var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
         expect($rootScope.items).toEqual(listContent(element));
 
-        li = element.find(':eq(0)');
+        li = element.find('[ng-repeat]:eq(0)');
         dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
         expect($rootScope.items).toEqual(listContent(element));
 
-        li = element.find(':eq(2)');
+        li = element.find('[ng-repeat]:eq(2)');
         dy = -(2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
@@ -76,7 +88,12 @@ describe('uiSortable', function() {
     it('should cancel sorting of node "Two" and "helper: function" that returns a list element is used', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+          afterLiElement +
+          '</ul>'))($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             helper: function (e, item) {
@@ -93,19 +110,19 @@ describe('uiSortable', function() {
 
         host.append(element);
 
-        var li = element.find(':eq(1)');
+        var li = element.find('[ng-repeat]:eq(1)');
         var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
         expect($rootScope.items).toEqual(listContent(element));
 
-        li = element.find(':eq(0)');
+        li = element.find('[ng-repeat]:eq(0)');
         dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
         expect($rootScope.items).toEqual(listContent(element));
 
-        li = element.find(':eq(2)');
+        li = element.find('[ng-repeat]:eq(2)');
         dy = -(2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
@@ -118,8 +135,18 @@ describe('uiSortable', function() {
     it('should update model from update() callback', function() {
       inject(function($compile, $rootScope) {
         var element, logsElement;
-        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
-        logsElement = $compile('<ul ng-model="logs"><li ng-repeat="log in logs" id="l-{{$index}}">{{ log }}</li></ul>')($rootScope);
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+          afterLiElement +
+          '</ul>'))($rootScope);
+        logsElement = $compile(''.concat(
+          '<ul ng-model="logs">',
+          beforeLiElement,
+          '<li ng-repeat="log in logs" id="l-{{$index}}">{{ log }}</li>',
+          afterLiElement +
+          '</ul>'))($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             update: function(e, ui) {
@@ -132,7 +159,7 @@ describe('uiSortable', function() {
 
         host.append(element).append(logsElement);
 
-        var li = element.find(':eq(1)');
+        var li = element.find('[ng-repeat]:eq(1)');
         var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
@@ -149,8 +176,18 @@ describe('uiSortable', function() {
     it('should update model from stop() callback', function() {
       inject(function($compile, $rootScope) {
         var element, logsElement;
-        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
-        logsElement = $compile('<ul ng-model="logs"><li ng-repeat="log in logs" id="l-{{$index}}">{{ log }}</li></ul>')($rootScope);
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+          afterLiElement +
+          '</ul>'))($rootScope);
+        logsElement = $compile(''.concat(
+          '<ul ng-model="logs">',
+          beforeLiElement,
+          '<li ng-repeat="log in logs" id="l-{{$index}}">{{ log }}</li>',
+          afterLiElement +
+          '</ul>'))($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             stop: function(e, ui) {
@@ -163,7 +200,7 @@ describe('uiSortable', function() {
 
         host.append(element).append(logsElement);
 
-        var li = element.find(':eq(1)');
+        var li = element.find('[ng-repeat]:eq(1)');
         var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
@@ -187,7 +224,12 @@ describe('uiSortable', function() {
             }
           };
           spyOn($rootScope.opts, 'create');
-          element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+          element = $compile(''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+            afterLiElement +
+            '</ul>'))($rootScope);
         });
 
         host.append(element);
@@ -201,7 +243,12 @@ describe('uiSortable', function() {
     it('should properly set ui.item.sortable properties', function() {
       inject(function($compile, $rootScope) {
         var element, updateCallbackExpectations;
-        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+          afterLiElement +
+          '</ul>'))($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             update: function(e, ui) {
@@ -218,7 +265,7 @@ describe('uiSortable', function() {
 
         $rootScope.$apply(function() {
         });
-        var li = element.find(':eq(1)');
+        var li = element.find('[ng-repeat]:eq(1)');
         var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         updateCallbackExpectations = function(uiItemSortable) {
           expect(uiItemSortable.model).toEqual('Two');
@@ -234,7 +281,7 @@ describe('uiSortable', function() {
         expect($rootScope.items).toEqual(listContent(element));
         updateCallbackExpectations = undefined;
 
-        li = element.find(':eq(0)');
+        li = element.find('[ng-repeat]:eq(0)');
         dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         updateCallbackExpectations = function(uiItemSortable) {
           expect(uiItemSortable.model).toEqual('One');
@@ -250,7 +297,7 @@ describe('uiSortable', function() {
         expect($rootScope.items).toEqual(listContent(element));
         updateCallbackExpectations = undefined;
 
-        li = element.find(':eq(2)');
+        li = element.find('[ng-repeat]:eq(2)');
         dy = -(2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         updateCallbackExpectations = function(uiItemSortable) {
           expect(uiItemSortable.model).toEqual('One');
@@ -301,23 +348,28 @@ describe('uiSortable', function() {
               callbackContexts.stop = this;
             }
           };
-          spyOn($rootScope.opts, 'helper').andCallThrough();
-          spyOn($rootScope.opts, 'create').andCallThrough();
-          spyOn($rootScope.opts, 'start').andCallThrough();
-          spyOn($rootScope.opts, 'activate').andCallThrough();
-          spyOn($rootScope.opts, 'beforeStop').andCallThrough();
-          spyOn($rootScope.opts, 'update').andCallThrough();
-          spyOn($rootScope.opts, 'deactivate').andCallThrough();
-          spyOn($rootScope.opts, 'stop').andCallThrough();
+          spyOn($rootScope.opts, 'helper').and.callThrough();
+          spyOn($rootScope.opts, 'create').and.callThrough();
+          spyOn($rootScope.opts, 'start').and.callThrough();
+          spyOn($rootScope.opts, 'activate').and.callThrough();
+          spyOn($rootScope.opts, 'beforeStop').and.callThrough();
+          spyOn($rootScope.opts, 'update').and.callThrough();
+          spyOn($rootScope.opts, 'deactivate').and.callThrough();
+          spyOn($rootScope.opts, 'stop').and.callThrough();
           $rootScope.items = ['One', 'Two', 'Three'];
-          element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+          element = $compile(''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+            afterLiElement +
+            '</ul>'))($rootScope);
         });
 
         host.append(element);
 
         $rootScope.$apply(function() {
         });
-        var li = element.find(':eq(0)');
+        var li = element.find('[ng-repeat]:eq(0)');
         var dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
@@ -348,12 +400,17 @@ describe('uiSortable', function() {
     it('should properly free ui.item.sortable object', function() {
       inject(function($compile, $rootScope) {
         var element, uiItem, uiItemSortable_Destroy;
-        element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+          afterLiElement +
+          '</ul>'))($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             start: function (e, ui) {
               uiItem = ui.item;
-              spyOn(ui.item.sortable, '_destroy').andCallThrough();
+              spyOn(ui.item.sortable, '_destroy').and.callThrough();
               uiItemSortable_Destroy = ui.item.sortable._destroy;
             },
             update: function(e, ui) {
@@ -367,7 +424,7 @@ describe('uiSortable', function() {
 
         host.append(element);
 
-        var li = element.find(':eq(1)');
+        var li = element.find('[ng-repeat]:eq(1)');
         var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
@@ -377,7 +434,7 @@ describe('uiSortable', function() {
         uiItem = uiItemSortable_Destroy = undefined;
 
 
-        li = element.find(':eq(0)');
+        li = element.find('[ng-repeat]:eq(0)');
         dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
@@ -387,7 +444,7 @@ describe('uiSortable', function() {
         uiItem = uiItemSortable_Destroy = undefined;
 
 
-        li = element.find(':eq(2)');
+        li = element.find('[ng-repeat]:eq(2)');
         dy = -(2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
@@ -400,6 +457,131 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should provide the item.sortable properties on helper callback', function() {
+      inject(function($compile, $rootScope) {
+        var element, helperItem, itemSortable_Restore, sortableAfterRestore, helperCallbackExpectations;
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+          afterLiElement +
+          '</ul>'))($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            helper: function(e, item) {
+              helperItem = item;
+
+              var oldRestore = item.sortable._restore;
+              item.sortable._restore = function () {
+                oldRestore.apply(this, arguments);
+                // hold the value of the sortable object
+                // right after the _restore method completes
+                sortableAfterRestore = item.sortable;
+              };
+
+              spyOn(item.sortable, '_restore').and.callThrough();
+              itemSortable_Restore = item.sortable._restore;
+              helperCallbackExpectations(item.sortable);
+              return item.clone();
+            }
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element);
+
+        $rootScope.$apply(function() {
+        });
+
+        var li = element.find('[ng-repeat]:eq(0)');
+        var dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        helperCallbackExpectations = function(helperItemSortable) {
+          expect(helperItemSortable.model).toEqual('One');
+          expect(helperItemSortable.index).toEqual(0);
+          expect(helperItemSortable.source.length).toEqual(1);
+          expect(helperItemSortable.source[0]).toBe(host.children()[0]);
+          expect(helperItemSortable.sourceModel).toBe($rootScope.items);
+        };
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
+        expect($rootScope.items).toEqual(listContent(element));
+        expect(itemSortable_Restore).toHaveBeenCalled();
+        expect(hasUndefinedProperties(helperItem.sortable)).toBe(true);
+        // this happens after the update callback, so everything is udnefined
+        expect(typeof sortableAfterRestore).toBe('function');
+        helperItem = itemSortable_Restore = sortableAfterRestore = helperCallbackExpectations = undefined;
+
+        $(element).remove();
+      });
+    });
+
+    it('should properly reset a deleted callback option', function() {
+      inject(function($compile, $rootScope) {
+        var element, logsElement;
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+          afterLiElement +
+          '</ul>'))($rootScope);
+        logsElement = $compile(''.concat(
+          '<ul ng-model="logs">',
+          beforeLiElement,
+          '<li ng-repeat="log in logs" id="l-{{$index}}">{{ log }}</li>',
+          afterLiElement +
+          '</ul>'))($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            stop: function(e, ui) {
+              $rootScope.logs.push('Moved element ' + ui.item.sortable.model);
+            }
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+          $rootScope.logs = [];
+        });
+
+        host.append(element).append(logsElement);
+
+        var li = element.find('[ng-repeat]:eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
+        expect($rootScope.logs).toEqual(['Moved element Two']);
+        expect($rootScope.items).toEqual(listContent(element));
+        expect($rootScope.logs).toEqual(listContent(logsElement));
+
+        $rootScope.$digest();
+          
+        $rootScope.$apply(function() {
+          $rootScope.opts = {};
+        });
+
+        li = element.find('[ng-repeat]:eq(0)');
+        dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Three', 'One', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element));
+        // the log should be the same
+        expect($rootScope.logs).toEqual(['Moved element Two']);
+        expect($rootScope.logs).toEqual(listContent(logsElement));
+
+        $(element).remove();
+        $(logsElement).remove();
+      });
+    });
+
+  }
+
+  [0, 1].forEach(function(useExtraElements){
+    var testDescription = tests.description;
+
+    if (useExtraElements) {
+      testDescription += ' with extra elements';
+    }
+
+    describe(testDescription, function(){
+      tests(useExtraElements);
+    });
   });
 
 });

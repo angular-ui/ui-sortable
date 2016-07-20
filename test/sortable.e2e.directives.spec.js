@@ -13,21 +13,28 @@ describe('uiSortable', function() {
   beforeEach(module('ui.sortable.testHelper'));
   beforeEach(module('ui.sortable.testDirectives'));
 
-  var EXTRA_DY_PERCENTAGE, listContent, listInnerContent;
+  var EXTRA_DY_PERCENTAGE, listContent, listInnerContent, beforeLiElement, afterLiElement;
 
   beforeEach(inject(function (sortableTestHelper) {
     EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
     listContent = sortableTestHelper.listContent;
     listInnerContent = sortableTestHelper.listInnerContent;
+    beforeLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.beforeLiElement;
+    afterLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.afterLiElement;
   }));
 
-  describe('Inner directives related', function() {
+  tests.description = 'Inner directives related';
+  function tests (useExtraElements) {
 
     var host;
 
     beforeEach(inject(function() {
       host = $('<div id="test-host"></div>');
       $('body').append(host);
+
+      if (!useExtraElements) {
+        beforeLiElement = afterLiElement = '';
+      }
     }));
 
     afterEach(function() {
@@ -40,9 +47,11 @@ describe('uiSortable', function() {
         var element;
         element = $compile(''.concat(
           '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
             '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">',
               '<ui-sortable-simple-test-directive ng-model="item"></ui-sortable-simple-test-directive>',
             '</li>',
+            afterLiElement,
           '</ul>'))($rootScope);
 
         $rootScope.$apply(function() {
@@ -52,13 +61,13 @@ describe('uiSortable', function() {
 
         host.append(element);
 
-        var li = element.find('> :eq(1)');
+        var li = element.find('> [ng-repeat]:eq(1)');
         var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
         expect($rootScope.items).toEqual(listInnerContent(element));
 
-        li = element.find('> :eq(1)');
+        li = element.find('> [ng-repeat]:eq(1)');
         dy = -(1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['Three', 'One', 'Two']);
@@ -73,9 +82,11 @@ describe('uiSortable', function() {
         var element;
         element = $compile(''.concat(
           '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
             '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">',
               '<ui-sortable-destroyable-test-directive ng-model="item"></ui-sortable-destroyable-test-directive>',
             '</li>',
+            afterLiElement,
           '</ul>'))($rootScope);
 
         $rootScope.$apply(function() {
@@ -85,13 +96,13 @@ describe('uiSortable', function() {
 
         host.append(element);
 
-        var li = element.find('> :eq(1)');
+        var li = element.find('> [ng-repeat]:eq(1)');
         var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
         expect($rootScope.items).toEqual(listInnerContent(element));
 
-        li = element.find('> :eq(1)');
+        li = element.find('> [ng-repeat]:eq(1)');
         dy = -(1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['Three', 'One', 'Two']);
@@ -101,6 +112,18 @@ describe('uiSortable', function() {
       });
     });
 
+  }
+
+  [0, 1].forEach(function(useExtraElements){
+    var testDescription = tests.description;
+
+    if (useExtraElements) {
+      testDescription += ' with extra elements';
+    }
+
+    describe(testDescription, function(){
+      tests(useExtraElements);
+    });
   });
 
 });
