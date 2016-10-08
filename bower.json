@@ -17,8 +17,8 @@
   ],
   "dependencies": {
     "angular": ">=1.2.x",
-    "jquery": "<3.0.0",
-    "jquery-ui": ">=1.9"
+    "jquery": ">=3.1.x",
+    "jquery-ui": ">=1.12.x"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.x",
