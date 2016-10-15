@@ -1,6 +1,6 @@
 /**
  * angular-ui-sortable - This directive allows you to jQueryUI Sortable.
- * @version v0.14.3 - 2016-06-30
+ * @version v0.15.0 - 2016-10-15
  * @link http://angular-ui.github.com
  * @license MIT
  */
@@ -32,8 +32,8 @@ angular.module('ui.sortable', [])
           var savedNodes;
 
           function combineCallbacks(first, second){
-            var firstIsFunc = first && (typeof first === 'function');
-            var secondIsFunc = second && (typeof second === 'function');
+            var firstIsFunc = typeof first === 'function';
+            var secondIsFunc = typeof second === 'function';
             if(firstIsFunc && secondIsFunc) {
               return function() {
                 first.apply(this, arguments);
@@ -71,12 +71,8 @@ angular.module('ui.sortable', [])
             }
 
             // patch the options that need to have values set
-            if (!value) {
-              if (key === 'items') {
-                value = uiSortableConfig.items;
-              } else if (key === 'ui-model-items') {
-                value = uiSortableConfig.items;
-              }
+            if (!value && (key === 'items' || key === 'ui-model-items')) {
+              value = uiSortableConfig.items;
             }
 
             return value;
