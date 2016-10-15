@@ -10,8 +10,8 @@ This directive allows you to sort an array with drag & drop.
 
 ## Requirements
 
-- JQuery
-- JQueryUI 1.9+
+- JQuery v3.1+ (for jQuery v1.x & v2.x use [v0.14.x versions](https://github.com/angular-ui/ui-sortable/tree/v0.14.x-stable))
+- JQueryUI v1.12+
 - AngularJS v1.2+
 
 [Single minified cdn link](http://cdn.jsdelivr.net/g/jquery@1,jquery.ui@1.10%28jquery.ui.core.min.js+jquery.ui.widget.min.js+jquery.ui.mouse.min.js+jquery.ui.sortable.min.js%29,angularjs@1.2,angular.ui-sortable) ~245kB and [example](http://codepen.io/thgreasi/pen/olDJi) with JQuery v1.x, required parts of JQueryUI v1.10, AngularJS v1.2 & latest angular-ui-sortable.
@@ -62,7 +62,7 @@ This is the preferred way since it:
   - reduces the chance of code duplication
   - [is suggested by the angularJS team](https://www.youtube.com/watch?feature=player_detailpage&v=ZhfUv0spHCY#t=3048)
   - it does not break the matching of the generated DOM elements and the `ng-model`'s items
-* `ui-sortable` lists containing many 'types' of items can be implemented by using dynamic template loading [with ng-include](http://stackoverflow.com/questions/14607879/angularjs-load-dynamic-template-html-within-directive/14621927#14621927) or a [loader directive](https://github.com/thgreasi/tg-dynamic-directive), to determine how each model item should be rendered. Also take a look at the [Tree with dynamic template](http://codepen.io/thgreasi/pen/uyHFC) example.
+* `ui-sortable` lists containing many 'types' of items can be implemented by using dynamic template loading [with ng-include](http://stackoverflow.com/questions/14607879/angularjs-load-dynamic-template-html-within-directive/14621927#14621927) or a [loader directive](https://github.com/thgreasi/tg-dynamic-directive), to determine how each model item should be rendered. Also take a look at the [Tree with dynamic template](http://codepen.io/thgreasi/pen/QKmWKj) example.
 
 ### Options
 
@@ -158,7 +158,7 @@ update: function(event, ui) {
 
 ### jQueryUI Sortable Event order
 
-**Single sortable** [demo](http://codepen.io/thgreasi/pen/KtsFH)
+**Single sortable** [demo](http://codepen.io/thgreasi/pen/QKmWGj)
 ```
 start
 activate
@@ -171,7 +171,7 @@ deactivate
 stop
 ```
 
-**Connected sortables** [demo](http://codepen.io/thgreasi/pen/uIBKb)
+**Connected sortables** [demo](http://codepen.io/thgreasi/pen/YGazpJ)
 
 ```
 list A: start
@@ -201,24 +201,24 @@ For more details about the events check the [jQueryUI API documentation](http://
 
 ## Examples
 
-- [Simple Demo](http://codepen.io/thgreasi/pen/jlkhr)
-  - [Simple RequireJS Demo](http://codepen.io/thgreasi/pen/bNaxRq)
-  - [Simple Touch-Enabled Demo](http://codepen.io/thgreasi/pen/rOevyv) using [jQuery UI Touch Punch](https://github.com/furf/jquery-ui-touch-punch/)
-- [Connected Lists](http://codepen.io/thgreasi/pen/uFile)
-- [Filtering](http://codepen.io/thgreasi/pen/mzGbq) ([details](https://github.com/angular-ui/ui-sortable/issues/113))
-- [Ordering 1](http://codepen.io/thgreasi/pen/iKEHd) & [Ordering 2](http://plnkr.co/edit/XPUzJjdvwE0QWQ6py6mQ?p=preview) ([details](https://github.com/angular-ui/ui-sortable/issues/70))
-- [Cloning](http://codepen.io/thgreasi/pen/qmvhG) ([details](https://github.com/angular-ui/ui-sortable/issues/139))
-- [Horizontal List](http://codepen.io/thgreasi/pen/wsfjD)
-- [Tree with dynamic template](http://codepen.io/thgreasi/pen/uyHFC)
+- [Simple Demo](http://codepen.io/thgreasi/pen/wzmvgw)
+  - [Simple RequireJS Demo](http://codepen.io/thgreasi/pen/rrdNjj)
+  - [Simple Touch-Enabled Demo](http://codepen.io/thgreasi/pen/wzmvJv) using [jQuery UI Touch Punch](https://github.com/furf/jquery-ui-touch-punch/)
+- [Connected Lists](http://codepen.io/thgreasi/pen/ozqNkr)
+- [Filtering](http://codepen.io/thgreasi/pen/XjEWRa) ([details](https://github.com/angular-ui/ui-sortable/issues/113))
+- [Ordering 1](http://codepen.io/thgreasi/pen/PGRomA) & [Ordering 2](http://plnkr.co/edit/gYsZZdFLeoeb5N9iemAO?p=preview) ([details](https://github.com/angular-ui/ui-sortable/issues/70))
+- [Cloning](http://codepen.io/thgreasi/pen/jrzOLA) ([details](https://github.com/angular-ui/ui-sortable/issues/139))
+- [Horizontal List](http://codepen.io/thgreasi/pen/zKWYdP)
+- [Tree with dynamic template](http://codepen.io/thgreasi/pen/VKXwzV)
 - Canceling
-  - [Connected Lists With Max Size](http://codepen.io/thgreasi/pen/IdvFc)
-  - [Connected Lists Without Duplicates](http://codepen.io/thgreasi/pen/NPaJyb)
-  - [Promised Reverting](http://codepen.io/thgreasi/pen/MwQqdg)
-- [Locked Items](http://codepen.io/thgreasi/pen/GgdeEO)
-- [Draggable Handle](http://codepen.io/thgreasi/pen/ihAyr)
-- [Drop Zone](http://codepen.io/thgreasi/pen/LVXWeO)
-- [Draggable-Sortable like interaction](http://codepen.io/thgreasi/pen/LVVJgK)
-- [Static HTML Sorting](http://codepen.io/thgreasi/pen/qdmjwy)
+  - [Connected Lists With Max Size](http://codepen.io/thgreasi/pen/zKWYEP)
+  - [Connected Lists Without Duplicates](http://codepen.io/thgreasi/pen/PGRoJr)
+  - [Promised Reverting](http://codepen.io/thgreasi/pen/ORvJzJ)
+- [Locked Items](http://codepen.io/thgreasi/pen/ALyBVQ)
+- [Draggable Handle](http://codepen.io/thgreasi/pen/PGRoRY)
+- [Drop Zone](http://codepen.io/thgreasi/pen/zKWYWR)
+- [Draggable-Sortable like interaction](http://codepen.io/thgreasi/pen/mAxdxk)
+- [Static HTML Sorting](http://codepen.io/thgreasi/pen/XjEWqV)
 
 ## Integrations
 - [firebase](http://codepen.io/thgreasi/pen/repEZg?editors=0010)
