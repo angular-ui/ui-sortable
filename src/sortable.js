@@ -195,6 +195,15 @@ angular.module('ui.sortable', [])
                 break;
               }
             }
+            if (!result) {
+              for (var i = 0; i < elementScopes.length; i++) {
+                var x = elementScopes[i];
+                if (x.element[0] === element[0].closest("[ui-sortable]")) {
+                  result = x.scope;
+                  break;
+                }
+              }
+            }
             return result;
           }
 
