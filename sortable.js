@@ -1,6 +1,6 @@
 /**
  * angular-ui-sortable - This directive allows you to jQueryUI Sortable.
- * @version v0.15.0 - 2016-10-15
+ * @version v0.15.1 - 2016-11-28
  * @link http://angular-ui.github.com
  * @license MIT
  */
@@ -378,29 +378,30 @@ angular.module('ui.sortable', [])
               // If the received flag hasn't be set on the item, this is a
               // normal sort, if dropindex is set, the item was moved, so move
               // the items in the list.
-              if(!ui.item.sortable.received &&
-                 ('dropindex' in ui.item.sortable) &&
-                 !ui.item.sortable.isCanceled()) {
+              var wasMoved = ('dropindex' in ui.item.sortable) &&
+                              !ui.item.sortable.isCanceled();
+
+              if (wasMoved && !ui.item.sortable.received) {
 
                 scope.$apply(function () {
                   ngModel.$modelValue.splice(
                     ui.item.sortable.dropindex, 0,
                     ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0]);
                 });
-              } else {
-                // if the item was not moved, then restore the elements
+              } else if (!wasMoved &&
+                         !angular.equals(element.contents().toArray(), savedNodes.toArray())) {
+                // if the item was not moved
+                // and the DOM element order has changed,
+                // then restore the elements
                 // so that the ngRepeat's comment are correct.
-                if ((!('dropindex' in ui.item.sortable) || ui.item.sortable.isCanceled()) &&
-                    !angular.equals(element.contents(), savedNodes)) {
 
-                  var sortingHelper = getSortingHelper(element, ui, savedNodes);
-                  if (sortingHelper && sortingHelper.length) {
-                    // Restore all the savedNodes except from the sorting helper element.
-                    // That way it will be garbage collected.
-                    savedNodes = savedNodes.not(sortingHelper);
-                  }
-                  savedNodes.appendTo(element);
+                var sortingHelper = getSortingHelper(element, ui, savedNodes);
+                if (sortingHelper && sortingHelper.length) {
+                  // Restore all the savedNodes except from the sorting helper element.
+                  // That way it will be garbage collected.
+                  savedNodes = savedNodes.not(sortingHelper);
                 }
+                savedNodes.appendTo(element);
               }
 
               // It's now safe to clear the savedNodes
