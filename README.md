@@ -1,9 +1,3 @@
-# Notes for this for
-This fork modifies the sortable.js file at line 198, in order for the ui-sortable directive to work on other directives that have isolated scopes.  One example is the angular material tabs directive (https://material.angularjs.org/latest/demo/tabs).  To workaround the limitation of being unable to have two directives with isolated scopes on one element (not alowed by AngularJS), wrap the md-tabs element with an element containing the ui-sortable directive.  You must also set the sortable option, in the case of md-tabs, '"items": "md-tab-item"'.  I also noticed the example below didn't work until I added a "track by" on the ng-repeat.  
-
-See the live example on CodePen:
-http://codepen.io/yenoh2/pen/rWxxVJ
-
 # UI.Sortable directive
 [![npm](https://img.shields.io/npm/v/angular-ui-sortable.svg)](https://www.npmjs.com/package/angular-ui-sortable)
 [![npm](https://img.shields.io/npm/dm/angular-ui-sortable.svg)](https://www.npmjs.com/package/angular-ui-sortable)
