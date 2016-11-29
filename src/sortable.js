@@ -196,14 +196,14 @@ angular.module('ui.sortable', [])
               }
             }
             //If result is still null it means that the draggable (ng-repeat) item isn't a direct child of
-            //the element containing the ui.sortable directive.  This may be required when using the ui.sortable 
+            //the element containing the ui.sortable directive.  This may be required when using the ui.sortable
             //directive with other directives that have isolated scopes.  This will compare x.element[0]
             //with the closest ancestorof element[0] that has the ui-sortable attribute to get the applicable
             //element scope.
             if (!result) {
-              for (var i = 0; i < elementScopes.length; i++) {
-                var x = elementScopes[i];
-                if (x.element[0] === element[0].closest("[ui-sortable]")) {
+              for (i = 0; i < elementScopes.length; i++) {
+                x = elementScopes[i];
+                if (x.element[0] === element[0].closest('[ui-sortable]')) {
                   result = x.scope;
                   break;
                 }
