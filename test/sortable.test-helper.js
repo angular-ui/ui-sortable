@@ -15,6 +15,17 @@ angular.module('ui.sortable.testHelper', [])
       return [];
     }
 
+    function listFindContent (list, contentSelector) {
+      if (!contentSelector) {
+        contentSelector = '.sortable-item';
+      }
+
+      if (list && list.length) {
+        return list.find(contentSelector).map(function(){ return this.innerHTML; }).toArray();
+      }
+      return [];
+    }
+
     function listInnerContent (list, contentSelector) {
       if (!contentSelector) {
         contentSelector = '.itemContent';
@@ -79,6 +90,7 @@ angular.module('ui.sortable.testHelper', [])
     return {
       EXTRA_DY_PERCENTAGE: EXTRA_DY_PERCENTAGE,
       listContent: listContent,
+      listFindContent: listFindContent,
       listInnerContent: listInnerContent,
       simulateElementDrag: simulateElementDrag,
       hasUndefinedProperties: hasUndefinedProperties,
