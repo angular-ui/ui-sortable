@@ -188,8 +188,10 @@ angular.module('ui.sortable', [])
 
           function getElementScope(elementScopes, element) {
             var result = null;
-            for (var i = 0; i < elementScopes.length; i++) {
-              var x = elementScopes[i];
+            var x = null;
+            var i = null;
+            for (i = 0; i < elementScopes.length; i++) {
+              x = elementScopes[i];
               if (x.element[0] === element[0]) {
                 result = x.scope;
                 break;
