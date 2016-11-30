@@ -97,7 +97,7 @@ angular.module('ui.sortable', [])
                     }
                     return;
                   }
-                  
+
                   if (!defaultOptions) {
                     defaultOptions = angular.element.ui.sortable().options;
                   }
@@ -188,11 +188,27 @@ angular.module('ui.sortable', [])
 
           function getElementScope(elementScopes, element) {
             var result = null;
-            for (var i = 0; i < elementScopes.length; i++) {
-              var x = elementScopes[i];
+            var x = null;
+            var i = null;
+            for (i = 0; i < elementScopes.length; i++) {
+              x = elementScopes[i];
               if (x.element[0] === element[0]) {
                 result = x.scope;
                 break;
+              }
+            }
+            //If result is still null it means that the draggable (ng-repeat) item isn't a direct child of
+            //the element containing the ui.sortable directive.  This may be required when using the ui.sortable
+            //directive with other directives that have isolated scopes.  This will compare x.element[0]
+            //with the closest ancestorof element[0] that has the ui-sortable attribute to get the applicable
+            //element scope.
+            if (!result) {
+              for (i = 0; i < elementScopes.length; i++) {
+                x = elementScopes[i];
+                if (x.element[0] === element[0].closest('[ui-sortable]')) {
+                  result = x.scope;
+                  break;
+                }
               }
             }
             return result;
@@ -459,7 +475,7 @@ angular.module('ui.sortable', [])
               var sortableWidgetInstance = getSortableWidgetInstance(element);
               if (!!sortableWidgetInstance) {
                 var optsDiff = patchUISortableOptions(newVal, oldVal, sortableWidgetInstance);
-                
+
                 if (optsDiff) {
                   element.sortable('option', optsDiff);
                 }
@@ -475,7 +491,7 @@ angular.module('ui.sortable', [])
             } else {
               $log.info('ui.sortable: ngModel not provided!', element);
             }
-            
+
             // Create sortable
             element.sortable(opts);
           }
