@@ -186,32 +186,13 @@ angular.module('ui.sortable', [])
             return (/left|right/).test(item.css('float')) || (/inline|table-cell/).test(item.css('display'));
           }
 
-          function getElementScope(elementScopes, element) {
-            var result = null;
-            var x = null;
-            var i = null;
-            for (i = 0; i < elementScopes.length; i++) {
-              x = elementScopes[i];
-              if (x.element[0] === element[0]) {
-                result = x.scope;
-                break;
+          function getElementContext(elementScopes, element) {
+            for (var i = 0; i < elementScopes.length; i++) {
+              var c = elementScopes[i];
+              if (c.element[0] === element[0]) {
+                return c;
               }
             }
-            //If result is still null it means that the draggable (ng-repeat) item isn't a direct child of
-            //the element containing the ui.sortable directive.  This may be required when using the ui.sortable
-            //directive with other directives that have isolated scopes.  This will compare x.element[0]
-            //with the closest ancestorof element[0] that has the ui-sortable attribute to get the applicable
-            //element scope.
-            if (!result) {
-              for (i = 0; i < elementScopes.length; i++) {
-                x = elementScopes[i];
-                if (x.element[0] === element[0].closest('[ui-sortable]')) {
-                  result = x.scope;
-                  break;
-                }
-              }
-            }
-            return result;
           }
 
           function afterStop(e, ui) {
@@ -338,8 +319,8 @@ angular.module('ui.sortable', [])
                 var droptarget = ui.item.closest('[ui-sortable]');
                 ui.item.sortable.droptarget = droptarget;
 
-                var droptargetScope = getElementScope(ui.item.sortable._connectedSortables, droptarget);
-                ui.item.sortable.droptargetModel = droptargetScope.ngModel;
+                var droptargetContext = getElementContext(ui.item.sortable._connectedSortables, droptarget);
+                ui.item.sortable.droptargetModel = droptargetContext.scope.ngModel;
 
                 // Cancel the sort (let ng-repeat do the sort for us)
                 // Don't cancel if this is the received list because it has
