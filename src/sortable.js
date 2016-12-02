@@ -264,6 +264,7 @@ angular.module('ui.sortable', [])
                 model: ngModel.$modelValue[index],
                 index: index,
                 source: element,
+                sourceList: ui.item.parent(),
                 sourceModel: ngModel.$modelValue,
                 cancel: function () {
                   ui.item.sortable._isCanceled = true;
@@ -318,6 +319,7 @@ angular.module('ui.sortable', [])
                 ui.item.sortable.dropindex = getItemIndex(ui.item);
                 var droptarget = ui.item.closest('[ui-sortable]');
                 ui.item.sortable.droptarget = droptarget;
+                ui.item.sortable.droptargetList = ui.item.parent();
 
                 var droptargetContext = getElementContext(ui.item.sortable._connectedSortables, droptarget);
                 ui.item.sortable.droptargetModel = droptargetContext.scope.ngModel;
@@ -431,6 +433,7 @@ angular.module('ui.sortable', [])
                     model: ngModel.$modelValue[index],
                     index: index,
                     source: element,
+                    sourceList: item.parent(),
                     sourceModel: ngModel.$modelValue,
                     _restore: function () {
                       angular.forEach(item.sortable, function(value, key) {
