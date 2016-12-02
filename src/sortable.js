@@ -282,18 +282,32 @@ angular.module('ui.sortable', [])
                     ui.item.sortable[key] = undefined;
                   });
                 },
+                _connectedSortables: [],
                 _getElementContext: function (element) {
-                  return getElementContext(this._connectedSortables || [], element);
+                  return getElementContext(this._connectedSortables, element);
                 }
               };
             };
 
             callbacks.activate = function(e, ui) {
+              var isSourceContext = ui.item.sortable.source === element;
+              var savedNodesOrigin = isSourceContext ?
+                                     ui.item.sortable.sourceList :
+                                     element;
+              var elementContext = {
+                element: element,
+                scope: scope,
+                isSourceContext: isSourceContext,
+                savedNodesOrigin: savedNodesOrigin
+              };
+              // save the directive's scope so that it is accessible from ui.item.sortable
+              ui.item.sortable._connectedSortables.push(elementContext);
+
               // We need to make a copy of the current element's contents so
               // we can restore it after sortable has messed it up.
               // This is inside activate (instead of start) in order to save
               // both lists when dragging between connected lists.
-              savedNodes = element.contents();
+              savedNodes = savedNodesOrigin.contents();
 
               // If this list has a placeholder (the connected lists won't),
               // don't inlcude it in saved nodes.
@@ -302,16 +316,6 @@ angular.module('ui.sortable', [])
                 var excludes = getPlaceholderExcludesludes(element, placeholder);
                 savedNodes = savedNodes.not(excludes);
               }
-
-              // save the directive's scope so that it is accessible from ui.item.sortable
-              var connectedSortables = ui.item.sortable._connectedSortables || [];
-
-              connectedSortables.push({
-                element: element,
-                scope: scope
-              });
-
-              ui.item.sortable._connectedSortables = connectedSortables;
             };
 
             callbacks.update = function(e, ui) {
@@ -345,7 +349,8 @@ angular.module('ui.sortable', [])
                 // That way it will be garbage collected.
                 savedNodes = savedNodes.not(sortingHelper);
               }
-              savedNodes.appendTo(element);
+              var elementContext = ui.item.sortable._getElementContext(element);
+              savedNodes.appendTo(elementContext.savedNodesOrigin);
 
               // If this is the target connected list then
               // it's safe to clear the restored nodes since:
@@ -394,7 +399,8 @@ angular.module('ui.sortable', [])
                   // That way it will be garbage collected.
                   savedNodes = savedNodes.not(sortingHelper);
                 }
-                savedNodes.appendTo(element);
+                var elementContext = ui.item.sortable._getElementContext(element);
+                savedNodes.appendTo(elementContext.savedNodesOrigin);
               }
 
               // It's now safe to clear the savedNodes
