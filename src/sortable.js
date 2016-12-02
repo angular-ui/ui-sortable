@@ -281,6 +281,9 @@ angular.module('ui.sortable', [])
                   angular.forEach(ui.item.sortable, function(value, key) {
                     ui.item.sortable[key] = undefined;
                   });
+                },
+                _getElementContext: function (element) {
+                  return getElementContext(this._connectedSortables || [], element);
                 }
               };
             };
@@ -321,7 +324,7 @@ angular.module('ui.sortable', [])
                 ui.item.sortable.droptarget = droptarget;
                 ui.item.sortable.droptargetList = ui.item.parent();
 
-                var droptargetContext = getElementContext(ui.item.sortable._connectedSortables, droptarget);
+                var droptargetContext = ui.item.sortable._getElementContext(droptarget);
                 ui.item.sortable.droptargetModel = droptargetContext.scope.ngModel;
 
                 // Cancel the sort (let ng-repeat do the sort for us)
