@@ -46,11 +46,12 @@ angular.module('ui.sortable.testHelper', [])
       };
 
       if (options === 'above') {
-        dragOptions.dy -= EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
+        options = { place: 'above' };
       } else if (options === 'below') {
-        dragOptions.dy += EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
-      } else if (typeof options === 'object') {
+        options = { place: 'below' };
+      }
 
+      if (typeof options === 'object') {
         if ('place' in options) {
           if (options.place === 'above') {
             dragOptions.dy -= EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
@@ -72,6 +73,10 @@ angular.module('ui.sortable.testHelper', [])
 
         if (isFinite(options.extradx)) {
           dragOptions.dx += options.extradx;
+        }
+
+        if (isFinite(options.moves) && options.moves > 0) {
+          dragOptions.moves = options.moves;
         }
       }
 
@@ -96,7 +101,9 @@ angular.module('ui.sortable.testHelper', [])
       hasUndefinedProperties: hasUndefinedProperties,
       extraElements: {
         beforeLiElement: '<li>extra element</li>',
-        afterLiElement: '<li>extra element</li>'
+        afterLiElement: '<li>extra element</li>',
+        beforeDivElement: '<div>extra element</div>',
+        afterDivElement: '<div>extra element</div>'
       }
     };
   })
