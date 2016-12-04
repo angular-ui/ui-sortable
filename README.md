@@ -160,6 +160,10 @@ update: function(event, ui) {
 
 **Single sortable** [demo](http://codepen.io/thgreasi/pen/QKmWGj)
 ```
+create
+
+/* dragging starts */
+helper
 start
 activate
 
@@ -174,6 +178,11 @@ stop
 **Connected sortables** [demo](http://codepen.io/thgreasi/pen/YGazpJ)
 
 ```
+list A: create
+list B: create
+
+/* dragging starts from sortable A to B */
+list A: helper
 list A: start
 list B: activate
 list A: activate
