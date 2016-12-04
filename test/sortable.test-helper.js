@@ -15,6 +15,17 @@ angular.module('ui.sortable.testHelper', [])
       return [];
     }
 
+    function listFindContent (list, contentSelector) {
+      if (!contentSelector) {
+        contentSelector = '.sortable-item';
+      }
+
+      if (list && list.length) {
+        return list.find(contentSelector).map(function(){ return this.innerHTML; }).toArray();
+      }
+      return [];
+    }
+
     function listInnerContent (list, contentSelector) {
       if (!contentSelector) {
         contentSelector = '.itemContent';
@@ -35,11 +46,12 @@ angular.module('ui.sortable.testHelper', [])
       };
 
       if (options === 'above') {
-        dragOptions.dy -= EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
+        options = { place: 'above' };
       } else if (options === 'below') {
-        dragOptions.dy += EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
-      } else if (typeof options === 'object') {
+        options = { place: 'below' };
+      }
 
+      if (typeof options === 'object') {
         if ('place' in options) {
           if (options.place === 'above') {
             dragOptions.dy -= EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
@@ -62,6 +74,10 @@ angular.module('ui.sortable.testHelper', [])
         if (isFinite(options.extradx)) {
           dragOptions.dx += options.extradx;
         }
+
+        if (isFinite(options.moves) && options.moves > 0) {
+          dragOptions.moves = options.moves;
+        }
       }
 
       draggedElement.simulate(dragOptions.action, dragOptions);
@@ -79,12 +95,15 @@ angular.module('ui.sortable.testHelper', [])
     return {
       EXTRA_DY_PERCENTAGE: EXTRA_DY_PERCENTAGE,
       listContent: listContent,
+      listFindContent: listFindContent,
       listInnerContent: listInnerContent,
       simulateElementDrag: simulateElementDrag,
       hasUndefinedProperties: hasUndefinedProperties,
       extraElements: {
         beforeLiElement: '<li>extra element</li>',
-        afterLiElement: '<li>extra element</li>'
+        afterLiElement: '<li>extra element</li>',
+        beforeDivElement: '<div>extra element</div>',
+        afterDivElement: '<div>extra element</div>'
       }
     };
   })

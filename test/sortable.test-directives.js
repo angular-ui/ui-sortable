@@ -34,5 +34,21 @@ angular.module('ui.sortable.testDirectives', [])
         }
       };
     }
+  ).directive('uiSortableTransclusionTestDirective',
+    function() {
+      return {
+        restrict: 'E',
+        transclude: true,
+        scope: true,
+        template: '<div>' +
+                    '<h1>Transclusion Directive</h1>' +
+                    '<div>' +
+                      '<div>' +
+                        '<ng-transclude></ng-transclude>' +
+                      '</div>' +
+                    '</div>' +
+                  '</div>'
+      };
+    }
   );
 
