@@ -406,6 +406,9 @@ angular.module('ui.sortable', [])
               // It's now safe to clear the savedNodes
               // since stop is the last callback.
               savedNodes = null;
+     
+              //notifiy when sortable finished
+              scope.$emit('sortable:finished');
             };
 
             callbacks.receive = function(e, ui) {
