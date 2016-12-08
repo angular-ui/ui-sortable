@@ -370,6 +370,11 @@ angular.module('ui.sortable', [])
                                              ui.item.sortable.moved);
                 });
               }
+
+              if(wasMoved && !ui.item.sortable.received){
+                scope.$emit('sortable:wasMoved');
+              }
+
             };
 
             callbacks.stop = function(e, ui) {
@@ -406,9 +411,6 @@ angular.module('ui.sortable', [])
               // It's now safe to clear the savedNodes
               // since stop is the last callback.
               savedNodes = null;
-     
-              //notifiy when sortable finished
-              scope.$emit('sortable:finished');
             };
 
             callbacks.receive = function(e, ui) {
