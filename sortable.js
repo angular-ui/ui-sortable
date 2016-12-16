@@ -1,6 +1,6 @@
 /**
  * angular-ui-sortable - This directive allows you to jQueryUI Sortable.
- * @version v0.16.0 - 2016-12-04
+ * @version v0.16.1 - 2016-12-16
  * @link http://angular-ui.github.com
  * @license MIT
  */
@@ -333,7 +333,7 @@ angular.module('ui.sortable', [])
               // the value will be overwritten with the old value
               if(!ui.item.sortable.received) {
                 ui.item.sortable.dropindex = getItemIndex(ui.item);
-                var droptarget = ui.item.closest('[ui-sortable]');
+                var droptarget = ui.item.closest('[ui-sortable], [data-ui-sortable], [x-ui-sortable]');
                 ui.item.sortable.droptarget = droptarget;
                 ui.item.sortable.droptargetList = ui.item.parent();
 
