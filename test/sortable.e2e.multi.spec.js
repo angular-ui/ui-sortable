@@ -947,6 +947,92 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should properly set ui.item.sortable.droptargetModel when using data-ui-sortable', function() {
+      inject(function($compile, $rootScope) {
+        var elementTop, elementBottom, updateCallbackExpectations;
+        elementTop = $compile(''.concat(
+          '<ul data-ui-sortable="opts" class="cross-sortable" data-ng-model="itemsTop">',
+          beforeLiElement,
+          '<li ng-repeat="item in itemsTop" id="s-top-{{$index}}">{{ item }}</li>',
+          afterLiElement,
+          '</ul>'))($rootScope);
+        elementBottom = $compile(''.concat(
+          '<ul data-ui-sortable="opts" class="cross-sortable" data-ng-model="itemsBottom">',
+          beforeLiElement,
+          '<li ng-repeat="item in itemsBottom" id="s-bottom-{{$index}}">{{ item }}</li>',
+          afterLiElement,
+          '</ul>'))($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.itemsTop = ['Top One', 'Top Two', 'Top Three'];
+          $rootScope.itemsBottom = ['Bottom One', 'Bottom Two', 'Bottom Three'];
+          $rootScope.opts = {
+            connectWith: '.cross-sortable',
+            update: function(e, ui) {
+              if (ui.item.sortable.model &&
+                (typeof ui.item.sortable.model === 'string') &&
+                ui.item.sortable.model.indexOf('Two') >= 0) {
+                ui.item.sortable.cancel();
+              }
+              updateCallbackExpectations(ui.item.sortable);
+            }
+          };
+        });
+
+        host.append(elementTop).append(elementBottom).append('<div class="clear"></div>');
+
+        var li1 = elementTop.find('[ng-repeat]:eq(1)');
+        var li2 = elementBottom.find('[ng-repeat]:eq(0)');
+        updateCallbackExpectations = function(uiItemSortable) {
+          expect(uiItemSortable.droptargetModel).toBe($rootScope.itemsBottom);
+        };
+        simulateElementDrag(li1, li2, { place: 'below', extradx: -20, extrady: -11 });
+        expect($rootScope.itemsTop).toEqual(['Top One', 'Top Two', 'Top Three']);
+        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual(listContent(elementTop));
+        expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
+        updateCallbackExpectations = undefined;
+
+        li1 = elementBottom.find('[ng-repeat]:eq(1)');
+        li2 = elementTop.find('[ng-repeat]:eq(1)');
+        updateCallbackExpectations = function(uiItemSortable) {
+          expect(uiItemSortable.droptargetModel).toBe($rootScope.itemsTop);
+        };
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -11 });
+        expect($rootScope.itemsTop).toEqual(['Top One', 'Top Two', 'Top Three']);
+        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual(listContent(elementTop));
+        expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
+        updateCallbackExpectations = undefined;
+
+        li1 = elementTop.find('[ng-repeat]:eq(0)');
+        li2 = elementBottom.find('[ng-repeat]:eq(0)');
+        updateCallbackExpectations = function(uiItemSortable) {
+          expect(uiItemSortable.droptargetModel).toBe($rootScope.itemsBottom);
+        };
+        simulateElementDrag(li1, li2, 'below');
+        expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three']);
+        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Top One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual(listContent(elementTop));
+        expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
+        updateCallbackExpectations = undefined;
+
+        li1 = elementBottom.find('[ng-repeat]:eq(1)');
+        li2 = elementTop.find('[ng-repeat]:eq(1)');
+        updateCallbackExpectations = function(uiItemSortable) {
+          expect(uiItemSortable.droptargetModel).toBe($rootScope.itemsTop);
+        };
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -20, extrady: -11 });
+        expect($rootScope.itemsTop).toEqual(['Top Two', 'Top One', 'Top Three']);
+        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual(listContent(elementTop));
+        expect($rootScope.itemsBottom).toEqual(listContent(elementBottom));
+        updateCallbackExpectations = undefined;
+
+        $(elementTop).remove();
+        $(elementBottom).remove();
+      });
+    });
+
     it('should properly set ui.item.sortable.droptargetModel when sorting between different scopes', function() {
       inject(function($compile, $rootScope) {
         var elementTop, elementBottom,
