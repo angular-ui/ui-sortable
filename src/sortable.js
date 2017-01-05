@@ -16,8 +16,13 @@ angular.module('ui.sortable', [])
       return {
         require: '?ngModel',
         scope: {
-          ngModel: '=',
-          uiSortable: '='
+			ngModel: '=',
+			uiSortable: '=',
+			receive     :'&uiSortableReceive',//Expression bindings from html.
+			remove      :'&uiSortableRemove',
+			start       :'&uiSortableStart',
+			stop        :'&uiSortableStop',
+			update      :'&uiSortableUpdate'
         },
         link: function(scope, element, attrs, ngModel) {
           var savedNodes;
@@ -125,9 +130,25 @@ angular.module('ui.sortable', [])
                 opts[key] = patchSortableOption(key, value);
                 return;
               }
+			  
+			  
+				/*
+				*   If user defines ui-sortable-callback for @key and callback based option at the same time the html based ui-sortable-callback expression will be selected. (Overridden)
+				*	If user defined ui-sortable-callback for @key but callback expression is empty then option based @key callback will be selected.
+				*   If user not defines a option for @key callback then html based ui-sortable-callback will be just selected.
+				*   If user just defines option for @key callback then it will be attached.
+				* */
+				var attrKey = 'uiSortable'+key.substring(0,1).toUpperCase()+key.substring(1);
+				if(scope[key]!=undefined && scope[key] instanceof Function && attrs[attrKey] != undefined && attrs[attrKey].length > 0)
+				{
+					value = patchSortableOption(key, scope[key]);
+				}
+				else
+				{
+					value = patchSortableOption(key, value);
+				}
 
-              value = patchSortableOption(key, value);
-
+				
               if (!optsDiff) {
                 optsDiff = {};
               }

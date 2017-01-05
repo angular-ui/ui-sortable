@@ -104,6 +104,42 @@ To provide a solution/workaround (till jquery.ui.sortable.refresh() also tests t
 </ul>
 ```
 
+
+#### Attributes For Event Handling
+
+To handle events with html bindings just define any expression to listed event attributes. 
+If you defined an attribute for this events and defined callback function in sortableOptions at the same time attribute based callback will be selected.
+If attribute based callback expression is not filled then sortableOption based callback function will be selected.
+
+*   **ui-sortable-receive**
+*   **ui-sortable-remove**
+*   **ui-sortable-start**
+*   **ui-sortable-stop**
+*   **ui-sortable-update**
+
+
+
+Expression works on update event.
+```html
+<ul ui-sortable ng-model="items" ui-sortable-update="expression" >
+  <li ng-repeat="item in items">{{ item }}</li>
+</ul>
+```
+
+
+callBackFunction2 works on update event.
+```js
+$scope.sortableOptions = {
+  'update': callBackFunction
+};
+```
+```html
+<ul ui-sortable="sortableOptions" ng-model="items" ui-sortable-update="callBackFunction2()" >
+  <li ng-repeat="item in items">{{ item }}</li>
+</ul>
+```
+
+
 **OR**
 
 ```js
