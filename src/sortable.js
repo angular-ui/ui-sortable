@@ -153,22 +153,22 @@ angular.module('ui.sortable', [])
                     expression.apply(0,arguments); //Sends all of arguments to callBack function.
                 
                     if(receivedFunct instanceof Function)
+                    {
                       receivedFunct.apply(0,arguments);
+                    }
                       
                   }
-                  catch(err)
-                  {
+                  catch(err){
                     //Can be printed to console.
                   }
                 }
                 
                 value = patchSortableOption(key, expressionCapsule);
-			  }
-			  else
-			  {
-			    value = patchSortableOption(key, value);
-			  }
-
+              }
+              else
+              {
+                value = patchSortableOption(key, value);
+              }
 				
               if (!optsDiff) {
                 optsDiff = {};
