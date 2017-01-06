@@ -14,15 +14,16 @@ angular.module('ui.sortable', [])
     'uiSortableConfig', '$timeout', '$log',
     function(uiSortableConfig, $timeout, $log) {
       return {
-        require: '?ngModel',
+        require:'?ngModel',
         scope: {
-			ngModel: '=',
-			uiSortable: '=',
-			receive     :'&uiSortableReceive',//Expression bindings from html.
-			remove      :'&uiSortableRemove',
-			start       :'&uiSortableStart',
-			stop        :'&uiSortableStop',
-			update      :'&uiSortableUpdate'
+			ngModel:'=',
+			uiSortable:'=',
+			receive:'&uiSortableReceive',//Expression bindings from html.
+			remove:'&uiSortableRemove',
+			start:'&uiSortableStart',
+			stop:'&uiSortableStop',
+			update:'&uiSortableUpdate',
+			received :'&uiSortableReceived'
         },
         link: function(scope, element, attrs, ngModel) {
           var savedNodes;
@@ -132,21 +133,41 @@ angular.module('ui.sortable', [])
               }
 			  
 			  
-				/*
-				*   If user defines ui-sortable-callback for @key and callback based option at the same time the html based ui-sortable-callback expression will be selected. (Overridden)
-				*	If user defined ui-sortable-callback for @key but callback expression is empty then option based @key callback will be selected.
-				*   If user not defines a option for @key callback then html based ui-sortable-callback will be just selected.
-				*   If user just defines option for @key callback then it will be attached.
-				* */
-				var attrKey = 'uiSortable'+key.substring(0,1).toUpperCase()+key.substring(1);
-				if(scope[key]!=undefined && scope[key] instanceof Function && attrs[attrKey] != undefined && attrs[attrKey].length > 0)
+			  /*
+			  * If user defines ui-sortable-callback for @key and callback based option at the same time the html based ui-sortable-callback expression will be selected. (Overridden)
+			  *	If user defined ui-sortable-callback for @key but callback expression is empty then option based @key callback will be selected.
+			  * If user not defines a option for @key callback then html based ui-sortable-callback will be just selected.
+			  * If user just defines option for @key callback then it will be attached.
+			  * */
+			  var attrKey = 'uiSortable'+key.substring(0,1).toUpperCase()+key.substring(1);
+			  if(scope[key]!==undefined && scope[key] instanceof Function && attrs[attrKey] !== undefined && attrs[attrKey].length > 0)
+			  {
+				  
+				var expression = scope[key]; //Scope variable can be changed on fly.
+				var receivedFunct = scope.received;
+				var expressionCapsule = function(e, ui)
 				{
-					value = patchSortableOption(key, scope[key]);
+					try
+					{
+						
+						expression.apply(0,arguments); //Sends all of arguments to callBack function.
+						
+						if(receivedFunct instanceof Function)
+							receivedFunct.apply(0,arguments);
+						
+					}
+					catch(err)
+					{
+						//Can be printed to console.
+					}
 				}
-				else
-				{
-					value = patchSortableOption(key, value);
-				}
+				  
+			  	value = patchSortableOption(key, expressionCapsule);
+			  }
+			  else
+			  {
+			  	value = patchSortableOption(key, value);
+			  }
 
 				
               if (!optsDiff) {
