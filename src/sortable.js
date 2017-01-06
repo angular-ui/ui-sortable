@@ -140,26 +140,21 @@ angular.module('ui.sortable', [])
               * If user just defines option for @key callback then it will be attached.
               * */
               var attrKey = 'uiSortable'+key.substring(0,1).toUpperCase()+key.substring(1);
-              if(scope[key]!==undefined && scope[key] instanceof Function && attrs[attrKey] !== undefined && attrs[attrKey].length > 0)
-              {
+              if(scope[key]!==undefined && scope[key] instanceof Function && attrs[attrKey] !== undefined && attrs[attrKey].length > 0) {
                 
                 var expression = scope[key]; //Scope variable can be changed on fly.
                 var receivedFunct = scope.received;
-                var expressionCapsule = function()
-                {
-                  try
-                  {
+                var expressionCapsule = function() {
+                  try {
                   
                     expression.apply(0,arguments); //Sends all of arguments to callBack function.
                 
-                    if(receivedFunct instanceof Function)
-                    {
+                    if(receivedFunct instanceof Function) {
                       receivedFunct.apply(0,arguments);
                     }
                       
                   }
-                  catch(err)
-                  {
+                  catch(err) {
                   
                   }
                   
@@ -167,8 +162,7 @@ angular.module('ui.sortable', [])
                 
                 value = patchSortableOption(key, expressionCapsule);
               }
-              else
-              {
+              else {
                 value = patchSortableOption(key, value);
               }
 				
