@@ -158,9 +158,11 @@ angular.module('ui.sortable', [])
                     }
                       
                   }
-                  catch(err){
-                    //Can be printed to console.
+                  catch(err)
+                  {
+                  
                   }
+                  
                 }
                 
                 value = patchSortableOption(key, expressionCapsule);
