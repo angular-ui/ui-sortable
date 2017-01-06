@@ -145,7 +145,7 @@ angular.module('ui.sortable', [])
                 
                 var expression = scope[key]; //Scope variable can be changed on fly.
                 var receivedFunct = scope.received;
-                var expressionCapsule = function(e, ui)
+                var expressionCapsule = function()
                 {
                   try
                   {
@@ -162,12 +162,12 @@ angular.module('ui.sortable', [])
                   }
                 }
                 
-                  value = patchSortableOption(key, expressionCapsule);
-			    }
-			    else
-			    {
-			      value = patchSortableOption(key, value);
-			    }
+                value = patchSortableOption(key, expressionCapsule);
+			  }
+			  else
+			  {
+			    value = patchSortableOption(key, value);
+			  }
 
 				
               if (!optsDiff) {
