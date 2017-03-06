@@ -345,6 +345,10 @@ angular.module('ui.sortable', [])
               // Save current drop position but only if this is not a second
               // update that happens when moving between lists because then
               // the value will be overwritten with the old value
+
+              var wasMoved = ('dropindex' in ui.item.sortable) &&
+                              !ui.item.sortable.isCanceled();
+
               if(!ui.item.sortable.received) {
                 ui.item.sortable.dropindex = getItemIndex(ui.item);
                 var droptarget = ui.item.closest('[ui-sortable], [data-ui-sortable], [x-ui-sortable]');
@@ -393,6 +397,11 @@ angular.module('ui.sortable', [])
                                              ui.item.sortable.moved);
                 });
               }
+
+              if(wasMoved && !ui.item.sortable.received){
+                scope.$emit('sortable:wasMoved');
+              }
+
             };
 
             callbacks.stop = function(e, ui) {
