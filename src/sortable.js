@@ -18,12 +18,21 @@ angular.module('ui.sortable', [])
         scope: {
           ngModel:'=',
           uiSortable:'=',
-          receive:'&uiSortableReceive',//Expression bindings from html.
-          remove:'&uiSortableRemove',
+          ////Expression bindings from html.
+          create:'&uiSortableCreate',
+          // helper:'&uiSortableHelper',
           start:'&uiSortableStart',
-          stop:'&uiSortableStop',
+          activate:'&uiSortableActivate',
+          // sort:'&uiSortableSort',
+          // change:'&uiSortableChange',
+          // over:'&uiSortableOver',
+          // out:'&uiSortableOut',
+          beforeStop:'&uiSortableBeforeStop',
           update:'&uiSortableUpdate',
-          received :'&uiSortableReceived'
+          remove:'&uiSortableRemove',
+          receive:'&uiSortableReceive',
+          deactivate:'&uiSortableDeactivate',
+          stop:'&uiSortableStop'
         },
         link: function(scope, element, attrs, ngModel) {
           var savedNodes;
@@ -131,41 +140,9 @@ angular.module('ui.sortable', [])
                 opts[key] = patchSortableOption(key, value);
                 return;
               }
-			  
-			  
-              /*
-              * If user defines ui-sortable-callback for @key and callback based option at the same time the html based ui-sortable-callback expression will be selected. (Overridden)
-              *	If user defined ui-sortable-callback for @key but callback expression is empty then option based @key callback will be selected.
-              * If user not defines a option for @key callback then html based ui-sortable-callback will be just selected.
-              * If user just defines option for @key callback then it will be attached.
-              * */
-              var attrKey = 'uiSortable'+key.substring(0,1).toUpperCase()+key.substring(1);
-              if(scope[key]!==undefined && scope[key] instanceof Function && attrs[attrKey] !== undefined && attrs[attrKey].length > 0) {
-                
-                var expression = scope[key]; //Scope variable can be changed on fly.
-                var receivedFunct = scope.received;
-                var expressionCapsule = function() {
-                  try {
-                  
-                    expression.apply(0,arguments); //Sends all of arguments to callBack function.
-                
-                    if(receivedFunct instanceof Function) {
-                      receivedFunct.apply(0,arguments);
-                    }
-                      
-                  }
-                  catch(err) {
-                  
-                  }
-                  
-                }
-                
-                value = patchSortableOption(key, expressionCapsule);
-              }
-              else {
-                value = patchSortableOption(key, value);
-              }
-				
+
+              value = patchSortableOption(key, value);
+
               if (!optsDiff) {
                 optsDiff = {};
               }
@@ -255,11 +232,19 @@ angular.module('ui.sortable', [])
           };
 
           var callbacks = {
-            receive: null,
-            remove: null,
+            create: null,
             start: null,
-            stop: null,
-            update: null
+            activate: null,
+            // sort: null,
+            // change: null,
+            // over: null,
+            // out: null,
+            beforeStop: null,
+            update: null,
+            remove: null,
+            receive: null,
+            deactivate: null,
+            stop: null
           };
 
           var wrappers = {
@@ -470,6 +455,21 @@ angular.module('ui.sortable', [])
                 });
               }
             };
+
+            // setup attribute handlers
+            angular.forEach(callbacks, function(value, key) {
+              callbacks[key] = combineCallbacks(callbacks[key],
+                function () {
+                  var attrHandler = scope[key];
+                  var attrHandlerFn;
+                  if (typeof attrHandler === 'function' &&
+                      ('uiSortable' + key.substring(0,1).toUpperCase() + key.substring(1)).length &&
+                      typeof (attrHandlerFn = attrHandler()) === 'function') {
+                    attrHandlerFn.apply(this, arguments);
+                  }
+                });
+            });
+
 
             wrappers.helper = function (inner) {
               if (inner && typeof inner === 'function') {
