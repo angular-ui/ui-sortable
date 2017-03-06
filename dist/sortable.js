@@ -1,6 +1,6 @@
 /**
  * angular-ui-sortable - This directive allows you to jQueryUI Sortable.
- * @version v0.16.1 - 2016-12-16
+ * @version v0.16.1 - 2017-03-06
  * @link http://angular-ui.github.com
  * @license MIT
  */
@@ -23,10 +23,25 @@ angular.module('ui.sortable', [])
     'uiSortableConfig', '$timeout', '$log',
     function(uiSortableConfig, $timeout, $log) {
       return {
-        require: '?ngModel',
+        require:'?ngModel',
         scope: {
-          ngModel: '=',
-          uiSortable: '='
+          ngModel:'=',
+          uiSortable:'=',
+          ////Expression bindings from html.
+          create:'&uiSortableCreate',
+          // helper:'&uiSortableHelper',
+          start:'&uiSortableStart',
+          activate:'&uiSortableActivate',
+          // sort:'&uiSortableSort',
+          // change:'&uiSortableChange',
+          // over:'&uiSortableOver',
+          // out:'&uiSortableOut',
+          beforeStop:'&uiSortableBeforeStop',
+          update:'&uiSortableUpdate',
+          remove:'&uiSortableRemove',
+          receive:'&uiSortableReceive',
+          deactivate:'&uiSortableDeactivate',
+          stop:'&uiSortableStop'
         },
         link: function(scope, element, attrs, ngModel) {
           var savedNodes;
@@ -226,11 +241,19 @@ angular.module('ui.sortable', [])
           };
 
           var callbacks = {
-            receive: null,
-            remove: null,
+            create: null,
             start: null,
-            stop: null,
-            update: null
+            activate: null,
+            // sort: null,
+            // change: null,
+            // over: null,
+            // out: null,
+            beforeStop: null,
+            update: null,
+            remove: null,
+            receive: null,
+            deactivate: null,
+            stop: null
           };
 
           var wrappers = {
@@ -441,6 +464,21 @@ angular.module('ui.sortable', [])
                 });
               }
             };
+
+            // setup attribute handlers
+            angular.forEach(callbacks, function(value, key) {
+              callbacks[key] = combineCallbacks(callbacks[key],
+                function () {
+                  var attrHandler = scope[key];
+                  var attrHandlerFn;
+                  if (typeof attrHandler === 'function' &&
+                      ('uiSortable' + key.substring(0,1).toUpperCase() + key.substring(1)).length &&
+                      typeof (attrHandlerFn = attrHandler()) === 'function') {
+                    attrHandlerFn.apply(this, arguments);
+                  }
+                });
+            });
+
 
             wrappers.helper = function (inner) {
               if (inner && typeof inner === 'function') {
