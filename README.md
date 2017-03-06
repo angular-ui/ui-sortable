@@ -104,42 +104,6 @@ To provide a solution/workaround (till jquery.ui.sortable.refresh() also tests t
 </ul>
 ```
 
-
-#### Attributes For Event Handling
-
-To handle events with html bindings just define any expression to listed event attributes. 
-If you defined an attribute for this events and defined callback function in sortableOptions at the same time attribute based callback will be selected.
-If attribute based callback expression is not filled then sortableOption based callback function will be selected.
-
-*   **ui-sortable-receive**
-*   **ui-sortable-remove**
-*   **ui-sortable-start**
-*   **ui-sortable-stop**
-*   **ui-sortable-update**
-
-
-
-Expression works on update event.
-```html
-<ul ui-sortable ng-model="items" ui-sortable-update="expression" >
-  <li ng-repeat="item in items">{{ item }}</li>
-</ul>
-```
-
-
-callBackFunction2 works on update event.
-```js
-$scope.sortableOptions = {
-  'update': callBackFunction
-};
-```
-```html
-<ul ui-sortable="sortableOptions" ng-model="items" ui-sortable-update="callBackFunction2()" >
-  <li ng-repeat="item in items">{{ item }}</li>
-</ul>
-```
-
-
 **OR**
 
 ```js
@@ -160,6 +124,43 @@ Type: [Boolean](http://api.jquery.com/Types/#Boolean)/[String](http://api.jquery
 *   **false**:     Forces jquery.ui.sortable to detect the list as vertical.
 *   **true**:      Forces jquery.ui.sortable to detect the list as horizontal.
 *   **"auto"**:    Detects on each drag `start` if the element is floating or not.
+
+#### Attributes For Event Handling
+
+To handle events with html bindings just define any expression to listed event attributes. 
+If you defined an attribute for this events and defined callback function in sortableOptions at the same time, the attribute based callback will be called first.
+
+*   **ui-sortable-activate**
+*   **ui-sortable-start**
+*   **ui-sortable-activate**
+*   **ui-sortable-before-stop**
+*   **ui-sortable-update**
+*   **ui-sortable-remove**
+*   **ui-sortable-receive**
+*   **ui-sortable-deactivate**
+*   **ui-sortable-stop**
+
+
+
+Expression works on update event.
+```html
+<ul ui-sortable ng-model="items" ui-sortable-update="expression" >
+  <li ng-repeat="item in items">{{ item }}</li>
+</ul>
+```
+
+
+On update event callBackFunction1 if called before callBackFunction2.
+```js
+$scope.sortableOptions = {
+  'update': callBackFunction2
+};
+```
+```html
+<ul ui-sortable="sortableOptions" ng-model="items" ui-sortable-update="callBackFunction1()" >
+  <li ng-repeat="item in items">{{ item }}</li>
+</ul>
+```
 
 #### Canceling
 
