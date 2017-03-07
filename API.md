@@ -58,3 +58,16 @@ Returns whether the current sorting is marked as canceled, by an earlier call to
 ### isCustomHelperUsed[()](http://api.jquery.com/Types/#Function)
 Returns: [Boolean](http://api.jquery.com/Types/#Boolean)  
 Returns whether the [`helper`](http://api.jqueryui.com/sortable/#option-helper) element used for the current sorting, is one of the original ui-sortable list elements.
+
+
+## Events
+
+### `ui-sortable:moved`
+Is emitted after the `stop` callback.
+In connected sortables it is also emitted after the `update` on the receiving sortable.
+
+```js
+$rootScope.$on('ui-sortable:moved', function (e, ui) {
+    
+});
+```
