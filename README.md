@@ -157,7 +157,7 @@ $scope.sortableOptions = {
 };
 ```
 ```html
-<ul ui-sortable="sortableOptions" ng-model="items" ui-sortable-update="callBackFunction1()" >
+<ul ui-sortable="sortableOptions" ng-model="items" ui-sortable-update="callBackFunction1" >
   <li ng-repeat="item in items">{{ item }}</li>
 </ul>
 ```
