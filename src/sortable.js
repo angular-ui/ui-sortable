@@ -345,11 +345,7 @@ angular.module('ui.sortable', [])
               // Save current drop position but only if this is not a second
               // update that happens when moving between lists because then
               // the value will be overwritten with the old value
-
-              var wasMoved = ('dropindex' in ui.item.sortable) &&
-                              !ui.item.sortable.isCanceled();
-
-              if(!ui.item.sortable.received) {
+              if (!ui.item.sortable.received) {
                 ui.item.sortable.dropindex = getItemIndex(ui.item);
                 var droptarget = ui.item.closest('[ui-sortable], [data-ui-sortable], [x-ui-sortable]');
                 ui.item.sortable.droptarget = droptarget;
@@ -383,7 +379,7 @@ angular.module('ui.sortable', [])
               // it's safe to clear the restored nodes since:
               // update is currently running and
               // stop is not called for the target list.
-              if(ui.item.sortable.received) {
+              if (ui.item.sortable.received) {
                 savedNodes = null;
               }
 
@@ -391,17 +387,13 @@ angular.module('ui.sortable', [])
               // then we add the new item to this list otherwise wait until the
               // stop event where we will know if it was a sort or item was
               // moved here from another list
-              if(ui.item.sortable.received && !ui.item.sortable.isCanceled()) {
+              if (ui.item.sortable.received && !ui.item.sortable.isCanceled()) {
                 scope.$apply(function () {
                   ngModel.$modelValue.splice(ui.item.sortable.dropindex, 0,
                                              ui.item.sortable.moved);
                 });
+                scope.$emit('ui-sortable:moved', ui);
               }
-
-              if(wasMoved && !ui.item.sortable.received){
-                scope.$emit('sortable:wasMoved');
-              }
-
             };
 
             callbacks.stop = function(e, ui) {
@@ -418,6 +410,7 @@ angular.module('ui.sortable', [])
                     ui.item.sortable.dropindex, 0,
                     ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0]);
                 });
+                scope.$emit('ui-sortable:moved', ui);
               } else if (!wasMoved &&
                          !angular.equals(element.contents().toArray(), savedNodes.toArray())) {
                 // if the item was not moved
