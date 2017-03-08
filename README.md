@@ -272,6 +272,7 @@ myAppModule.controller('MyController', function($scope) {
 ## Examples
 
 - [Simple Demo](http://codepen.io/thgreasi/pen/wzmvgw)
+  - [Simple Attribute Handlers Demo](http://codepen.io/thgreasi/pen/JWbmjb)
   - [Simple RequireJS Demo](http://codepen.io/thgreasi/pen/rrdNjj)
   - [Simple Touch-Enabled Demo](http://codepen.io/thgreasi/pen/wzmvJv) using [jQuery UI Touch Punch](https://github.com/furf/jquery-ui-touch-punch/)
   - [Multiple items sorting (ctrl+click)](http://codepen.io/thgreasi/pen/mJAcL) using [ui-sortable-multiselection](https://github.com/thgreasi/ui-sortable-multiselection)
