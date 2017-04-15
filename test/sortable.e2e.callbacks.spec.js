@@ -515,6 +515,65 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should cancel sorting of node "Two" when then helper is appended to the `body`', function() {
+      inject(function($compile, $rootScope) {
+        var element;
+        element = $compile(''.concat(
+          '<ul ui-sortable="opts" ng-model="items">',
+          beforeLiElement,
+          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+          afterLiElement +
+          '</ul>'))($rootScope);
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            helper: function (e, item) {
+              return item.clone().appendTo('body');
+            },
+            update: function(e, ui) {
+              if (ui.item.sortable.model === 'Two') {
+                ui.item.sortable.cancel();
+              }
+            }
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element);
+
+        var li = element.find('[ng-repeat]:eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+        // try again
+        li = element.find('[ng-repeat]:eq(1)');
+        dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+        // try again
+        li = element.find('[ng-repeat]:eq(1)');
+        dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        li = element.find('[ng-repeat]:eq(0)');
+        dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        li = element.find('[ng-repeat]:eq(2)');
+        dy = -(2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
+        li.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Two', 'Three']);
+        expect($rootScope.items).toEqual(listContent(element));
+
+        $(element).remove();
+      });
+    });
+
     it('should properly reset a deleted callback option', function() {
       inject(function($compile, $rootScope) {
         var element, logsElement;
