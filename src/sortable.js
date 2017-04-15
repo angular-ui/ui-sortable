@@ -171,7 +171,7 @@ angular.module('ui.sortable', [])
             return helperOption === 'clone' || (typeof helperOption === 'function' && ui.item.sortable.isCustomHelperUsed());
           }
 
-          function getSortingHelper (element, ui, savedNodes) {
+          function getSortingHelper (element, ui/*, savedNodes*/) {
             var result = null;
             if (hasSortingHelper(element, ui) &&
                 element.sortable( 'option', 'appendTo' ) === 'parent') {
