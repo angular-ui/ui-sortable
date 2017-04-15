@@ -36,6 +36,7 @@ angular.module('ui.sortable', [])
         },
         link: function(scope, element, attrs, ngModel) {
           var savedNodes;
+          var helper;
 
           function combineCallbacks(first, second){
             var firstIsFunc = typeof first === 'function';
@@ -185,13 +186,12 @@ angular.module('ui.sortable', [])
             return helperOption === 'clone' || (typeof helperOption === 'function' && ui.item.sortable.isCustomHelperUsed());
           }
 
-          function getSortingHelper (element, ui, savedNodes) {
+          function getSortingHelper (element, ui/*, savedNodes*/) {
             var result = null;
             if (hasSortingHelper(element, ui) &&
                 element.sortable( 'option', 'appendTo' ) === 'parent') {
               // The .ui-sortable-helper element (that's the default class name)
-              // is placed last.
-              result = savedNodes.last();
+              result = helper;
             }
             return result;
           }
@@ -331,6 +331,7 @@ angular.module('ui.sortable', [])
               // This is inside activate (instead of start) in order to save
               // both lists when dragging between connected lists.
               savedNodes = savedNodesOrigin.contents();
+              helper = ui.helper;
 
               // If this list has a placeholder (the connected lists won't),
               // don't inlcude it in saved nodes.
@@ -428,9 +429,10 @@ angular.module('ui.sortable', [])
                 savedNodes.appendTo(elementContext.savedNodesOrigin);
               }
 
-              // It's now safe to clear the savedNodes
+              // It's now safe to clear the savedNodes and helper
               // since stop is the last callback.
               savedNodes = null;
+              helper = null;
             };
 
             callbacks.receive = function(e, ui) {
