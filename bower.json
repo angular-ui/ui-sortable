@@ -1,10 +1,10 @@
 {
   "name": "angular-ui-sortable",
-  "version": "0.17.0",
+  "version": "0.14.4",
   "main": ["./sortable.js"],
   "dependencies": {
     "angular": ">=1.2.x",
-    "jquery": ">=3.1.x",
-    "jquery-ui": ">=1.12.x"
+    "jquery": "<3.0.0",
+    "jquery-ui": ">=1.9"
   }
 }
