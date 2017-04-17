@@ -8,7 +8,7 @@ angular.module('ui.sortable', [])
     // the default for jquery-ui sortable is "> *", we need to restrict this to
     // ng-repeat items
     // if the user uses
-    items: '> [ng-repeat],> [data-ng-repeat],> [x-ng-repeat]'
+    items: '> [ng-repeat],> [data-ng-repeat],> [x-ng-repeat],> [ng-repeat-start]'
   })
   .directive('uiSortable', [
     'uiSortableConfig', '$timeout', '$log',
