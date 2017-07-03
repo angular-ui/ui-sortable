@@ -219,7 +219,9 @@ angular.module('ui.sortable', [])
           // which are not items
           function getItemIndex(item) {
             var par = item.parent();
-            while (!par.attr('ui-sortable')) par = par.parent();
+            while (!par.attr('ui-sortable')) {
+              par = par.parent();
+            }
             return par
               .find(opts['items'])
               .index(item);
