@@ -130,7 +130,6 @@ Type: [Boolean](http://api.jquery.com/Types/#Boolean)/[String](http://api.jquery
 To handle events with html bindings just define any expression to listed event attributes. 
 If you defined an attribute for this events and defined callback function in sortableOptions at the same time, the attribute based callback will be called first.
 
-*   **ui-sortable-activate**
 *   **ui-sortable-start**
 *   **ui-sortable-activate**
 *   **ui-sortable-before-stop**
