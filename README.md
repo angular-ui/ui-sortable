@@ -246,7 +246,7 @@ list A: stop
 For more details about the events check the [jQueryUI API documentation](http://api.jqueryui.com/sortable/).
 
 ## Integrating with directives doing transclusion
-Wrap the transclusion directive element with the ui-sortable directive and set the `items` to target your `ng-repeat`ed elements. Following best practices, it is also highly recommended that you add a `track by` expression to your `ng-repeat`. [Angular Meterial example](http://codepen.io/thgreasi/pen/NbyLVK).
+Wrap the transclusion directive element with the ui-sortable directive and set the `items` to target your `ng-repeat`ed elements. Following best practices, it is also highly recommended that you add a `track by` expression to your `ng-repeat`. [Angular Material example](http://codepen.io/thgreasi/pen/NbyLVK).
 
 ```js
 myAppModule.controller('MyController', function($scope) {
