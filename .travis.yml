@@ -1,12 +1,12 @@
 language: node_js
 node_js:
-- '0.10'
+- '6'
 addons:
   firefox: "latest"
 before_install:
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
-- npm install -qg bower grunt-cli
+- npm install -qg bower grunt grunt-cli
 - npm install -q
 - bower install
 after_success:
