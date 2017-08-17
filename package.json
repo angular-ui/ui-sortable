@@ -35,7 +35,12 @@
     "requirejs": "2.1.x",
     "wiredep": "1.8.x"
   },
-  "scripts": {},
+  "scripts": {
+    "coverage": "grunt coverage",
+    "dist": "grunt dist",
+    "serve": "grunt serve",
+    "test": "grunt test"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/angular-ui/ui-sortable.git"
