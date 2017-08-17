@@ -218,8 +218,12 @@ angular.module('ui.sortable', [])
           // we can't just do ui.item.index() because there it might have siblings
           // which are not items
           function getItemIndex(item) {
-            return item.parent()
-              .find(opts['ui-model-items'])
+            var par = item.parent();
+            while (!par.attr('ui-sortable')) {
+              par = par.parent();
+            }
+            return par
+              .find(opts['items'])
               .index(item);
           }
 
