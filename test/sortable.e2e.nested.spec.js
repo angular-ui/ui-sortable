@@ -128,6 +128,59 @@ describe('uiSortable', function() {
       });
     });
 
+    it('should update model when sorting between drectly nested sortables', function() {
+      inject(function($compile, $rootScope) {
+        var elementTree, li1, li2;
+
+        elementTree = $compile(''.concat(
+          '<div ui-sortable="sortableOptions" ng-model="items" class="nested-sortable outterList" style="float: left;margin-left: 10px;padding-bottom: 10px;">',
+            '<div ui-sortable="innerSortableOptions" ng-model="item.items" class="nested-sortable innerList" ng-repeat="item in items">',
+              '<div class="itemContent lvl1ItemContent">{{item.text}}</div>',
+              '<div ng-repeat="i in item.items" style="margin-left: 10px;padding-bottom: 10px;">',
+                '<div class="itemContent lvl2ItemContent">{{i.text}}</div>',
+              '</div>',
+            '</div>',
+          '</div>',
+          '<div style="clear: both;"></div>'))($rootScope);
+
+        $rootScope.$apply(function() {
+          $rootScope.items = [
+            {
+              text: 'Item 1',
+              items: [
+                { text: 'Item 1.1', items: [] },
+                { text: 'Item 1.2', items: [] }
+              ]
+            },
+            {
+              text: 'Item 2',
+              items: [
+                { text: 'Item 2.1', items: [] },
+                { text: 'Item 2.2', items: [] }
+              ]
+            }
+          ];
+          
+          $rootScope.sortableOptions = {};
+          $rootScope.innerSortableOptions = {
+            connectWith: '.nested-sortable'
+          };
+        });
+
+        host.append(elementTree);
+
+        li1 = elementTree.find('.innerList:last');
+        li2 = elementTree.find('.innerList:first');
+        simulateElementDrag(li1, li2, { place: 'above', extradx: -10, extrady: -6 });
+        expect($rootScope.items.map(function(x){ return x.text; }))
+          .toEqual(['Item 2', 'Item 1']);
+        expect($rootScope.items.map(function(x){ return x.text; }))
+          .toEqual(listInnerContent(elementTree, '.lvl1ItemContent'));
+
+        $(elementTree).remove();
+      });
+    });
+
   });
 
 });
