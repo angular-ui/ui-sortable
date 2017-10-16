@@ -18,6 +18,7 @@ angular.module('ui.sortable', [])
         scope: {
           ngModel:'=',
           uiSortable:'=',
+          uiPreserveSize: '=uiPreserveSize',
           ////Expression bindings from html.
           create:'&uiSortableCreate',
           // helper:'&uiSortableHelper',
@@ -480,6 +481,16 @@ angular.module('ui.sortable', [])
                 return function (e, item) {
                   var oldItemSortable = item.sortable;
                   var index = getItemIndex(item);
+
+                  if (typeof scope.uiPreserveSize === 'boolean' && scope.uiPreserveSize !== false) {
+                    item.children().each(function () {
+                      var $el = angular.element(this);
+
+                      // Preserve the with of the element
+                      $el.width($el.width());
+                    });
+                  }
+
                   item.sortable = {
                     model: ngModel.$modelValue[index],
                     index: index,
