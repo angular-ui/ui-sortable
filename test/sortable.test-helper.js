@@ -102,6 +102,8 @@ angular.module('ui.sortable.testHelper', [])
       extraElements: {
         beforeLiElement: '<li>extra element</li>',
         afterLiElement: '<li>extra element</li>',
+        beforeTrElement: '<tr><td>extra element</td></tr>',
+        afterTrElement: '<tr><td>extra element</td></tr>',
         beforeDivElement: '<div>extra element</div>',
         afterDivElement: '<div>extra element</div>'
       }

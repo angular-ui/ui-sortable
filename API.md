@@ -1,5 +1,16 @@
 # ui.item.sortable API documentation
 
+This refers to the additional properties that are exposed through the `ui` parameter in the provided callback hooks. eg:
+```js
+$scope.sortableOptions = {
+  update: function(e, ui) {
+    if (ui.item.sortable.model == "can't be moved") {
+      ui.item.sortable.cancel();
+    }
+  }
+};
+```
+
 ## Properties
 
 **Note:**
