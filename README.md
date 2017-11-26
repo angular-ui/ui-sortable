@@ -90,7 +90,15 @@ myAppModule.controller('MyController', function($scope) {
 When using event callbacks ([start](http://api.jqueryui.com/sortable/#event-start)/[update](http://api.jqueryui.com/sortable/#event-update)/[stop](http://api.jqueryui.com/sortable/#event-stop)...), avoid manipulating DOM elements (especially the one with the ng-repeat attached).
 The suggested pattern is to use callbacks for emmiting events and altering the scope (inside the 'Angular world').
 
-#### Floating
+#### ui-floating
+
+**ui-floating** (default: undefined)  
+Description: Enables a workaround for smooth horizontal sorting.  
+Type: [Boolean](http://api.jquery.com/Types/#Boolean)/[String](http://api.jquery.com/Types/#String)/`undefined`
+*   **undefined**: Relies on jquery.ui to detect the list's orientation.
+*   **false**:     Forces jquery.ui.sortable to detect the list as vertical.
+*   **true**:      Forces jquery.ui.sortable to detect the list as horizontal.
+*   **"auto"**:    Detects on each drag `start` if the element is floating or not.
 
 To have a smooth horizontal-list reordering, jquery.ui.sortable needs to detect the orientation of the list.
 This detection takes place during the initialization of the plugin (and some of the checks include: whether the first item is floating left/right or if 'axis' parameter is 'x', etc).
@@ -118,14 +126,24 @@ $scope.sortableOptions = {
 ```
 
 
-**ui-floating** (default: undefined)  
-Type: [Boolean](http://api.jquery.com/Types/#Boolean)/[String](http://api.jquery.com/Types/#String)/`undefined`
-*   **undefined**: Relies on jquery.ui to detect the list's orientation.
-*   **false**:     Forces jquery.ui.sortable to detect the list as vertical.
-*   **true**:      Forces jquery.ui.sortable to detect the list as horizontal.
-*   **"auto"**:    Detects on each drag `start` if the element is floating or not.
+#### ui-model-items
 
-#### Attributes For Event Handling
+**ui-model-items** (default: `> [ng-repeat],> [data-ng-repeat],> [x-ng-repeat]`)  
+Description: Defines which elements should be considered as part of your model.  
+Type: [CSS selector](http://api.jquery.com/Types/#Selector)/[String](http://api.jquery.com/Types/#String)
+
+This is the model related counterpart option of [jQuery's items option](http://api.jqueryui.com/sortable/#option-items).
+
+#### ui-preserve-size
+
+**ui-preserve-size** (default: undefined)  
+Description: Set's the size of the sorting helper to the size of the original element before the sorting.  
+Type: [Boolean](http://api.jquery.com/Types/#Boolean)/`undefined`
+
+This is useful for elements that their size is dependent to other page characteristics.
+A representative example of such cases are `<table>` `<tr>`s and `<td>`s.
+
+### Attributes For Event Handling
 
 To handle events with html bindings just define any expression to listed event attributes. 
 If you defined an attribute for this events and defined callback function in sortableOptions at the same time, the attribute based callback will be called first.
@@ -161,7 +179,7 @@ $scope.sortableOptions = {
 </ul>
 ```
 
-#### Canceling
+### Canceling
 
 Inside the `update` callback, you can check the item that is dragged and cancel the sorting.
 

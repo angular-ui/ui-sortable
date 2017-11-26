@@ -12,13 +12,15 @@ describe('uiSortable', function() {
   beforeEach(module('ui.sortable'));
   beforeEach(module('ui.sortable.testHelper'));
 
-  var EXTRA_DY_PERCENTAGE, listContent, beforeLiElement, afterLiElement;
+  var EXTRA_DY_PERCENTAGE, listContent, beforeLiElement, afterLiElement, beforeTrElement, afterTrElement;
 
   beforeEach(inject(function (sortableTestHelper) {
     EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
     listContent = sortableTestHelper.listContent;
     beforeLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.beforeLiElement;
     afterLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.afterLiElement;
+    beforeTrElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.beforeTrElement;
+    afterTrElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.afterTrElement;
   }));
 
   tests.description = 'Custom directive options related';
@@ -32,6 +34,7 @@ describe('uiSortable', function() {
 
       if (!useExtraElements) {
         beforeLiElement = afterLiElement = '';
+        beforeTrElement = afterTrElement = '';
       }
     }));
 
@@ -388,6 +391,147 @@ describe('uiSortable', function() {
         li.simulate('drag', { dy: dy });
         expect($rootScope.items).toEqual(['Three', 'One', 'Two']);
         expect($rootScope.items).toEqual(listContent(element, itemsSelector));
+
+        $(element).remove();
+      });
+    });
+
+    it('should work when the "ui-preserve-size" option is used', function() {
+      inject(function($compile, $rootScope) {
+        var width = '200px';
+        var element;
+        element = $compile(''.concat(
+          '<table>',
+            '<tbody><tr><td style="width: ' + width + ';"></td></tr></tbody>',
+            '<tbody ui-sortable="opts" ng-model="items">',
+              beforeTrElement,
+              '<tr ng-repeat="item in items" id="s-{{$index}}">',
+                '<td class="sortable-item">{{ item }}</td>',
+              '</tr>',
+              afterTrElement,
+            '</tbody>',
+          '</table>'
+          ))($rootScope);
+
+        var itemsSelector = '.sortable-item';
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            'ui-preserve-size': true,
+            stop: function(e, ui) {
+              expect(ui.item.children().css('width')).toEqual(width);
+            }
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element).append('<div class="clear"></div>');
+
+        var tr = element.find(itemsSelector + ':eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * tr.outerHeight();
+        tr.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element.find('tbody')).map($).map($.text));
+
+        tr = element.find(itemsSelector + ':eq(1)');
+        dy = -(1 + EXTRA_DY_PERCENTAGE) * tr.outerHeight();
+        tr.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Three', 'One', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element.find('tbody')).map($).map($.text));
+
+        $(element).remove();
+      });
+    });
+
+    it('should work when the "ui-preserve-size" option is false', function() {
+      inject(function($compile, $rootScope) {
+        var width = '200px';
+        var element;
+        element = $compile(''.concat(
+          '<table>',
+            '<tbody><tr><td style="width: ' + width + ';"></td></tr></tbody>',
+            '<tbody ui-sortable="opts" ng-model="items">',
+              beforeTrElement,
+              '<tr ng-repeat="item in items" id="s-{{$index}}">',
+                '<td class="sortable-item">{{ item }}</td>',
+              '</tr>',
+              afterTrElement,
+            '</tbody>',
+          '</table>'
+          ))($rootScope);
+
+        var itemsSelector = '.sortable-item';
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            'ui-preserve-size': false,
+            stop: function(e, ui) {
+              expect(ui.item.children().attr('style')).toEqual(undefined);
+            }
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element).append('<div class="clear"></div>');
+
+        var tr = element.find(itemsSelector + ':eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * tr.outerHeight();
+        tr.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element.find('tbody')).map($).map($.text));
+
+        tr = element.find(itemsSelector + ':eq(1)');
+        dy = -(1 + EXTRA_DY_PERCENTAGE) * tr.outerHeight();
+        tr.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Three', 'One', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element.find('tbody')).map($).map($.text));
+
+        $(element).remove();
+      });
+    });
+
+    it('should work when the "ui-preserve-size" & helper options are used', function() {
+      inject(function($compile, $rootScope) {
+        var width = '200px';
+        var element;
+        element = $compile(''.concat(
+          '<table>',
+            '<tbody><tr><td style="width: ' + width + ';"></td></tr></tbody>',
+            '<tbody ui-sortable="opts" ng-model="items">',
+              beforeTrElement,
+              '<tr ng-repeat="item in items" id="s-{{$index}}">',
+                '<td class="sortable-item">{{ item }}</td>',
+              '</tr>',
+              afterTrElement,
+            '</tbody>',
+          '</table>'
+          ))($rootScope);
+
+        var itemsSelector = '.sortable-item';
+        $rootScope.$apply(function() {
+          $rootScope.opts = {
+            'ui-preserve-size': true,
+            helper: function (e, item) {
+              return item.clone();
+            },
+            stop: function(e, ui) {
+              expect(ui.item.children().css('width')).toEqual(width);
+            }
+          };
+          $rootScope.items = ['One', 'Two', 'Three'];
+        });
+
+        host.append(element).append('<div class="clear"></div>');
+
+        var tr = element.find(itemsSelector + ':eq(1)');
+        var dy = (1 + EXTRA_DY_PERCENTAGE) * tr.outerHeight();
+        tr.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['One', 'Three', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element.find('tbody')).map($).map($.text));
+
+        tr = element.find(itemsSelector + ':eq(1)');
+        dy = -(1 + EXTRA_DY_PERCENTAGE) * tr.outerHeight();
+        tr.simulate('drag', { dy: dy });
+        expect($rootScope.items).toEqual(['Three', 'One', 'Two']);
+        expect($rootScope.items).toEqual(listContent(element.find('tbody')).map($).map($.text));
 
         $(element).remove();
       });
