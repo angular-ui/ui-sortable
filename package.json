@@ -18,6 +18,7 @@
     "grunt-karma": "^0.12.1",
     "grunt-ngmin": "0.0.x",
     "grunt-surround": "0.1.x",
+    "husky": "^0.14.3",
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.22",
     "karma-chrome-launcher": "0.1.x",
@@ -31,18 +32,28 @@
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-requirejs": "^0.2.5",
     "karma-script-launcher": "^0.2.0",
+    "lint-staged": "^5.0.0",
     "load-grunt-tasks": "0.2.x",
+    "prettier": "^1.8.2",
     "requirejs": "2.1.x",
     "wiredep": "1.8.x"
   },
   "scripts": {
     "coverage": "grunt coverage",
     "dist": "grunt dist",
+    "precommit": "lint-staged",
+    "prettify": "prettier --write \"src/**/*.js\" \"test/**/*.js\"",
     "serve": "grunt serve",
     "test": "grunt test"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/angular-ui/ui-sortable.git"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
