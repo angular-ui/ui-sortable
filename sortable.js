@@ -1,6 +1,6 @@
 /**
  * angular-ui-sortable - This directive allows you to jQueryUI Sortable.
- * @version v0.17.2 - 2017-08-17
+ * @version v0.18.0 - 2017-11-26
  * @link http://angular-ui.github.com
  * @license MIT
  */
@@ -71,6 +71,19 @@ angular.module('ui.sortable', [])
             return null;
           }
 
+          function setItemChildrenWidth(item) {
+            item.children().each(function() {
+              var $el = angular.element(this);
+
+              // Preserve the with of the element
+              $el.width($el.width());
+            });
+          }
+
+          function dummyHelper(e, item) {
+            return item;
+          }
+
           function patchSortableOption(key, value) {
             if (callbacks[key]) {
               if( key === 'stop' ){
@@ -94,7 +107,8 @@ angular.module('ui.sortable', [])
             return value;
           }
 
-          function patchUISortableOptions(newVal, oldVal, sortableWidgetInstance) {
+          function patchUISortableOptions(newOpts, oldOpts, sortableWidgetInstance) {
+
             function addDummyOptionKey(value, key) {
               if (!(key in opts)) {
                 // add the key in the opts object so that
@@ -109,11 +123,11 @@ angular.module('ui.sortable', [])
             // update some options of the sortable
             var optsDiff = null;
 
-            if (oldVal) {
+            if (oldOpts) {
               // reset deleted options to default
               var defaultOptions;
-              angular.forEach(oldVal, function(oldValue, key) {
-                if (!newVal || !(key in newVal)) {
+              angular.forEach(oldOpts, function(oldValue, key) {
+                if (!newOpts || !(key in newOpts)) {
                   if (key in directiveOpts) {
                     if (key === 'ui-floating') {
                       opts[key] = 'auto';
@@ -138,16 +152,33 @@ angular.module('ui.sortable', [])
               });
             }
 
+            newOpts = angular.extend({}, newOpts);
             // update changed options
-            angular.forEach(newVal, function(value, key) {
-              // if it's a custom option of the directive,
-              // handle it approprietly
+            // handle the custom option of the directive first
+            angular.forEach(newOpts, function(value, key) {
               if (key in directiveOpts) {
                 if (key === 'ui-floating' && (value === false || value === true) && sortableWidgetInstance) {
                   sortableWidgetInstance.floating = value;
                 }
 
+                if (key === 'ui-preserve-size' && (value === false || value === true)) {
+                  var userProvidedHelper = opts.helper;
+                  newOpts.helper = function(e, item) {
+                    if (opts['ui-preserve-size'] === true) {
+                      setItemChildrenWidth(item);
+                    }
+                    return (userProvidedHelper || dummyHelper).apply(this, arguments);
+                  };
+                }
+
                 opts[key] = patchSortableOption(key, value);
+              }
+            });
+
+            // handle the normal option of the directive
+            angular.forEach(newOpts, function(value, key) {
+              if (key in directiveOpts) {
+                // the custom option of the directive are already handled
                 return;
               }
 
@@ -206,7 +237,7 @@ angular.module('ui.sortable', [])
           }
 
           // thanks jquery-ui
-          function isFloating (item) {
+          function isFloating(item) {
             return (/left|right/).test(item.css('float')) || (/inline|table-cell/).test(item.css('display'));
           }
 
@@ -237,7 +268,8 @@ angular.module('ui.sortable', [])
           // directive specific options
           var directiveOpts = {
             'ui-floating': undefined,
-            'ui-model-items': uiSortableConfig.items
+            'ui-model-items': uiSortableConfig.items,
+            'ui-preserve-size': undefined
           };
 
           var callbacks = {
@@ -489,6 +521,7 @@ angular.module('ui.sortable', [])
                 return function (e, item) {
                   var oldItemSortable = item.sortable;
                   var index = getItemIndex(item);
+
                   item.sortable = {
                     model: ngModel.$modelValue[index],
                     index: index,
@@ -513,12 +546,12 @@ angular.module('ui.sortable', [])
               return inner;
             };
 
-            scope.$watchCollection('uiSortable', function(newVal, oldVal) {
+            scope.$watchCollection('uiSortable', function(newOpts, oldOpts) {
               // ensure that the jquery-ui-sortable widget instance
               // is still bound to the directive's element
               var sortableWidgetInstance = getSortableWidgetInstance(element);
               if (!!sortableWidgetInstance) {
-                var optsDiff = patchUISortableOptions(newVal, oldVal, sortableWidgetInstance);
+                var optsDiff = patchUISortableOptions(newOpts, oldOpts, sortableWidgetInstance);
 
                 if (optsDiff) {
                   element.sortable('option', optsDiff);
