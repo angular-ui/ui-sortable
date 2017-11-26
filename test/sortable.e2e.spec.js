@@ -1,40 +1,52 @@
 'use strict';
 
 describe('uiSortable', function() {
-
-  beforeEach(module(function($compileProvider) {
-    if (typeof $compileProvider.debugInfoEnabled === 'function') {
-      $compileProvider.debugInfoEnabled(false);
-    }
-  }));
+  beforeEach(
+    module(function($compileProvider) {
+      if (typeof $compileProvider.debugInfoEnabled === 'function') {
+        $compileProvider.debugInfoEnabled(false);
+      }
+    })
+  );
 
   // Ensure the sortable angular module is loaded
   beforeEach(module('ui.sortable'));
   beforeEach(module('ui.sortable.testHelper'));
 
-  var EXTRA_DY_PERCENTAGE, listContent, listInnerContent, beforeLiElement, afterLiElement;
+  var EXTRA_DY_PERCENTAGE,
+    listContent,
+    listInnerContent,
+    beforeLiElement,
+    afterLiElement;
 
-  beforeEach(inject(function (sortableTestHelper) {
-    EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
-    listContent = sortableTestHelper.listContent;
-    listInnerContent = sortableTestHelper.listInnerContent;
-    beforeLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.beforeLiElement;
-    afterLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.afterLiElement;
-  }));
+  beforeEach(
+    inject(function(sortableTestHelper) {
+      EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
+      listContent = sortableTestHelper.listContent;
+      listInnerContent = sortableTestHelper.listInnerContent;
+      beforeLiElement =
+        sortableTestHelper.extraElements &&
+        sortableTestHelper.extraElements.beforeLiElement;
+      afterLiElement =
+        sortableTestHelper.extraElements &&
+        sortableTestHelper.extraElements.afterLiElement;
+    })
+  );
 
   tests.description = 'Drag & Drop simulation';
-  function tests (useExtraElements) {
-
+  function tests(useExtraElements) {
     var host;
 
-    beforeEach(inject(function() {
-      host = $('<div id="test-host"></div>');
-      $('body').append(host);
-      
-      if (!useExtraElements) {
-        beforeLiElement = afterLiElement = '';
-      }
-    }));
+    beforeEach(
+      inject(function() {
+        host = $('<div id="test-host"></div>');
+        $('body').append(host);
+
+        if (!useExtraElements) {
+          beforeLiElement = afterLiElement = '';
+        }
+      })
+    );
 
     afterEach(function() {
       host.remove();
@@ -44,12 +56,15 @@ describe('uiSortable', function() {
     it('should update model when order changes', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.items = ['One', 'Two', 'Three'];
         });
@@ -75,15 +90,18 @@ describe('uiSortable', function() {
     it('should not allow sorting of "locked" nodes', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}" ng-class="{ sortable: item.sortable }">{{ item.text }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}" ng-class="{ sortable: item.sortable }">{{ item.text }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
-            items:'> .sortable'
+            items: '> .sortable'
           };
           $rootScope.items = [
             { text: 'One', sortable: true },
@@ -98,26 +116,58 @@ describe('uiSortable', function() {
         var li = element.find('[ng-repeat]:eq(2)');
         var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
-        expect($rootScope.items.map(function(x){ return x.text; })).toEqual(['One', 'Two', 'Three', 'Four']);
-        expect($rootScope.items.map(function(x){ return x.text; })).toEqual(listContent(element));
+        expect(
+          $rootScope.items.map(function(x) {
+            return x.text;
+          })
+        ).toEqual(['One', 'Two', 'Three', 'Four']);
+        expect(
+          $rootScope.items.map(function(x) {
+            return x.text;
+          })
+        ).toEqual(listContent(element));
 
         li = element.find('[ng-repeat]:eq(1)');
         dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
-        expect($rootScope.items.map(function(x){ return x.text; })).toEqual(['One', 'Three', 'Four', 'Two']);
-        expect($rootScope.items.map(function(x){ return x.text; })).toEqual(listContent(element));
+        expect(
+          $rootScope.items.map(function(x) {
+            return x.text;
+          })
+        ).toEqual(['One', 'Three', 'Four', 'Two']);
+        expect(
+          $rootScope.items.map(function(x) {
+            return x.text;
+          })
+        ).toEqual(listContent(element));
 
         li = element.find('[ng-repeat]:eq(2)');
         dy = -(2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
-        expect($rootScope.items.map(function(x){ return x.text; })).toEqual(['Four', 'One', 'Three', 'Two']);
-        expect($rootScope.items.map(function(x){ return x.text; })).toEqual(listContent(element));
+        expect(
+          $rootScope.items.map(function(x) {
+            return x.text;
+          })
+        ).toEqual(['Four', 'One', 'Three', 'Two']);
+        expect(
+          $rootScope.items.map(function(x) {
+            return x.text;
+          })
+        ).toEqual(listContent(element));
 
         li = element.find('[ng-repeat]:eq(3)');
         dy = -(2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
-        expect($rootScope.items.map(function(x){ return x.text; })).toEqual(['Four', 'Two', 'One', 'Three']);
-        expect($rootScope.items.map(function(x){ return x.text; })).toEqual(listContent(element));
+        expect(
+          $rootScope.items.map(function(x) {
+            return x.text;
+          })
+        ).toEqual(['Four', 'Two', 'One', 'Three']);
+        expect(
+          $rootScope.items.map(function(x) {
+            return x.text;
+          })
+        ).toEqual(listContent(element));
 
         // also placing right above the locked node seems a bit harder !?!?
 
@@ -128,12 +178,15 @@ describe('uiSortable', function() {
     it('should work when "placeholder" option is used', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             placeholder: 'sortable-item-placeholder'
@@ -162,12 +215,15 @@ describe('uiSortable', function() {
     it('should work when "placeholder" option equals the class of items', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             placeholder: 'sortable-item'
@@ -196,12 +252,15 @@ describe('uiSortable', function() {
     it('should work when "placeholder" option equals the class of items [data-ng-repeat]', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li data-ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li data-ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             placeholder: 'sortable-item'
@@ -230,12 +289,15 @@ describe('uiSortable', function() {
     it('should continue to work after a drag is reverted', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             placeholder: 'sortable-item'
@@ -276,12 +338,15 @@ describe('uiSortable', function() {
     it('should work when "handle" option is used', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}"><span class="handle">H</span> <span class="itemContent">{{ item }}</span></li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}"><span class="handle">H</span> <span class="itemContent">{{ item }}</span></li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             handle: '.handle'
@@ -310,19 +375,22 @@ describe('uiSortable', function() {
     it('should properly remove elements after a sorting', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}"><span class="handle">H</span> <span class="itemContent">{{ item }}</span> <button type="button" class="removeButton" ng-click="remove(item, $index)">X</button></li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}"><span class="handle">H</span> <span class="itemContent">{{ item }}</span> <button type="button" class="removeButton" ng-click="remove(item, $index)">X</button></li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             handle: '.handle'
           };
           $rootScope.items = ['One', 'Two', 'Three'];
 
-          $rootScope.remove = function (item, itemIndex) {
+          $rootScope.remove = function(item, itemIndex) {
             $rootScope.items.splice(itemIndex, 1);
           };
         });
@@ -358,19 +426,22 @@ describe('uiSortable', function() {
     it('should properly remove elements after a drag is reverted', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}"><span class="handle">H</span> <span class="itemContent">{{ item }}</span> <button type="button" class="removeButton" ng-click="remove(item, $index)">X</button></li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}"><span class="handle">H</span> <span class="itemContent">{{ item }}</span> <button type="button" class="removeButton" ng-click="remove(item, $index)">X</button></li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             handle: '.handle'
           };
           $rootScope.items = ['One', 'Two', 'Three'];
 
-          $rootScope.remove = function (item, itemIndex) {
+          $rootScope.remove = function(item, itemIndex) {
             $rootScope.items.splice(itemIndex, 1);
           };
         });
@@ -401,12 +472,15 @@ describe('uiSortable', function() {
     it('should work when "helper: clone" option is used', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             helper: 'clone'
@@ -435,12 +509,15 @@ describe('uiSortable', function() {
     it('should work when "helper: clone" option is used and a drag is reverted', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             helper: 'clone'
@@ -481,12 +558,15 @@ describe('uiSortable', function() {
     it('should work when "helper: clone" and "appendTo [selector]" options are used together', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             helper: 'clone',
@@ -516,12 +596,15 @@ describe('uiSortable', function() {
     it('should work when "helper: clone" and "appendTo [element]" options are used together', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             helper: 'clone',
@@ -551,12 +634,15 @@ describe('uiSortable', function() {
     it('should work when "helper: clone" and "appendTo [jQuery object]" options are used together', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             helper: 'clone',
@@ -586,12 +672,15 @@ describe('uiSortable', function() {
     it('should work when "helper: clone" and "placeholder" options are used together.', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             helper: 'clone',
@@ -639,15 +728,18 @@ describe('uiSortable', function() {
     it('should work when "helper: function" option is used', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
-            helper: function (e, item) {
+            helper: function(e, item) {
               return item.clone().text('helper');
             }
           };
@@ -675,15 +767,18 @@ describe('uiSortable', function() {
     it('should work when "helper: function" option is used and a drag is reverted', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
-            helper: function (e, item) {
+            helper: function(e, item) {
               return item.clone().text('helper');
             }
           };
@@ -723,15 +818,18 @@ describe('uiSortable', function() {
     it('should work when "helper: function" and "placeholder" options are used together.', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
-            helper: function (e, item) {
+            helper: function(e, item) {
               return item.clone().text('helper');
             },
             placeholder: 'sortable-item'
@@ -778,15 +876,18 @@ describe('uiSortable', function() {
     it('should work when "helper: function" that returns a list element is used', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
-            helper: function (e, item) {
+            helper: function(e, item) {
               return item;
             }
           };
@@ -826,15 +927,18 @@ describe('uiSortable', function() {
     it('should work when "helper: function" that returns a list element and "placeholder" options are used together.', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
-            helper: function (e, item) {
+            helper: function(e, item) {
               return item;
             },
             placeholder: 'sortable-item'
@@ -877,19 +981,17 @@ describe('uiSortable', function() {
         $(element).remove();
       });
     });
-
   }
 
-  [0, 1].forEach(function(useExtraElements){
+  [0, 1].forEach(function(useExtraElements) {
     var testDescription = tests.description;
 
     if (useExtraElements) {
       testDescription += ' with extra elements';
     }
 
-    describe(testDescription, function(){
+    describe(testDescription, function() {
       tests(useExtraElements);
     });
   });
-
 });

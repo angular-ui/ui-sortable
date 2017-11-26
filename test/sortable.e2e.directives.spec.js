@@ -1,46 +1,66 @@
 'use strict';
 
 describe('uiSortable', function() {
-
-  beforeEach(module(function($compileProvider) {
-    if (typeof $compileProvider.debugInfoEnabled === 'function') {
-      $compileProvider.debugInfoEnabled(false);
-    }
-  }));
+  beforeEach(
+    module(function($compileProvider) {
+      if (typeof $compileProvider.debugInfoEnabled === 'function') {
+        $compileProvider.debugInfoEnabled(false);
+      }
+    })
+  );
 
   // Ensure the sortable angular module is loaded
   beforeEach(module('ui.sortable'));
   beforeEach(module('ui.sortable.testHelper'));
   beforeEach(module('ui.sortable.testDirectives'));
 
-  var EXTRA_DY_PERCENTAGE, listContent, listFindContent, listInnerContent, simulateElementDrag, beforeLiElement, afterLiElement, beforeDivElement, afterDivElement;
+  var EXTRA_DY_PERCENTAGE,
+    listContent,
+    listFindContent,
+    listInnerContent,
+    simulateElementDrag,
+    beforeLiElement,
+    afterLiElement,
+    beforeDivElement,
+    afterDivElement;
 
-  beforeEach(inject(function (sortableTestHelper) {
-    EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
-    listContent = sortableTestHelper.listContent;
-    listFindContent = sortableTestHelper.listFindContent;
-    listInnerContent = sortableTestHelper.listInnerContent;
-    simulateElementDrag = sortableTestHelper.simulateElementDrag;
-    beforeLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.beforeLiElement;
-    afterLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.afterLiElement;
-    beforeDivElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.beforeDivElement;
-    afterDivElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.afterDivElement;
-  }));
+  beforeEach(
+    inject(function(sortableTestHelper) {
+      EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
+      listContent = sortableTestHelper.listContent;
+      listFindContent = sortableTestHelper.listFindContent;
+      listInnerContent = sortableTestHelper.listInnerContent;
+      simulateElementDrag = sortableTestHelper.simulateElementDrag;
+      beforeLiElement =
+        sortableTestHelper.extraElements &&
+        sortableTestHelper.extraElements.beforeLiElement;
+      afterLiElement =
+        sortableTestHelper.extraElements &&
+        sortableTestHelper.extraElements.afterLiElement;
+      beforeDivElement =
+        sortableTestHelper.extraElements &&
+        sortableTestHelper.extraElements.beforeDivElement;
+      afterDivElement =
+        sortableTestHelper.extraElements &&
+        sortableTestHelper.extraElements.afterDivElement;
+    })
+  );
 
   tests.description = 'Inner directives related';
-  function tests (useExtraElements) {
-
+  function tests(useExtraElements) {
     var host;
 
-    beforeEach(inject(function() {
-      host = $('<div id="test-host"></div>');
-      $('body').append(host);
+    beforeEach(
+      inject(function() {
+        host = $('<div id="test-host"></div>');
+        $('body').append(host);
 
-      if (!useExtraElements) {
-        beforeLiElement = afterLiElement = '';
-        beforeDivElement = afterDivElement = '';
-      }
-    }));
+        if (!useExtraElements) {
+          beforeLiElement = afterLiElement = '';
+          beforeDivElement = afterDivElement = '';
+        }
+      })
+    );
 
     afterEach(function() {
       host.remove();
@@ -50,17 +70,20 @@ describe('uiSortable', function() {
     it('should work when inner directives are used', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
             beforeLiElement,
             '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">',
-              '<ui-sortable-simple-test-directive ng-model="item"></ui-sortable-simple-test-directive>',
+            '<ui-sortable-simple-test-directive ng-model="item"></ui-sortable-simple-test-directive>',
             '</li>',
             afterLiElement,
-          '</ul>'))($rootScope);
+            '</ul>'
+          )
+        )($rootScope);
 
         $rootScope.$apply(function() {
-          $rootScope.opts = { };
+          $rootScope.opts = {};
           $rootScope.items = ['One', 'Two', 'Three'];
         });
 
@@ -85,17 +108,20 @@ describe('uiSortable', function() {
     it('should not $destroy directives after sorting.', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
             beforeLiElement,
             '<li ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">',
-              '<ui-sortable-destroyable-test-directive ng-model="item"></ui-sortable-destroyable-test-directive>',
+            '<ui-sortable-destroyable-test-directive ng-model="item"></ui-sortable-destroyable-test-directive>',
             '</li>',
             afterLiElement,
-          '</ul>'))($rootScope);
+            '</ul>'
+          )
+        )($rootScope);
 
         $rootScope.$apply(function() {
-          $rootScope.opts = { };
+          $rootScope.opts = {};
           $rootScope.items = ['One', 'Two', 'Three'];
         });
 
@@ -120,16 +146,19 @@ describe('uiSortable', function() {
     it('should work when the items are inside a transcluded directive', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<div ui-sortable="opts" ng-model="items">',
+        element = $compile(
+          ''.concat(
+            '<div ui-sortable="opts" ng-model="items">',
             '<ui-sortable-transclusion-test-directive>',
-              beforeLiElement,
-              '<div ng-repeat="item in items track by $index" id="s-{{$index}}" class="sortable-item">',
-                '{{ item }}',
-              '</div>',
-              afterLiElement,
+            beforeLiElement,
+            '<div ng-repeat="item in items track by $index" id="s-{{$index}}" class="sortable-item">',
+            '{{ item }}',
+            '</div>',
+            afterLiElement,
             '</ui-sortable-simple-test-directive>',
-          '</div>'))($rootScope);
+            '</div>'
+          )
+        )($rootScope);
 
         $rootScope.$apply(function() {
           $rootScope.opts = {
@@ -159,16 +188,19 @@ describe('uiSortable', function() {
     it('should properly cancel() when the items are inside a transcluded directive', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<div ui-sortable="opts" ng-model="items">',
+        element = $compile(
+          ''.concat(
+            '<div ui-sortable="opts" ng-model="items">',
             '<ui-sortable-transclusion-test-directive>',
-              beforeLiElement,
-              '<div ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">',
-                '{{ item }}',
-              '</div>',
-              afterLiElement,
+            beforeLiElement,
+            '<div ng-repeat="item in items" id="s-{{$index}}" class="sortable-item">',
+            '{{ item }}',
+            '</div>',
+            afterLiElement,
             '</ui-sortable-simple-test-directive>',
-          '</div>'))($rootScope);
+            '</div>'
+          )
+        )($rootScope);
 
         $rootScope.$apply(function() {
           $rootScope.opts = {
@@ -214,7 +246,6 @@ describe('uiSortable', function() {
         expect($rootScope.items).toEqual(['Two', 'Three', 'One']);
         expect($rootScope.items).toEqual(listFindContent(element));
 
-
         $(element).remove();
       });
     });
@@ -222,22 +253,28 @@ describe('uiSortable', function() {
     it('should update model when the items are inside a transcluded directive and sorting between sortables', function() {
       inject(function($compile, $rootScope) {
         var elementTop, elementBottom;
-        elementTop = $compile(''.concat(
-          '<div ui-sortable="opts" class="cross-sortable" ng-model="itemsTop">',
+        elementTop = $compile(
+          ''.concat(
+            '<div ui-sortable="opts" class="cross-sortable" ng-model="itemsTop">',
             '<ui-sortable-transclusion-test-directive>',
-              beforeDivElement,
-              '<div ng-repeat="item in itemsTop" id="s-top-{{$index}}" class="sortable-item">{{ item }}</div>',
-              afterDivElement,
+            beforeDivElement,
+            '<div ng-repeat="item in itemsTop" id="s-top-{{$index}}" class="sortable-item">{{ item }}</div>',
+            afterDivElement,
             '</ui-sortable-simple-test-directive>',
-          '</div>'))($rootScope);
-        elementBottom = $compile(''.concat(
-          '<div ui-sortable="opts" class="cross-sortable" ng-model="itemsBottom">',
+            '</div>'
+          )
+        )($rootScope);
+        elementBottom = $compile(
+          ''.concat(
+            '<div ui-sortable="opts" class="cross-sortable" ng-model="itemsBottom">',
             '<ui-sortable-transclusion-test-directive>',
-              beforeDivElement,
-              '<div ng-repeat="item in itemsBottom" id="s-bottom-{{$index}}" class="sortable-item">{{ item }}</div>',
-              afterDivElement,
+            beforeDivElement,
+            '<div ng-repeat="item in itemsBottom" id="s-bottom-{{$index}}" class="sortable-item">{{ item }}</div>',
+            afterDivElement,
             '</ui-sortable-simple-test-directive>',
-          '</div>'))($rootScope);
+            '</div>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.itemsTop = ['Top One', 'Top Two', 'Top Three'];
           $rootScope.itemsBottom = ['Bottom One', 'Bottom Two', 'Bottom Three'];
@@ -247,13 +284,21 @@ describe('uiSortable', function() {
           };
         });
 
-        host.append(elementTop).append(elementBottom).append('<div class="clear"></div>');
+        host
+          .append(elementTop)
+          .append(elementBottom)
+          .append('<div class="clear"></div>');
 
         var li1 = elementTop.find('.sortable-item:eq(0)');
         var li2 = elementBottom.find('.sortable-item:eq(2)');
         simulateElementDrag(li1, li2, { place: 'above', moves: 100 });
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three']);
-        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Top One', 'Bottom Three']);
+        expect($rootScope.itemsBottom).toEqual([
+          'Bottom One',
+          'Bottom Two',
+          'Top One',
+          'Bottom Three'
+        ]);
         expect($rootScope.itemsTop).toEqual(listFindContent(elementTop));
         expect($rootScope.itemsBottom).toEqual(listFindContent(elementBottom));
 
@@ -261,8 +306,16 @@ describe('uiSortable', function() {
         li1 = elementBottom.find('.sortable-item:eq(2)');
         li2 = elementTop.find('.sortable-item:eq(1)');
         simulateElementDrag(li1, li2, { place: 'below', moves: 100 });
-        expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three', 'Top One']);
-        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual([
+          'Top Two',
+          'Top Three',
+          'Top One'
+        ]);
+        expect($rootScope.itemsBottom).toEqual([
+          'Bottom One',
+          'Bottom Two',
+          'Bottom Three'
+        ]);
         expect($rootScope.itemsTop).toEqual(listFindContent(elementTop));
         expect($rootScope.itemsBottom).toEqual(listFindContent(elementBottom));
 
@@ -274,22 +327,28 @@ describe('uiSortable', function() {
     it('should properly cancel() when the items are inside a transcluded directive and sorting between sortables', function() {
       inject(function($compile, $rootScope) {
         var elementTop, elementBottom;
-        elementTop = $compile(''.concat(
-          '<div ui-sortable="opts" class="cross-sortable" ng-model="itemsTop">',
+        elementTop = $compile(
+          ''.concat(
+            '<div ui-sortable="opts" class="cross-sortable" ng-model="itemsTop">',
             '<ui-sortable-transclusion-test-directive>',
-              beforeDivElement,
-              '<div ng-repeat="item in itemsTop" id="s-top-{{$index}}" class="sortable-item">{{ item }}</div>',
-              afterDivElement,
+            beforeDivElement,
+            '<div ng-repeat="item in itemsTop" id="s-top-{{$index}}" class="sortable-item">{{ item }}</div>',
+            afterDivElement,
             '</ui-sortable-simple-test-directive>',
-          '</div>'))($rootScope);
-        elementBottom = $compile(''.concat(
-          '<div ui-sortable="opts" class="cross-sortable" ng-model="itemsBottom">',
+            '</div>'
+          )
+        )($rootScope);
+        elementBottom = $compile(
+          ''.concat(
+            '<div ui-sortable="opts" class="cross-sortable" ng-model="itemsBottom">',
             '<ui-sortable-transclusion-test-directive>',
-              beforeDivElement,
-              '<div ng-repeat="item in itemsBottom" id="s-bottom-{{$index}}" class="sortable-item">{{ item }}</div>',
-              afterDivElement,
+            beforeDivElement,
+            '<div ng-repeat="item in itemsBottom" id="s-bottom-{{$index}}" class="sortable-item">{{ item }}</div>',
+            afterDivElement,
             '</ui-sortable-simple-test-directive>',
-          '</div>'))($rootScope);
+            '</div>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.itemsTop = ['Top One', 'Top Two', 'Top Three'];
           $rootScope.itemsBottom = ['Bottom One', 'Bottom Two', 'Bottom Three'];
@@ -297,38 +356,67 @@ describe('uiSortable', function() {
             connectWith: '.cross-sortable',
             items: '> * .sortable-item',
             update: function(e, ui) {
-              if (ui.item.sortable.model &&
-                (typeof ui.item.sortable.model === 'string') &&
-                ui.item.sortable.model.indexOf('Two') >= 0) {
+              if (
+                ui.item.sortable.model &&
+                typeof ui.item.sortable.model === 'string' &&
+                ui.item.sortable.model.indexOf('Two') >= 0
+              ) {
                 ui.item.sortable.cancel();
               }
             }
           };
         });
 
-        host.append(elementTop).append(elementBottom).append('<div class="clear"></div>');
+        host
+          .append(elementTop)
+          .append(elementBottom)
+          .append('<div class="clear"></div>');
 
         var li1 = elementTop.find('.sortable-item:eq(1)');
         var li2 = elementBottom.find('.sortable-item:eq(0)');
         simulateElementDrag(li1, li2, { place: 'below', moves: 100 });
-        expect($rootScope.itemsTop).toEqual(['Top One', 'Top Two', 'Top Three']);
-        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual([
+          'Top One',
+          'Top Two',
+          'Top Three'
+        ]);
+        expect($rootScope.itemsBottom).toEqual([
+          'Bottom One',
+          'Bottom Two',
+          'Bottom Three'
+        ]);
         expect($rootScope.itemsTop).toEqual(listFindContent(elementTop));
         expect($rootScope.itemsBottom).toEqual(listFindContent(elementBottom));
         // try again
         li1 = elementBottom.find('.sortable-item:eq(1)');
         li2 = elementTop.find('.sortable-item:eq(1)');
         simulateElementDrag(li1, li2, { place: 'above', moves: 100 });
-        expect($rootScope.itemsTop).toEqual(['Top One', 'Top Two', 'Top Three']);
-        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual([
+          'Top One',
+          'Top Two',
+          'Top Three'
+        ]);
+        expect($rootScope.itemsBottom).toEqual([
+          'Bottom One',
+          'Bottom Two',
+          'Bottom Three'
+        ]);
         expect($rootScope.itemsTop).toEqual(listFindContent(elementTop));
         expect($rootScope.itemsBottom).toEqual(listFindContent(elementBottom));
         // try again
         li1 = elementBottom.find('.sortable-item:eq(1)');
         li2 = elementTop.find('.sortable-item:eq(1)');
         simulateElementDrag(li1, li2, { place: 'above', moves: 100 });
-        expect($rootScope.itemsTop).toEqual(['Top One', 'Top Two', 'Top Three']);
-        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual([
+          'Top One',
+          'Top Two',
+          'Top Three'
+        ]);
+        expect($rootScope.itemsBottom).toEqual([
+          'Bottom One',
+          'Bottom Two',
+          'Bottom Three'
+        ]);
         expect($rootScope.itemsTop).toEqual(listFindContent(elementTop));
         expect($rootScope.itemsBottom).toEqual(listFindContent(elementBottom));
 
@@ -336,7 +424,12 @@ describe('uiSortable', function() {
         li2 = elementBottom.find('.sortable-item:eq(2)');
         simulateElementDrag(li1, li2, { place: 'above', moves: 100 });
         expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three']);
-        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Top One', 'Bottom Three']);
+        expect($rootScope.itemsBottom).toEqual([
+          'Bottom One',
+          'Bottom Two',
+          'Top One',
+          'Bottom Three'
+        ]);
         expect($rootScope.itemsTop).toEqual(listFindContent(elementTop));
         expect($rootScope.itemsBottom).toEqual(listFindContent(elementBottom));
 
@@ -344,8 +437,16 @@ describe('uiSortable', function() {
         li1 = elementBottom.find('.sortable-item:eq(2)');
         li2 = elementTop.find('.sortable-item:eq(1)');
         simulateElementDrag(li1, li2, { place: 'below', moves: 100 });
-        expect($rootScope.itemsTop).toEqual(['Top Two', 'Top Three', 'Top One']);
-        expect($rootScope.itemsBottom).toEqual(['Bottom One', 'Bottom Two', 'Bottom Three']);
+        expect($rootScope.itemsTop).toEqual([
+          'Top Two',
+          'Top Three',
+          'Top One'
+        ]);
+        expect($rootScope.itemsBottom).toEqual([
+          'Bottom One',
+          'Bottom Two',
+          'Bottom Three'
+        ]);
         expect($rootScope.itemsTop).toEqual(listFindContent(elementTop));
         expect($rootScope.itemsBottom).toEqual(listFindContent(elementBottom));
 
@@ -353,19 +454,17 @@ describe('uiSortable', function() {
         $(elementBottom).remove();
       });
     });
-
   }
 
-  [0, 1].forEach(function(useExtraElements){
+  [0, 1].forEach(function(useExtraElements) {
     var testDescription = tests.description;
 
     if (useExtraElements) {
       testDescription += ' with extra elements';
     }
 
-    describe(testDescription, function(){
+    describe(testDescription, function() {
       tests(useExtraElements);
     });
   });
-
 });

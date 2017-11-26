@@ -1,12 +1,13 @@
 'use strict';
 
 describe('uiSortable', function() {
-
-  beforeEach(module(function($compileProvider) {
-    if (typeof $compileProvider.debugInfoEnabled === 'function') {
-      $compileProvider.debugInfoEnabled(false);
-    }
-  }));
+  beforeEach(
+    module(function($compileProvider) {
+      if (typeof $compileProvider.debugInfoEnabled === 'function') {
+        $compileProvider.debugInfoEnabled(false);
+      }
+    })
+  );
 
   // Ensure the sortable angular module is loaded
   beforeEach(module('ui.sortable'));
@@ -14,12 +15,13 @@ describe('uiSortable', function() {
 
   var listContent;
 
-  beforeEach(inject(function (sortableTestHelper) {
-    listContent = sortableTestHelper.listContent;
-  }));
+  beforeEach(
+    inject(function(sortableTestHelper) {
+      listContent = sortableTestHelper.listContent;
+    })
+  );
 
   describe('Simple use', function() {
-
     it('should have a ui-sortable class', function() {
       inject(function($compile, $rootScope) {
         var element;
@@ -31,14 +33,18 @@ describe('uiSortable', function() {
     it('should log that ngModel was not provided', function() {
       inject(function($compile, $rootScope, $log) {
         var element;
-        element = $compile('<ul ui-sortable><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        element = $compile(
+          '<ul ui-sortable><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>'
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.items = ['One', 'Two', 'Three'];
         });
 
         expect($log.info.logs.length).toEqual(1);
         expect($log.info.logs[0].length).toEqual(2);
-        expect($log.info.logs[0][0]).toEqual('ui.sortable: ngModel not provided!');
+        expect($log.info.logs[0][0]).toEqual(
+          'ui.sortable: ngModel not provided!'
+        );
       });
     });
 
@@ -50,14 +56,18 @@ describe('uiSortable', function() {
         angular.element.fn = mockJQliteFn;
 
         var element;
-        element = $compile('<ul ui-sortable><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>')($rootScope);
+        element = $compile(
+          '<ul ui-sortable><li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li></ul>'
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.items = ['One', 'Two', 'Three'];
         });
 
         expect($log.error.logs.length).toEqual(1);
         expect($log.error.logs[0].length).toEqual(1);
-        expect($log.error.logs[0][0]).toEqual('ui.sortable: jQuery should be included before AngularJS!');
+        expect($log.error.logs[0][0]).toEqual(
+          'ui.sortable: jQuery should be included before AngularJS!'
+        );
 
         angular.element.fn = oldAngularElementFn;
       });
@@ -67,7 +77,9 @@ describe('uiSortable', function() {
       inject(function($compile, $rootScope, $timeout) {
         var element;
         var childScope = $rootScope.$new();
-        element = $compile('<ul ui-sortable ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>')(childScope);
+        element = $compile(
+          '<ul ui-sortable ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>'
+        )(childScope);
         $rootScope.$apply(function() {
           childScope.items = ['One', 'Two', 'Three'];
         });
@@ -85,7 +97,9 @@ describe('uiSortable', function() {
       inject(function($compile, $rootScope, $timeout) {
         var element;
         var childScope = $rootScope.$new();
-        element = $compile('<ul data-ui-sortable="opts" data-ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>')(childScope);
+        element = $compile(
+          '<ul data-ui-sortable="opts" data-ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>'
+        )(childScope);
         $rootScope.$apply(function() {
           childScope.items = ['One', 'Two', 'Three'];
           childScope.opts = {};
@@ -104,7 +118,9 @@ describe('uiSortable', function() {
       inject(function($compile, $rootScope, $timeout) {
         var element;
         var childScope = $rootScope.$new();
-        element = $compile('<div><ul ui-sortable ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul></div>')(childScope);
+        element = $compile(
+          '<div><ul ui-sortable ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul></div>'
+        )(childScope);
         $rootScope.$apply(function() {
           childScope.items = ['One', 'Two', 'Three'];
         });
@@ -113,7 +129,6 @@ describe('uiSortable', function() {
         expect(function() {
           $timeout.flush();
         }).not.toThrow();
-
       });
     });
 
@@ -121,7 +136,9 @@ describe('uiSortable', function() {
       inject(function($compile, $rootScope, $timeout) {
         var element;
         var childScope = $rootScope.$new();
-        element = $compile('<div><ul data-ui-sortable="opts" data-ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul></div>')(childScope);
+        element = $compile(
+          '<div><ul data-ui-sortable="opts" data-ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul></div>'
+        )(childScope);
         $rootScope.$apply(function() {
           childScope.items = ['One', 'Two', 'Three'];
           childScope.opts = {};
@@ -131,7 +148,6 @@ describe('uiSortable', function() {
         expect(function() {
           $timeout.flush();
         }).not.toThrow();
-
       });
     });
 
@@ -139,7 +155,9 @@ describe('uiSortable', function() {
       inject(function($compile, $rootScope, $timeout) {
         var element;
         var childScope = $rootScope.$new();
-        element = $compile('<div><ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul></div>')(childScope);
+        element = $compile(
+          '<div><ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul></div>'
+        )(childScope);
         $rootScope.$apply(function() {
           childScope.items = ['One', 'Two', 'Three'];
           childScope.opts = {
@@ -152,7 +170,6 @@ describe('uiSortable', function() {
         expect(function() {
           $timeout.flush();
         }).not.toThrow();
-
       });
     });
 
@@ -160,7 +177,9 @@ describe('uiSortable', function() {
       inject(function($compile, $rootScope, $timeout) {
         var element;
         var childScope = $rootScope.$new();
-        element = $compile('<div><ul data-ui-sortable="opts" data-ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul></div>')(childScope);
+        element = $compile(
+          '<div><ul data-ui-sortable="opts" data-ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul></div>'
+        )(childScope);
         $rootScope.$apply(function() {
           childScope.items = ['One', 'Two', 'Three'];
           childScope.opts = {
@@ -173,35 +192,33 @@ describe('uiSortable', function() {
         expect(function() {
           $timeout.flush();
         }).not.toThrow();
-
       });
     });
 
     describe('items option', function() {
-
       it('should use a default items that is restricted to ng-repeat items', function() {
-
         inject(function($compile, $rootScope, $timeout) {
           var element;
           var childScope = $rootScope.$new();
-          element = $compile('<div><ul data-ui-sortable="opts" data-ng-model="items"></ul></div>')(childScope);
+          element = $compile(
+            '<div><ul data-ui-sortable="opts" data-ng-model="items"></ul></div>'
+          )(childScope);
 
           $rootScope.$digest();
 
-          expect(element.find('ul').sortable('option', 'items')).toBe('> [ng-repeat],> [data-ng-repeat],> [x-ng-repeat]');
+          expect(element.find('ul').sortable('option', 'items')).toBe(
+            '> [ng-repeat],> [data-ng-repeat],> [x-ng-repeat]'
+          );
 
           element.remove(element.firstChild);
 
           expect(function() {
             $timeout.flush();
           }).not.toThrow();
-
         });
-
       });
 
       it('should not change items option if given', function() {
-
         inject(function($compile, $rootScope, $timeout) {
           var element;
           var childScope = $rootScope.$new();
@@ -209,24 +226,25 @@ describe('uiSortable', function() {
             items: '> .class'
           };
 
-          element = $compile('<div><ul data-ui-sortable="opts" data-ng-model="items"></ul></div>')(childScope);
+          element = $compile(
+            '<div><ul data-ui-sortable="opts" data-ng-model="items"></ul></div>'
+          )(childScope);
 
           $rootScope.$digest();
 
-          expect(element.find('ul').sortable('option', 'items')).toBe('> .class');
+          expect(element.find('ul').sortable('option', 'items')).toBe(
+            '> .class'
+          );
 
           element.remove(element.firstChild);
 
           expect(function() {
             $timeout.flush();
           }).not.toThrow();
-
         });
-
       });
 
       it('should restrict to ng-items if items is removed after initialization', function() {
-
         inject(function($compile, $rootScope, $timeout) {
           var element;
           var childScope = $rootScope.$new();
@@ -234,7 +252,9 @@ describe('uiSortable', function() {
             items: '> .class'
           };
 
-          element = $compile('<div><ul data-ui-sortable="opts" data-ng-model="items"></ul></div>')(childScope);
+          element = $compile(
+            '<div><ul data-ui-sortable="opts" data-ng-model="items"></ul></div>'
+          )(childScope);
 
           $rootScope.$digest();
 
@@ -242,35 +262,40 @@ describe('uiSortable', function() {
             childScope.opts = { items: null };
           });
 
-          expect(element.find('ul').sortable('option', 'items')).toBe('> [ng-repeat],> [data-ng-repeat],> [x-ng-repeat]');
+          expect(element.find('ul').sortable('option', 'items')).toBe(
+            '> [ng-repeat],> [data-ng-repeat],> [x-ng-repeat]'
+          );
 
           element.remove(element.firstChild);
 
           expect(function() {
             $timeout.flush();
           }).not.toThrow();
-
         });
-
       });
 
       it('should properly reset the value of a deleted option', function() {
-
         inject(function($compile, $rootScope, $timeout) {
           var element;
           var childScope = $rootScope.$new();
           childScope.opts = {
             opacity: 0.7,
             placeholder: 'phClass',
-            update: function() { }
+            update: function() {}
           };
 
-          element = $compile('<div><ul data-ui-sortable="opts" data-ng-model="items"></ul></div>')(childScope);
+          element = $compile(
+            '<div><ul data-ui-sortable="opts" data-ng-model="items"></ul></div>'
+          )(childScope);
           var $sortableElement = element.find('[data-ui-sortable]');
 
           expect($sortableElement.sortable('option', 'opacity')).toBe(0.7);
-          expect($sortableElement.sortable('option', 'placeholder')).toBe('phClass');
-          expect(typeof $sortableElement.sortable('option', 'update')).toBe('function');
+          expect($sortableElement.sortable('option', 'placeholder')).toBe(
+            'phClass'
+          );
+          expect(typeof $sortableElement.sortable('option', 'update')).toBe(
+            'function'
+          );
 
           $rootScope.$digest();
 
@@ -279,8 +304,12 @@ describe('uiSortable', function() {
           });
 
           expect($sortableElement.sortable('option', 'opacity')).toBe(false);
-          expect($sortableElement.sortable('option', 'placeholder')).toBe('phClass');
-          expect(typeof $sortableElement.sortable('option', 'update')).toBe('function');
+          expect($sortableElement.sortable('option', 'placeholder')).toBe(
+            'phClass'
+          );
+          expect(typeof $sortableElement.sortable('option', 'update')).toBe(
+            'function'
+          );
 
           $rootScope.$digest();
 
@@ -289,17 +318,19 @@ describe('uiSortable', function() {
           });
 
           expect($sortableElement.sortable('option', 'opacity')).toBe(false);
-          expect($sortableElement.sortable('option', 'placeholder')).toBe(false);
-          expect(typeof $sortableElement.sortable('option', 'update')).toBe('function');
+          expect($sortableElement.sortable('option', 'placeholder')).toBe(
+            false
+          );
+          expect(typeof $sortableElement.sortable('option', 'update')).toBe(
+            'function'
+          );
 
           element.remove(element.firstChild);
 
           expect(function() {
             $timeout.flush();
           }).not.toThrow();
-
         });
-
       });
 
       it('should not initialize a disabled sortable', function() {
@@ -312,7 +343,9 @@ describe('uiSortable', function() {
           childScope.opts = {
             disabled: true
           };
-          element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>')(childScope);
+          element = $compile(
+            '<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>'
+          )(childScope);
 
           expect(angular.element.fn.sortable).not.toHaveBeenCalled();
         });
@@ -328,7 +361,9 @@ describe('uiSortable', function() {
           childScope.opts = {
             disabled: true
           };
-          element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>')(childScope);
+          element = $compile(
+            '<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>'
+          )(childScope);
 
           expect(angular.element.fn.sortable).not.toHaveBeenCalled();
 
@@ -354,22 +389,23 @@ describe('uiSortable', function() {
           childScope.opts = {
             disabled: true
           };
-          element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>')(childScope);
+          element = $compile(
+            '<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>'
+          )(childScope);
 
           expect(angular.element.fn.sortable).not.toHaveBeenCalled();
 
-          $timeout(function () {
+          $timeout(function() {
             childScope.opts.disabled = false;
           });
 
-          $timeout(function () {
+          $timeout(function() {
             expect(angular.element.fn.sortable).toHaveBeenCalled();
           });
 
           expect(function() {
             $timeout.flush();
           }).not.toThrow();
-
         });
       });
 
@@ -383,7 +419,9 @@ describe('uiSortable', function() {
           childScope.opts = {
             disabled: true
           };
-          element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>')(childScope);
+          element = $compile(
+            '<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>'
+          )(childScope);
 
           expect(angular.element.fn.sortable).not.toHaveBeenCalled();
 
@@ -409,7 +447,9 @@ describe('uiSortable', function() {
           childScope.opts = {
             disabled: true
           };
-          element = $compile('<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>')(childScope);
+          element = $compile(
+            '<ul ui-sortable="opts" ng-model="items"><li ng-repeat="item in items">{{ item }}</li></ul>'
+          )(childScope);
 
           expect(angular.element.fn.sortable).not.toHaveBeenCalled();
 
@@ -417,24 +457,19 @@ describe('uiSortable', function() {
             $timeout.flush();
           }).not.toThrow();
 
-          $timeout(function () {
+          $timeout(function() {
             childScope.opts = {};
           });
 
-          $timeout(function () {
+          $timeout(function() {
             expect(angular.element.fn.sortable).toHaveBeenCalled();
           });
 
           expect(function() {
             $timeout.flush();
           }).not.toThrow();
-
         });
       });
-
     });
-
-
   });
-
 });

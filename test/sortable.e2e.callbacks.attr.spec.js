@@ -1,40 +1,52 @@
 'use strict';
 
 describe('uiSortable', function() {
-
-  beforeEach(module(function($compileProvider) {
-    if (typeof $compileProvider.debugInfoEnabled === 'function') {
-      $compileProvider.debugInfoEnabled(false);
-    }
-  }));
+  beforeEach(
+    module(function($compileProvider) {
+      if (typeof $compileProvider.debugInfoEnabled === 'function') {
+        $compileProvider.debugInfoEnabled(false);
+      }
+    })
+  );
 
   // Ensure the sortable angular module is loaded
   beforeEach(module('ui.sortable'));
   beforeEach(module('ui.sortable.testHelper'));
 
-  var EXTRA_DY_PERCENTAGE, listContent, hasUndefinedProperties, beforeLiElement, afterLiElement;
+  var EXTRA_DY_PERCENTAGE,
+    listContent,
+    hasUndefinedProperties,
+    beforeLiElement,
+    afterLiElement;
 
-  beforeEach(inject(function (sortableTestHelper) {
-    EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
-    listContent = sortableTestHelper.listContent;
-    hasUndefinedProperties = sortableTestHelper.hasUndefinedProperties;
-    beforeLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.beforeLiElement;
-    afterLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.afterLiElement;
-  }));
+  beforeEach(
+    inject(function(sortableTestHelper) {
+      EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
+      listContent = sortableTestHelper.listContent;
+      hasUndefinedProperties = sortableTestHelper.hasUndefinedProperties;
+      beforeLiElement =
+        sortableTestHelper.extraElements &&
+        sortableTestHelper.extraElements.beforeLiElement;
+      afterLiElement =
+        sortableTestHelper.extraElements &&
+        sortableTestHelper.extraElements.afterLiElement;
+    })
+  );
 
   tests.description = 'Attribute Callbacks related';
-  function tests (useExtraElements) {
-
+  function tests(useExtraElements) {
     var host;
 
-    beforeEach(inject(function() {
-      host = $('<div id="test-host"></div>');
-      $('body').append(host);
+    beforeEach(
+      inject(function() {
+        host = $('<div id="test-host"></div>');
+        $('body').append(host);
 
-      if (!useExtraElements) {
-        beforeLiElement = afterLiElement = '';
-      }
-    }));
+        if (!useExtraElements) {
+          beforeLiElement = afterLiElement = '';
+        }
+      })
+    );
 
     afterEach(function() {
       host.remove();
@@ -44,12 +56,15 @@ describe('uiSortable', function() {
     it('should cancel sorting of node "Two"', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable ui-sortable-update="update" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable ui-sortable-update="update" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.update = function(e, ui) {
             if (ui.item.sortable.model === 'Two') {
@@ -97,7 +112,8 @@ describe('uiSortable', function() {
 
     it('should call all callbacks with the proper context', function() {
       inject(function($compile, $rootScope) {
-        var element, callbackContexts = {};
+        var element,
+          callbackContexts = {};
         $rootScope.$apply(function() {
           $rootScope.create = function() {
             callbackContexts.create = this;
@@ -134,27 +150,28 @@ describe('uiSortable', function() {
           spyOn($rootScope, 'deactivate').and.callThrough();
           spyOn($rootScope, 'stop').and.callThrough();
           $rootScope.items = ['One', 'Two', 'Three'];
-          element = $compile(''.concat(
-            '<ul ui-sortable ' +
-            'ui-sortable-create="create" ' +
-            // 'ui-sortable-helper="helper" ' +
-            'ui-sortable-start="start" ' +
-            'ui-sortable-activate="activate" ' +
-            'ui-sortable-update="update" ' +
-            'ui-sortable-before-stop="beforeStop" ' +
-            'ui-sortable-deactivate="deactivate" ' +
-            'ui-sortable-stop="stop" ' +
-            'ng-model="items">',
-            beforeLiElement,
-            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
-            afterLiElement +
-            '</ul>'))($rootScope);
+          element = $compile(
+            ''.concat(
+              '<ul ui-sortable ' +
+                'ui-sortable-create="create" ' +
+                // 'ui-sortable-helper="helper" ' +
+                'ui-sortable-start="start" ' +
+                'ui-sortable-activate="activate" ' +
+                'ui-sortable-update="update" ' +
+                'ui-sortable-before-stop="beforeStop" ' +
+                'ui-sortable-deactivate="deactivate" ' +
+                'ui-sortable-stop="stop" ' +
+                'ng-model="items">',
+              beforeLiElement,
+              '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+              afterLiElement + '</ul>'
+            )
+          )($rootScope);
         });
 
         host.append(element);
 
-        $rootScope.$apply(function() {
-        });
+        $rootScope.$apply(function() {});
         var li = element.find('[ng-repeat]:eq(0)');
         var dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
@@ -184,16 +201,15 @@ describe('uiSortable', function() {
     });
   }
 
-  [0, 1].forEach(function(useExtraElements){
+  [0, 1].forEach(function(useExtraElements) {
     var testDescription = tests.description;
 
     if (useExtraElements) {
       testDescription += ' with extra elements';
     }
 
-    describe(testDescription, function(){
+    describe(testDescription, function() {
       tests(useExtraElements);
     });
   });
-
 });

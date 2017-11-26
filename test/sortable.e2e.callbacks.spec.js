@@ -1,40 +1,52 @@
 'use strict';
 
 describe('uiSortable', function() {
-
-  beforeEach(module(function($compileProvider) {
-    if (typeof $compileProvider.debugInfoEnabled === 'function') {
-      $compileProvider.debugInfoEnabled(false);
-    }
-  }));
+  beforeEach(
+    module(function($compileProvider) {
+      if (typeof $compileProvider.debugInfoEnabled === 'function') {
+        $compileProvider.debugInfoEnabled(false);
+      }
+    })
+  );
 
   // Ensure the sortable angular module is loaded
   beforeEach(module('ui.sortable'));
   beforeEach(module('ui.sortable.testHelper'));
 
-  var EXTRA_DY_PERCENTAGE, listContent, hasUndefinedProperties, beforeLiElement, afterLiElement;
+  var EXTRA_DY_PERCENTAGE,
+    listContent,
+    hasUndefinedProperties,
+    beforeLiElement,
+    afterLiElement;
 
-  beforeEach(inject(function (sortableTestHelper) {
-    EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
-    listContent = sortableTestHelper.listContent;
-    hasUndefinedProperties = sortableTestHelper.hasUndefinedProperties;
-    beforeLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.beforeLiElement;
-    afterLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.afterLiElement;
-  }));
+  beforeEach(
+    inject(function(sortableTestHelper) {
+      EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
+      listContent = sortableTestHelper.listContent;
+      hasUndefinedProperties = sortableTestHelper.hasUndefinedProperties;
+      beforeLiElement =
+        sortableTestHelper.extraElements &&
+        sortableTestHelper.extraElements.beforeLiElement;
+      afterLiElement =
+        sortableTestHelper.extraElements &&
+        sortableTestHelper.extraElements.afterLiElement;
+    })
+  );
 
   tests.description = 'Callbacks related';
-  function tests (useExtraElements) {
-
+  function tests(useExtraElements) {
     var host;
 
-    beforeEach(inject(function() {
-      host = $('<div id="test-host"></div>');
-      $('body').append(host);
+    beforeEach(
+      inject(function() {
+        host = $('<div id="test-host"></div>');
+        $('body').append(host);
 
-      if (!useExtraElements) {
-        beforeLiElement = afterLiElement = '';
-      }
-    }));
+        if (!useExtraElements) {
+          beforeLiElement = afterLiElement = '';
+        }
+      })
+    );
 
     afterEach(function() {
       host.remove();
@@ -44,12 +56,15 @@ describe('uiSortable', function() {
     it('should cancel sorting of node "Two"', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             update: function(e, ui) {
@@ -100,15 +115,17 @@ describe('uiSortable', function() {
     it('should cancel sorting of node "Two" and "helper: function" that returns an element is used', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
-          afterLiElement +
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+            afterLiElement + '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
-            helper: function (e, item) {
+            helper: function(e, item) {
               return item.clone();
             },
             update: function(e, ui) {
@@ -159,15 +176,17 @@ describe('uiSortable', function() {
     it('should cancel sorting of node "Two" when then helper is appended to the `body`', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
-          afterLiElement +
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+            afterLiElement + '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
-            helper: function (e, item) {
+            helper: function(e, item) {
               return item.clone().appendTo('body');
             },
             update: function(e, ui) {
@@ -218,15 +237,17 @@ describe('uiSortable', function() {
     it('should cancel sorting of node "Two" and "helper: function" that returns a list element is used', function() {
       inject(function($compile, $rootScope) {
         var element;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
-          afterLiElement +
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+            afterLiElement + '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
-            helper: function (e, item) {
+            helper: function(e, item) {
               return item;
             },
             update: function(e, ui) {
@@ -277,18 +298,22 @@ describe('uiSortable', function() {
     it('should update model from update() callback', function() {
       inject(function($compile, $rootScope) {
         var element, logsElement;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
-          afterLiElement +
-          '</ul>'))($rootScope);
-        logsElement = $compile(''.concat(
-          '<ul ng-model="logs">',
-          beforeLiElement,
-          '<li ng-repeat="log in logs" id="l-{{$index}}">{{ log }}</li>',
-          afterLiElement +
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+            afterLiElement + '</ul>'
+          )
+        )($rootScope);
+        logsElement = $compile(
+          ''.concat(
+            '<ul ng-model="logs">',
+            beforeLiElement,
+            '<li ng-repeat="log in logs" id="l-{{$index}}">{{ log }}</li>',
+            afterLiElement + '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             update: function(e, ui) {
@@ -318,18 +343,22 @@ describe('uiSortable', function() {
     it('should update model from stop() callback', function() {
       inject(function($compile, $rootScope) {
         var element, logsElement;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
-          afterLiElement +
-          '</ul>'))($rootScope);
-        logsElement = $compile(''.concat(
-          '<ul ng-model="logs">',
-          beforeLiElement,
-          '<li ng-repeat="log in logs" id="l-{{$index}}">{{ log }}</li>',
-          afterLiElement +
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+            afterLiElement + '</ul>'
+          )
+        )($rootScope);
+        logsElement = $compile(
+          ''.concat(
+            '<ul ng-model="logs">',
+            beforeLiElement,
+            '<li ng-repeat="log in logs" id="l-{{$index}}">{{ log }}</li>',
+            afterLiElement + '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             stop: function(e, ui) {
@@ -361,17 +390,17 @@ describe('uiSortable', function() {
         $rootScope.$apply(function() {
           $rootScope.items = ['One', 'Two', 'Three'];
           $rootScope.opts = {
-            create: function() {
-
-            }
+            create: function() {}
           };
           spyOn($rootScope.opts, 'create');
-          element = $compile(''.concat(
-            '<ul ui-sortable="opts" ng-model="items">',
-            beforeLiElement,
-            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
-            afterLiElement +
-            '</ul>'))($rootScope);
+          element = $compile(
+            ''.concat(
+              '<ul ui-sortable="opts" ng-model="items">',
+              beforeLiElement,
+              '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+              afterLiElement + '</ul>'
+            )
+          )($rootScope);
         });
 
         host.append(element);
@@ -385,12 +414,14 @@ describe('uiSortable', function() {
     it('should properly set ui.item.sortable properties', function() {
       inject(function($compile, $rootScope) {
         var element, updateCallbackExpectations;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
-          afterLiElement +
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+            afterLiElement + '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             update: function(e, ui) {
@@ -405,8 +436,7 @@ describe('uiSortable', function() {
 
         host.append(element);
 
-        $rootScope.$apply(function() {
-        });
+        $rootScope.$apply(function() {});
         var li = element.find('[ng-repeat]:eq(1)');
         var dy = (1 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         updateCallbackExpectations = function(uiItemSortable) {
@@ -461,7 +491,8 @@ describe('uiSortable', function() {
 
     it('should call all callbacks with the proper context', function() {
       inject(function($compile, $rootScope) {
-        var element, callbackContexts = {};
+        var element,
+          callbackContexts = {};
         $rootScope.$apply(function() {
           $rootScope.opts = {
             helper: function(e, item) {
@@ -499,18 +530,19 @@ describe('uiSortable', function() {
           spyOn($rootScope.opts, 'deactivate').and.callThrough();
           spyOn($rootScope.opts, 'stop').and.callThrough();
           $rootScope.items = ['One', 'Two', 'Three'];
-          element = $compile(''.concat(
-            '<ul ui-sortable="opts" ng-model="items">',
-            beforeLiElement,
-            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
-            afterLiElement +
-            '</ul>'))($rootScope);
+          element = $compile(
+            ''.concat(
+              '<ul ui-sortable="opts" ng-model="items">',
+              beforeLiElement,
+              '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+              afterLiElement + '</ul>'
+            )
+          )($rootScope);
         });
 
         host.append(element);
 
-        $rootScope.$apply(function() {
-        });
+        $rootScope.$apply(function() {});
         var li = element.find('[ng-repeat]:eq(0)');
         var dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
@@ -542,15 +574,17 @@ describe('uiSortable', function() {
     it('should properly free ui.item.sortable object', function() {
       inject(function($compile, $rootScope) {
         var element, uiItem, uiItemSortable_Destroy;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
-          afterLiElement +
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+            afterLiElement + '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
-            start: function (e, ui) {
+            start: function(e, ui) {
               uiItem = ui.item;
               spyOn(ui.item.sortable, '_destroy').and.callThrough();
               uiItemSortable_Destroy = ui.item.sortable._destroy;
@@ -575,7 +609,6 @@ describe('uiSortable', function() {
         expect(hasUndefinedProperties(uiItem.sortable)).toBe(true);
         uiItem = uiItemSortable_Destroy = undefined;
 
-
         li = element.find('[ng-repeat]:eq(0)');
         dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
         li.simulate('drag', { dy: dy });
@@ -584,7 +617,6 @@ describe('uiSortable', function() {
         expect(uiItemSortable_Destroy).toHaveBeenCalled();
         expect(hasUndefinedProperties(uiItem.sortable)).toBe(true);
         uiItem = uiItemSortable_Destroy = undefined;
-
 
         li = element.find('[ng-repeat]:eq(2)');
         dy = -(2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
@@ -601,20 +633,26 @@ describe('uiSortable', function() {
 
     it('should provide the item.sortable properties on helper callback', function() {
       inject(function($compile, $rootScope) {
-        var element, helperItem, itemSortable_Restore, sortableAfterRestore, helperCallbackExpectations;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
-          afterLiElement +
-          '</ul>'))($rootScope);
+        var element,
+          helperItem,
+          itemSortable_Restore,
+          sortableAfterRestore,
+          helperCallbackExpectations;
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+            afterLiElement + '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             helper: function(e, item) {
               helperItem = item;
 
               var oldRestore = item.sortable._restore;
-              item.sortable._restore = function () {
+              item.sortable._restore = function() {
                 oldRestore.apply(this, arguments);
                 // hold the value of the sortable object
                 // right after the _restore method completes
@@ -632,8 +670,7 @@ describe('uiSortable', function() {
 
         host.append(element);
 
-        $rootScope.$apply(function() {
-        });
+        $rootScope.$apply(function() {});
 
         var li = element.find('[ng-repeat]:eq(0)');
         var dy = (2 + EXTRA_DY_PERCENTAGE) * li.outerHeight();
@@ -660,18 +697,22 @@ describe('uiSortable', function() {
     it('should properly reset a deleted callback option', function() {
       inject(function($compile, $rootScope) {
         var element, logsElement;
-        element = $compile(''.concat(
-          '<ul ui-sortable="opts" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
-          afterLiElement +
-          '</ul>'))($rootScope);
-        logsElement = $compile(''.concat(
-          '<ul ng-model="logs">',
-          beforeLiElement,
-          '<li ng-repeat="log in logs" id="l-{{$index}}">{{ log }}</li>',
-          afterLiElement +
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable="opts" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+            afterLiElement + '</ul>'
+          )
+        )($rootScope);
+        logsElement = $compile(
+          ''.concat(
+            '<ul ng-model="logs">',
+            beforeLiElement,
+            '<li ng-repeat="log in logs" id="l-{{$index}}">{{ log }}</li>',
+            afterLiElement + '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.opts = {
             stop: function(e, ui) {
@@ -693,7 +734,7 @@ describe('uiSortable', function() {
         expect($rootScope.logs).toEqual(listContent(logsElement));
 
         $rootScope.$digest();
-          
+
         $rootScope.$apply(function() {
           $rootScope.opts = {};
         });
@@ -711,19 +752,17 @@ describe('uiSortable', function() {
         $(logsElement).remove();
       });
     });
-
   }
 
-  [0, 1].forEach(function(useExtraElements){
+  [0, 1].forEach(function(useExtraElements) {
     var testDescription = tests.description;
 
     if (useExtraElements) {
       testDescription += ' with extra elements';
     }
 
-    describe(testDescription, function(){
+    describe(testDescription, function() {
       tests(useExtraElements);
     });
   });
-
 });

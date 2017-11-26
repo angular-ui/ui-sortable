@@ -1,38 +1,56 @@
 'use strict';
 
-angular.module('ui.sortable.testHelper', [])
-  .factory('sortableTestHelper', function () {
+angular
+  .module('ui.sortable.testHelper', [])
+  .factory('sortableTestHelper', function() {
     var EXTRA_DY_PERCENTAGE = 0.25;
 
-    function listContent (list, contentSelector) {
+    function listContent(list, contentSelector) {
       if (!contentSelector) {
         contentSelector = '[ng-repeat], [data-ng-repeat], [x-ng-repeat]';
       }
 
       if (list && list.length) {
-        return list.children(contentSelector).map(function(){ return this.innerHTML; }).toArray();
+        return list
+          .children(contentSelector)
+          .map(function() {
+            return this.innerHTML;
+          })
+          .toArray();
       }
       return [];
     }
 
-    function listFindContent (list, contentSelector) {
+    function listFindContent(list, contentSelector) {
       if (!contentSelector) {
         contentSelector = '.sortable-item';
       }
 
       if (list && list.length) {
-        return list.find(contentSelector).map(function(){ return this.innerHTML; }).toArray();
+        return list
+          .find(contentSelector)
+          .map(function() {
+            return this.innerHTML;
+          })
+          .toArray();
       }
       return [];
     }
 
-    function listInnerContent (list, contentSelector) {
+    function listInnerContent(list, contentSelector) {
       if (!contentSelector) {
         contentSelector = '.itemContent';
       }
 
       if (list && list.length) {
-        return list.children().map(function(){ return $(this).find(contentSelector).html(); }).toArray();
+        return list
+          .children()
+          .map(function() {
+            return $(this)
+              .find(contentSelector)
+              .html();
+          })
+          .toArray();
       }
       return [];
     }
@@ -54,9 +72,11 @@ angular.module('ui.sortable.testHelper', [])
       if (typeof options === 'object') {
         if ('place' in options) {
           if (options.place === 'above') {
-            dragOptions.dy -= EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
+            dragOptions.dy -=
+              EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
           } else if (options.place === 'below') {
-            dragOptions.dy += EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
+            dragOptions.dy +=
+              EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
           }
         }
 
@@ -66,7 +86,7 @@ angular.module('ui.sortable.testHelper', [])
         if (isFinite(options.dy)) {
           dragOptions.dy = options.dy;
         }
-        
+
         if (isFinite(options.extrady)) {
           dragOptions.dy += options.extrady;
         }
@@ -84,12 +104,14 @@ angular.module('ui.sortable.testHelper', [])
     }
 
     function hasUndefinedProperties(testObject) {
-      return testObject && Object.keys(testObject)
-        .filter(function(key) {
-          return testObject.hasOwnProperty(key) &&
-                 testObject[key] !== undefined;
-        })
-        .length === 0;
+      return (
+        testObject &&
+        Object.keys(testObject).filter(function(key) {
+          return (
+            testObject.hasOwnProperty(key) && testObject[key] !== undefined
+          );
+        }).length === 0
+      );
     }
 
     return {
@@ -109,6 +131,6 @@ angular.module('ui.sortable.testHelper', [])
       }
     };
   })
-  .controller('dummyController', function ($scope) {
+  .controller('dummyController', function($scope) {
     $scope.testItems = ['One', 'Two', 'Three'];
   });

@@ -1,41 +1,54 @@
 'use strict';
 
 describe('uiSortable', function() {
-
-  beforeEach(module(function($compileProvider) {
-    if (typeof $compileProvider.debugInfoEnabled === 'function') {
-      $compileProvider.debugInfoEnabled(false);
-    }
-  }));
+  beforeEach(
+    module(function($compileProvider) {
+      if (typeof $compileProvider.debugInfoEnabled === 'function') {
+        $compileProvider.debugInfoEnabled(false);
+      }
+    })
+  );
 
   // Ensure the sortable angular module is loaded
   beforeEach(module('ui.sortable'));
   beforeEach(module('ui.sortable.testHelper'));
 
-  var EXTRA_DY_PERCENTAGE, listContent, simulateElementDrag, hasUndefinedProperties, beforeLiElement, afterLiElement;
+  var EXTRA_DY_PERCENTAGE,
+    listContent,
+    simulateElementDrag,
+    hasUndefinedProperties,
+    beforeLiElement,
+    afterLiElement;
 
-  beforeEach(inject(function (sortableTestHelper) {
-    EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
-    listContent = sortableTestHelper.listContent;
-    simulateElementDrag = sortableTestHelper.simulateElementDrag;
-    hasUndefinedProperties = sortableTestHelper.hasUndefinedProperties;
-    beforeLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.beforeLiElement;
-    afterLiElement = sortableTestHelper.extraElements && sortableTestHelper.extraElements.afterLiElement;
-  }));
+  beforeEach(
+    inject(function(sortableTestHelper) {
+      EXTRA_DY_PERCENTAGE = sortableTestHelper.EXTRA_DY_PERCENTAGE;
+      listContent = sortableTestHelper.listContent;
+      simulateElementDrag = sortableTestHelper.simulateElementDrag;
+      hasUndefinedProperties = sortableTestHelper.hasUndefinedProperties;
+      beforeLiElement =
+        sortableTestHelper.extraElements &&
+        sortableTestHelper.extraElements.beforeLiElement;
+      afterLiElement =
+        sortableTestHelper.extraElements &&
+        sortableTestHelper.extraElements.afterLiElement;
+    })
+  );
 
   tests.description = 'Events related';
-  function tests (useExtraElements) {
-
+  function tests(useExtraElements) {
     var host;
 
-    beforeEach(inject(function() {
-      host = $('<div id="test-host"></div>');
-      $('body').append(host);
+    beforeEach(
+      inject(function() {
+        host = $('<div id="test-host"></div>');
+        $('body').append(host);
 
-      if (!useExtraElements) {
-        beforeLiElement = afterLiElement = '';
-      }
-    }));
+        if (!useExtraElements) {
+          beforeLiElement = afterLiElement = '';
+        }
+      })
+    );
 
     afterEach(function() {
       host.remove();
@@ -45,18 +58,21 @@ describe('uiSortable', function() {
     it('should emit an event after sorting', function() {
       inject(function($compile, $rootScope) {
         var element, uiParam, emittedUiParam;
-        element = $compile(''.concat(
-          '<ul ui-sortable ui-sortable-update="update" ng-model="items">',
-          beforeLiElement,
-          '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
-          afterLiElement,
-          '</ul>'))($rootScope);
+        element = $compile(
+          ''.concat(
+            '<ul ui-sortable ui-sortable-update="update" ng-model="items">',
+            beforeLiElement,
+            '<li ng-repeat="item in items" id="s-{{$index}}">{{ item }}</li>',
+            afterLiElement,
+            '</ul>'
+          )
+        )($rootScope);
         $rootScope.$apply(function() {
           $rootScope.items = ['One', 'Two', 'Three'];
-          $rootScope.update = function (e, ui) {
+          $rootScope.update = function(e, ui) {
             uiParam = ui;
           };
-          $rootScope.onSorting = function (e, ui) {
+          $rootScope.onSorting = function(e, ui) {
             emittedUiParam = ui;
           };
           spyOn($rootScope, 'onSorting').and.callThrough();
@@ -81,48 +97,69 @@ describe('uiSortable', function() {
 
     it('should emit an event after sorting between sortables of different scopes', function() {
       inject(function($compile, $rootScope) {
-        var elementTop, elementBottom,
-            wrapperTop, wrapperBottom,
-            wrapperTopScope, wrapperBottomScope,
-            itemsTop, itemsBottom;
+        var elementTop,
+          elementBottom,
+          wrapperTop,
+          wrapperBottom,
+          wrapperTopScope,
+          wrapperBottomScope,
+          itemsTop,
+          itemsBottom;
         wrapperTopScope = $rootScope.$new();
         wrapperBottomScope = $rootScope.$new();
-        wrapperTop = $compile(''.concat(
-          '<div ng-controller="dummyController"><ul ui-sortable="opts" class="cross-sortable" ng-model="itemsTop">',
-          beforeLiElement,
-          '<li ng-repeat="item in itemsTop" id="s-top-{{$index}}">{{ item }}</li>',
-          afterLiElement,
-          '</ul></div>'))(wrapperTopScope);
-        wrapperBottom = $compile(''.concat(
-          '<div ng-controller="dummyController"><ul ui-sortable="opts" class="cross-sortable" ng-model="itemsBottom">',
-          beforeLiElement,
-          '<li ng-repeat="item in itemsBottom" id="s-bottom-{{$index}}">{{ item }}</li>',
-          afterLiElement,
-          '</ul></div>'))(wrapperBottomScope);
+        wrapperTop = $compile(
+          ''.concat(
+            '<div ng-controller="dummyController"><ul ui-sortable="opts" class="cross-sortable" ng-model="itemsTop">',
+            beforeLiElement,
+            '<li ng-repeat="item in itemsTop" id="s-top-{{$index}}">{{ item }}</li>',
+            afterLiElement,
+            '</ul></div>'
+          )
+        )(wrapperTopScope);
+        wrapperBottom = $compile(
+          ''.concat(
+            '<div ng-controller="dummyController"><ul ui-sortable="opts" class="cross-sortable" ng-model="itemsBottom">',
+            beforeLiElement,
+            '<li ng-repeat="item in itemsBottom" id="s-bottom-{{$index}}">{{ item }}</li>',
+            afterLiElement,
+            '</ul></div>'
+          )
+        )(wrapperBottomScope);
 
-        host.append(wrapperTop).append(wrapperBottom).append('<div class="clear"></div>');
+        host
+          .append(wrapperTop)
+          .append(wrapperBottom)
+          .append('<div class="clear"></div>');
         $rootScope.$apply(function() {
-          wrapperTopScope.itemsTop = itemsTop = ['Top One', 'Top Two', 'Top Three'];
+          wrapperTopScope.itemsTop = itemsTop = [
+            'Top One',
+            'Top Two',
+            'Top Three'
+          ];
           wrapperTopScope.opts = {
             connectWith: '.cross-sortable',
-            stop: function (e, ui) {
+            stop: function(e, ui) {
               wrapperTopScope.uiParam = ui;
             }
           };
-          wrapperTopScope.onSorting = function (e, ui) {
+          wrapperTopScope.onSorting = function(e, ui) {
             wrapperTopScope.emittedUiParam = ui;
           };
           spyOn(wrapperTopScope, 'onSorting').and.callThrough();
           $rootScope.$on('ui-sortable:moved', wrapperTopScope.onSorting);
 
-          wrapperBottomScope.itemsBottom = itemsBottom = ['Bottom One', 'Bottom Two', 'Bottom Three'];
+          wrapperBottomScope.itemsBottom = itemsBottom = [
+            'Bottom One',
+            'Bottom Two',
+            'Bottom Three'
+          ];
           wrapperBottomScope.opts = {
             connectWith: '.cross-sortable',
-            update: function (e, ui) {
+            update: function(e, ui) {
               wrapperBottomScope.uiParam = ui;
             }
           };
-          wrapperBottomScope.onSorting = function (e, ui) {
+          wrapperBottomScope.onSorting = function(e, ui) {
             wrapperBottomScope.emittedUiParam = ui;
           };
           spyOn(wrapperBottomScope, 'onSorting').and.callThrough();
@@ -136,15 +173,24 @@ describe('uiSortable', function() {
         var li2 = elementBottom.find('[ng-repeat]:eq(0)');
         simulateElementDrag(li1, li2, 'below');
         expect(itemsTop).toEqual(['Top Two', 'Top Three']);
-        expect(itemsBottom).toEqual(['Bottom One', 'Top One', 'Bottom Two', 'Bottom Three']);
+        expect(itemsBottom).toEqual([
+          'Bottom One',
+          'Top One',
+          'Bottom Two',
+          'Bottom Three'
+        ]);
         expect(itemsTop).toEqual(listContent(elementTop));
         expect(itemsBottom).toEqual(listContent(elementBottom));
 
         expect(wrapperTopScope.onSorting).toHaveBeenCalled();
-        expect(wrapperTopScope.uiParam.item).toEqual(wrapperTopScope.emittedUiParam.item);
+        expect(wrapperTopScope.uiParam.item).toEqual(
+          wrapperTopScope.emittedUiParam.item
+        );
 
         expect(wrapperBottomScope.onSorting).toHaveBeenCalled();
-        expect(wrapperBottomScope.uiParam.item).toEqual(wrapperBottomScope.emittedUiParam.item);
+        expect(wrapperBottomScope.uiParam.item).toEqual(
+          wrapperBottomScope.emittedUiParam.item
+        );
 
         $(wrapperBottom).remove();
         $(wrapperTop).remove();
@@ -152,16 +198,15 @@ describe('uiSortable', function() {
     });
   }
 
-  [0, 1].forEach(function(useExtraElements){
+  [0, 1].forEach(function(useExtraElements) {
     var testDescription = tests.description;
 
     if (useExtraElements) {
       testDescription += ' with extra elements';
     }
 
-    describe(testDescription, function(){
+    describe(testDescription, function() {
       tests(useExtraElements);
     });
   });
-
 });
