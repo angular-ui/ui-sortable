@@ -6,7 +6,11 @@
   "license": "MIT",
   "homepage": "http://angular-ui.github.com",
   "main": "./src/sortable.js",
-  "dependencies": {},
+  "dependencies": {
+    "angular": ">=1.2.x",
+    "jquery": ">=3.1.x",
+    "jquery-ui": ">=1.12.x"
+  },
   "devDependencies": {
     "angular-ui-publisher": "1.2.x",
     "grunt": "~0.4.x",
