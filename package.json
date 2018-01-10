@@ -9,7 +9,7 @@
   "dependencies": {
     "angular": ">=1.2.x",
     "jquery": ">=3.1.x",
-    "jquery-ui": ">=1.12.x"
+    "jquery-ui-dist": ">=1.12.x"
   },
   "devDependencies": {
     "angular-ui-publisher": "1.2.x",
