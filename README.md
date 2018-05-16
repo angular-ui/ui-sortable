@@ -312,7 +312,7 @@ myAppModule.controller('MyController', function($scope) {
 ## Integrations
 - [firebase](http://codepen.io/thgreasi/pen/repEZg?editors=0010)
 - [ui.bootstrap.accordion](http://plnkr.co/edit/TGIeeEbbvJwpJ3WRqo2z?p=preview)
-- [Angular Meterial](http://codepen.io/thgreasi/pen/NbyLVK) (thanks yenoh2)
+- [Angular Material](http://codepen.io/thgreasi/pen/NbyLVK) (thanks yenoh2)
 - [Asynchronous loading jQuery+jQueryUI with crisbeto/angular-ui-sortable-loader](https://github.com/crisbeto/angular-ui-sortable-loader)
 
 ## Reporting Issues
@@ -322,7 +322,7 @@ Feel free to edit any of them for your needs (don't forget to also update the li
 
 ## Testing
 
-We use Karma and jshint to ensure the quality of the code.  The easiest way to run these checks is to use grunt:
+We use Karma and JSHint to ensure the quality of the code.  The easiest way to run these checks is to use grunt:
 
 ```sh
 npm install -g grunt-cli
