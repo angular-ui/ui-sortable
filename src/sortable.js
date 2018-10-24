@@ -584,7 +584,12 @@ angular
                     key.substring(0, 1).toUpperCase() +
                     key.substring(1)
                   ).length &&
-                  typeof (attrHandlerFn = attrHandler({$event: arguments[0], $ui: arguments[1])) === 'function'
+                  typeof (attrHandlerFn = attrHandler(
+                   {
+                     $event: arguments[0], 
+                     $ui: arguments[1]
+                   }
+                  )) === 'function'
                 ) {
                   attrHandlerFn.apply(this, arguments);
                 }
