@@ -1,0 +1,136 @@
+'use strict';
+
+angular
+  .module('ui.sortable.testHelper', [])
+  .factory('sortableTestHelper', function() {
+    var EXTRA_DY_PERCENTAGE = 0.25;
+
+    function listContent(list, contentSelector) {
+      if (!contentSelector) {
+        contentSelector = '[ng-repeat], [data-ng-repeat], [x-ng-repeat]';
+      }
+
+      if (list && list.length) {
+        return list
+          .children(contentSelector)
+          .map(function() {
+            return this.innerHTML;
+          })
+          .toArray();
+      }
+      return [];
+    }
+
+    function listFindContent(list, contentSelector) {
+      if (!contentSelector) {
+        contentSelector = '.sortable-item';
+      }
+
+      if (list && list.length) {
+        return list
+          .find(contentSelector)
+          .map(function() {
+            return this.innerHTML;
+          })
+          .toArray();
+      }
+      return [];
+    }
+
+    function listInnerContent(list, contentSelector) {
+      if (!contentSelector) {
+        contentSelector = '.itemContent';
+      }
+
+      if (list && list.length) {
+        return list
+          .children()
+          .map(function() {
+            return $(this)
+              .find(contentSelector)
+              .html();
+          })
+          .toArray();
+      }
+      return [];
+    }
+
+    function simulateElementDrag(draggedElement, dropTarget, options) {
+      var dragOptions = {
+        dx: dropTarget.position().left - draggedElement.position().left,
+        dy: dropTarget.position().top - draggedElement.position().top,
+        moves: 30,
+        action: (options && options.action) || 'drag'
+      };
+
+      if (options === 'above') {
+        options = { place: 'above' };
+      } else if (options === 'below') {
+        options = { place: 'below' };
+      }
+
+      if (typeof options === 'object') {
+        if ('place' in options) {
+          if (options.place === 'above') {
+            dragOptions.dy -=
+              EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
+          } else if (options.place === 'below') {
+            dragOptions.dy +=
+              EXTRA_DY_PERCENTAGE * draggedElement.outerHeight();
+          }
+        }
+
+        if (isFinite(options.dx)) {
+          dragOptions.dx = options.dx;
+        }
+        if (isFinite(options.dy)) {
+          dragOptions.dy = options.dy;
+        }
+
+        if (isFinite(options.extrady)) {
+          dragOptions.dy += options.extrady;
+        }
+
+        if (isFinite(options.extradx)) {
+          dragOptions.dx += options.extradx;
+        }
+
+        if (isFinite(options.moves) && options.moves > 0) {
+          dragOptions.moves = options.moves;
+        }
+      }
+
+      draggedElement.simulate(dragOptions.action, dragOptions);
+    }
+
+    function hasUndefinedProperties(testObject) {
+      return (
+        testObject &&
+        Object.keys(testObject).filter(function(key) {
+          return (
+            testObject.hasOwnProperty(key) && testObject[key] !== undefined
+          );
+        }).length === 0
+      );
+    }
+
+    return {
+      EXTRA_DY_PERCENTAGE: EXTRA_DY_PERCENTAGE,
+      listContent: listContent,
+      listFindContent: listFindContent,
+      listInnerContent: listInnerContent,
+      simulateElementDrag: simulateElementDrag,
+      hasUndefinedProperties: hasUndefinedProperties,
+      extraElements: {
+        beforeLiElement: '<li>extra element</li>',
+        afterLiElement: '<li>extra element</li>',
+        beforeTrElement: '<tr><td>extra element</td></tr>',
+        afterTrElement: '<tr><td>extra element</td></tr>',
+        beforeDivElement: '<div>extra element</div>',
+        afterDivElement: '<div>extra element</div>'
+      }
+    };
+  })
+  .controller('dummyController', function($scope) {
+    $scope.testItems = ['One', 'Two', 'Three'];
+  });

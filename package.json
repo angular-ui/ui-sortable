@@ -1,20 +1,63 @@
 {
   "name": "angular-ui-sortable",
-  "version": "0.0.1",
+  "version": "0.19.0",
   "description": "This directive allows you to jQueryUI Sortable.",
   "author": "https://github.com/angular-ui/ui-sortable/graphs/contributors",
   "license": "MIT",
   "homepage": "http://angular-ui.github.com",
   "main": "./src/sortable.js",
-  "dependencies": {},
-  "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-testacular": "~0.3.0",
-    "grunt-contrib-jshint": "~0.2.0"
+  "dependencies": {
+    "angular": ">=1.2.x",
+    "jquery": ">=3.1.x",
+    "jquery-ui-dist": ">=1.12.x"
   },
-  "scripts": {},
+  "devDependencies": {
+    "angular-ui-publisher": "1.2.x",
+    "grunt": "~0.4.x",
+    "grunt-contrib-connect": "0.5.x",
+    "grunt-contrib-jshint": "0.8.x",
+    "grunt-contrib-uglify": "0.2.x",
+    "grunt-contrib-watch": "0.5.x",
+    "grunt-conventional-changelog": "~1.0.0",
+    "grunt-karma": "^0.12.1",
+    "grunt-ngmin": "0.0.x",
+    "grunt-surround": "0.1.x",
+    "husky": "^0.14.3",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "0.1.x",
+    "karma-coffee-preprocessor": "^0.3.0",
+    "karma-coverage": "^0.5.5",
+    "karma-coveralls": "~0.1.4",
+    "karma-firefox-launcher": "0.1.x",
+    "karma-html2js-preprocessor": "^0.1.0",
+    "karma-jasmine": "^0.3.7",
+    "karma-junit-reporter": "^0.4.0",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-requirejs": "^0.2.5",
+    "karma-script-launcher": "^0.2.0",
+    "lint-staged": "^5.0.0",
+    "load-grunt-tasks": "0.2.x",
+    "prettier": "^1.8.2",
+    "requirejs": "2.1.x",
+    "wiredep": "1.8.x"
+  },
+  "scripts": {
+    "coverage": "grunt coverage",
+    "dist": "grunt dist",
+    "precommit": "lint-staged",
+    "prettify": "prettier --write \"src/**/*.js\" \"test/**/*.js\"",
+    "serve": "grunt serve",
+    "test": "grunt test"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/angular-ui/ui-sortable.git"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }

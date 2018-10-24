@@ -2,5 +2,5 @@ bower_components/
 node_modules/
 coverage/
 junit/
-dist/
+# dist/
 out/
