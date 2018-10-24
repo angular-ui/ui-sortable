@@ -577,6 +577,10 @@ angular
               callbacks[key] = combineCallbacks(callbacks[key], function() {
                 var attrHandler = scope[key];
                 var attrHandlerFn;
+                var args = {
+                  $event: arguments[0],
+                  $ui: arguments[1]
+                };
                 if (
                   typeof attrHandler === 'function' &&
                   (
@@ -584,7 +588,7 @@ angular
                     key.substring(0, 1).toUpperCase() +
                     key.substring(1)
                   ).length &&
-                  typeof (attrHandlerFn = attrHandler()) === 'function'
+                  typeof (attrHandlerFn = attrHandler(args)) === 'function'
                 ) {
                   attrHandlerFn.apply(this, arguments);
                 }
